@@ -1,0 +1,19 @@
+{
+    "name": "sg_cine_2024/laboratorio",
+    "description": "Sistema de gestión de cine 2024",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "app\\": "",
+            "app\\core\\": "core/",
+            "app\\libs\\": "libs/"
+        }
+    },
+    "authors": [
+        {
+            "name": "JoelM2004",
+            "email": "joemercao@gmail.com"
+        }
+    ],
+    "require": {}
+}
