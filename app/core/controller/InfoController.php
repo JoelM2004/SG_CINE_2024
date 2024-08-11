@@ -3,10 +3,8 @@
 namespace app\core\controller;
 use app\core\controller\base\Controller;
 
-final class InicioController extends Controller
+final class InfoController extends Controller
 {
-
-
     public function __construct()
     {
         parent::__construct([
@@ -17,9 +15,10 @@ final class InicioController extends Controller
     public function index(): void
     { //listo
 
-        $this->view = "inicio/index.php";
-        
-        $breadcrumbActual="";
+        $this->view = "info/index.php";
+        $titulo = "Bienvenido a Los Pollos Hermanos";
+
+        $breadcrumbActual="Acerca de nosotros";
         $breadcrumbLink=APP_FRONT."inicio/index";
         $breadcrumbPasada="Menu Principal";
         

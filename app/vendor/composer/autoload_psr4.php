@@ -6,5 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'SgCine2024\\Laboratorio\\' => array($baseDir . '/src'),
+    'app\\libs\\' => array($baseDir . '/libs'),
+    'app\\core\\' => array($baseDir . '/core'),
+    'app\\' => array($baseDir . '/'),
 );

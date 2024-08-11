@@ -17,13 +17,13 @@
     <div class="container-fluid">
         <header>
             <?php   
-            if(isset($_SESSION["token"])&& $_SESSION["token"]==APP_TOKEN){
+            // if(isset($_SESSION["token"])&& $_SESSION["token"]==APP_TOKEN){
 
             require_once "includes/nav.php";
-            require_once "includes/menu.php";
+            // require_once "includes/menu.php";
             require_once "includes/bread_crumb.php";
 
-            }
+            // }
 
             ?>
         </header>
@@ -36,9 +36,9 @@
         </main>
         <footer>
             <?php
-            if(isset($_SESSION["token"])&& $_SESSION["token"]==APP_TOKEN){
+            // if(isset($_SESSION["token"])&& $_SESSION["token"]==APP_TOKEN){
             require_once "includes/footer.php";
-            }
+            // }
             ?>
         </footer>
 
