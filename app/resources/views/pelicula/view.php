@@ -30,7 +30,11 @@
 
           <div class="card-body">
             <a href="<?= APP_FRONT . "funcion/view" ?>" class="btn btn-primary">Entradas y Funciones Disponibles</a>
+
+            <a href="<?= APP_FRONT . "comentario/index" ?>" class="btn btn-primary">Deja tu opinión acerca de la película</a>
           </div>
+
+
         </div>
       </div>
     </div>

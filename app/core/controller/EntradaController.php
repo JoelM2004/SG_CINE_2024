@@ -6,9 +6,9 @@ use app\libs\response\Response;
 use app\core\controller\base\Controller;
 use app\core\controller\base\InterfaceController;
 use app\core\controller\base\InterfaceControllerExtend;
-use app\core\service\PeliculaService;
+use app\core\service\EntradaService;
 
-final class PeliculaController extends Controller implements InterfaceController, InterfaceControllerExtend{
+final class EntradaController extends Controller implements InterfaceController,InterfaceControllerExtend{
 
     public function __construct()
     {
@@ -17,13 +17,15 @@ final class PeliculaController extends Controller implements InterfaceController
             //  "app/js/usuario/usuarioService.js",
             //  "app/js/perfil/perfilService.js",
             //  "app/js/perfil/perfilController.js"
+                "assets/libs/js/viewEntrada.js"
+                
         ]);
     }
 
     public function index():void{
 
-        $this->view = "pelicula/index.php";
-        $breadcrumbActual="Peliculas";
+        $this->view = "entrada/index.php";
+        $breadcrumbActual="Entradas";
         $breadcrumbLink=APP_FRONT."inicio/index";
         $breadcrumbPasada="Menú Principal";
 
@@ -33,10 +35,10 @@ final class PeliculaController extends Controller implements InterfaceController
 
     public function view($id):void{
 
-        $this->view="pelicula/view.php";
-        $breadcrumbActual="Película";
-        $breadcrumbLink=APP_FRONT."inicio/index";
-        $breadcrumbPasada="Menú Principal";
+        $this->view="entrada/view.php";
+        $breadcrumbActual="Entradas";
+        $breadcrumbLink=APP_FRONT."funcion/view";
+        $breadcrumbPasada="Funciones";
         require_once APP_TEMPLATE."template.php";
 
     }

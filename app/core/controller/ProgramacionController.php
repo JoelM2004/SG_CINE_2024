@@ -8,7 +8,7 @@ use app\core\controller\base\InterfaceController;
 use app\core\controller\base\InterfaceControllerExtend;
 use app\core\service\PeliculaService;
 
-final class PeliculaController extends Controller implements InterfaceController, InterfaceControllerExtend{
+final class ProgramacionController extends Controller implements InterfaceController, InterfaceControllerExtend{
 
     public function __construct()
     {
@@ -22,8 +22,8 @@ final class PeliculaController extends Controller implements InterfaceController
 
     public function index():void{
 
-        $this->view = "pelicula/index.php";
-        $breadcrumbActual="Peliculas";
+        $this->view = "programacion/index.php";
+        $breadcrumbActual="Programaciones";
         $breadcrumbLink=APP_FRONT."inicio/index";
         $breadcrumbPasada="Menú Principal";
 
@@ -33,11 +33,7 @@ final class PeliculaController extends Controller implements InterfaceController
 
     public function view($id):void{
 
-        $this->view="pelicula/view.php";
-        $breadcrumbActual="Película";
-        $breadcrumbLink=APP_FRONT."inicio/index";
-        $breadcrumbPasada="Menú Principal";
-        require_once APP_TEMPLATE."template.php";
+       
 
     }
 
@@ -54,7 +50,13 @@ final class PeliculaController extends Controller implements InterfaceController
     *@param int id parametro opcional que permite la conación del registro
      */
     public function create($id):void{
+        $this->view="sala/alta.php";
 
+        $breadcrumbActual="Salas";
+        $breadcrumbLink=APP_FRONT."sala/index";
+        $breadcrumbPasada="Inicio Sala";
+        
+        require_once APP_TEMPLATE."template.php";
 
     }
 

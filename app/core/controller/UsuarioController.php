@@ -8,7 +8,7 @@ use app\core\controller\base\InterfaceController;
 use app\core\controller\base\InterfaceControllerExtend;
 use app\core\service\PeliculaService;
 
-final class PeliculaController extends Controller implements InterfaceController, InterfaceControllerExtend{
+final class UsuarioController extends Controller implements InterfaceController, InterfaceControllerExtend{
 
     public function __construct()
     {
@@ -22,8 +22,8 @@ final class PeliculaController extends Controller implements InterfaceController
 
     public function index():void{
 
-        $this->view = "pelicula/index.php";
-        $breadcrumbActual="Peliculas";
+        $this->view = "usuario/index.php";
+        $breadcrumbActual="Usuarios";
         $breadcrumbLink=APP_FRONT."inicio/index";
         $breadcrumbPasada="Menú Principal";
 
@@ -33,8 +33,8 @@ final class PeliculaController extends Controller implements InterfaceController
 
     public function view($id):void{
 
-        $this->view="pelicula/view.php";
-        $breadcrumbActual="Película";
+        $this->view="usuario/view.php";
+        $breadcrumbActual="Usuario";
         $breadcrumbLink=APP_FRONT."inicio/index";
         $breadcrumbPasada="Menú Principal";
         require_once APP_TEMPLATE."template.php";

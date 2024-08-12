@@ -5,9 +5,10 @@ use app\libs\request\Request;
 use app\libs\response\Response;
 use app\core\controller\base\Controller;
 use app\core\controller\base\InterfaceController;
+use app\core\controller\base\InterfaceControllerExtend;
 use app\core\service\FuncionService;
 
-final class FuncionController extends Controller implements InterfaceController{
+final class FuncionController extends Controller implements InterfaceController,InterfaceControllerExtend{
 
     public function __construct()
     {
@@ -22,7 +23,7 @@ final class FuncionController extends Controller implements InterfaceController{
     public function index():void{
 
         $this->view = "funcion/index.php";
-        $breadcrumbActual="Peliculas";
+        $breadcrumbActual="Funciones";
         $breadcrumbLink=APP_FRONT."inicio/index";
         $breadcrumbPasada="Menú Principal";
 
@@ -30,7 +31,7 @@ final class FuncionController extends Controller implements InterfaceController{
 
     }
 
-    public function view():void{
+    public function view($id):void{
 
         $this->view="funcion/view.php";
         $breadcrumbActual="Funciones";

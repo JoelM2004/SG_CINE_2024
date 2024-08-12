@@ -3,7 +3,12 @@
 
 <head>
 
-    <?php require_once "includes/head.php";
+    <?php
+
+use app\core\controller\base\Controller;
+use app\libs\autentication\Autentication;
+
+ require_once "includes/head.php";
 
         foreach ($this->scripts as $script) {
             echo '<script defer type="text/javascript" src="'.$script.'"></script>';
@@ -19,9 +24,14 @@
             <?php   
             // if(isset($_SESSION["token"])&& $_SESSION["token"]==APP_TOKEN){
 
-            require_once "includes/nav.php";
+            if (!str_contains($this->view, "autentication")) {
+                require_once "includes/nav.php";
             // require_once "includes/menu.php";
-            require_once "includes/bread_crumb.php";
+                require_once "includes/bread_crumb.php";
+            }
+            // require_once "includes/nav.php";
+            // // require_once "includes/menu.php";
+            // require_once "includes/bread_crumb.php";
 
             // }
 
@@ -37,7 +47,13 @@
         <footer>
             <?php
             // if(isset($_SESSION["token"])&& $_SESSION["token"]==APP_TOKEN){
-            require_once "includes/footer.php";
+
+            if (!str_contains($this->view, "autentication")) {
+                require_once "includes/footer.php";
+            }
+
+
+            
             // }
             ?>
         </footer>

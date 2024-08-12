@@ -23,6 +23,9 @@
             <a class="nav-link active" aria-current="page" href="<?= APP_FRONT . "inicio/index" ?>">Inicio </a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="<?= APP_FRONT . "usuario/view" ?>">Mi Cuenta</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="#cartelera">Cartelera-Programación</a>
           </li>
           <li class="nav-item">
@@ -51,18 +54,21 @@
                                                           
             </ul>-->
 
-            <li><a class="dropdown-item" href="#"> Gestionar Salas</a></li>
-            <li><a class="dropdown-item" href="#"> Gestionar Películas</a></li>
-            <li><a class="dropdown-item" href="#"> Gestionar Programaciones</a></li>
-            <li><a class="dropdown-item" href="#"> Gestionar Funciones</a></li>
-            <li><a class="dropdown-item" href="#"> Gestionar Entradas</a></li>
-            <li><a class="dropdown-item" href="#"> Gestionar Usuarios</a></li>
-          
+              <li><a class="dropdown-item" href="<?= APP_FRONT . "sala/index" ?>"> Gestionar Salas</a></li>
+              <li><a class="dropdown-item" href="<?= APP_FRONT . "pelicula/index" ?>"> Gestionar Películas</a></li>
+              <li><a class="dropdown-item" href="<?= APP_FRONT . "programacion/index" ?>"> Gestionar Programaciones</a></li>
+              <li><a class="dropdown-item" href="<?= APP_FRONT . "funcion/index" ?>"> Gestionar Funciones</a></li>
+              <li><a class="dropdown-item" href="<?= APP_FRONT . "entrada/index" ?>"> Gestionar Entradas</a></li>
+              <li><a class="dropdown-item" href="<?= APP_FRONT . "usuario/index" ?>"> Gestionar Usuarios</a></li>
+
           </li>
         </ul>
 
 
-        <button class="btn btn-success mt-3"> Iniciar Sesión o Registrarse</button>
+        <button class="btn btn-success mt-3" onclick="window.location.href='<?= APP_FRONT . 'autentication/index' ?>'">
+          Iniciar Sesión o Registrarse
+        </button>
+
         <button class="btn btn-danger mt-3 " onclick="window.location.href='autenticacion/logout'">Cerrar Sesión</button>
 
       </div>

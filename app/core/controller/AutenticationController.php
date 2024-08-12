@@ -7,24 +7,33 @@ use app\libs\autentication\Autentication;
 use app\libs\request\Request;
 use app\libs\response\Response;
 
-final class AutenticacionController extends Controller
+final class AutenticationController extends Controller
 {
 
     public function __construct()
     {
         parent::__construct([
-            "app/js/autentication/authController.js",
-             "app/js/autentication/authService.js"
+            // "app/js/autentication/authController.js",
+            //  "app/js/autentication/authService.js"
         ]);
     }
 
 
     public function index(): void
     {
-        $this->view = "autenticacion/index.php";
-        $titulo = "Bienvenido";
-        $breadcrumb = "Menú Principal";
+        $this->view = "autentication/index.php";
+        // $titulo = "Bienvenido";
+        // $breadcrumb = "Menú Principal";
         require_once APP_TEMPLATE . "template.php";
+    }
+
+    public function register():void{
+
+        $this->view = "autentication/register.php";
+        // $titulo = "Bienvenido";
+        // $breadcrumb = "Menú Principal";
+        require_once APP_TEMPLATE . "template.php";
+
     }
 
     public function login(Request $request, Response $response): void{

@@ -8,7 +8,7 @@ use app\core\controller\base\InterfaceController;
 use app\core\controller\base\InterfaceControllerExtend;
 use app\core\service\PeliculaService;
 
-final class PeliculaController extends Controller implements InterfaceController, InterfaceControllerExtend{
+final class SalaController extends Controller implements InterfaceController, InterfaceControllerExtend{
 
     public function __construct()
     {
@@ -17,13 +17,14 @@ final class PeliculaController extends Controller implements InterfaceController
             //  "app/js/usuario/usuarioService.js",
             //  "app/js/perfil/perfilService.js",
             //  "app/js/perfil/perfilController.js"
+            "assets/libs/js/viewSala.js"
         ]);
     }
 
     public function index():void{
 
-        $this->view = "pelicula/index.php";
-        $breadcrumbActual="Peliculas";
+        $this->view = "sala/index.php";
+        $breadcrumbActual="Salas";
         $breadcrumbLink=APP_FRONT."inicio/index";
         $breadcrumbPasada="Menú Principal";
 
@@ -33,11 +34,7 @@ final class PeliculaController extends Controller implements InterfaceController
 
     public function view($id):void{
 
-        $this->view="pelicula/view.php";
-        $breadcrumbActual="Película";
-        $breadcrumbLink=APP_FRONT."inicio/index";
-        $breadcrumbPasada="Menú Principal";
-        require_once APP_TEMPLATE."template.php";
+       
 
     }
 
@@ -54,7 +51,13 @@ final class PeliculaController extends Controller implements InterfaceController
     *@param int id parametro opcional que permite la conación del registro
      */
     public function create($id):void{
+        $this->view="sala/alta.php";
 
+        $breadcrumbActual="Salas";
+        $breadcrumbLink=APP_FRONT."sala/index";
+        $breadcrumbPasada="Inicio Sala";
+        
+        require_once APP_TEMPLATE."template.php";
 
     }
 
