@@ -36,6 +36,16 @@ final class AutenticationController extends Controller
 
     }
 
+    public function forgot():void{
+
+        $this->view = "autentication/forgot.php";
+        // $titulo = "Bienvenido";
+        // $breadcrumb = "Menú Principal";
+        require_once APP_TEMPLATE . "template.php";
+
+    }
+
+
     public function login(Request $request, Response $response): void{
         $data = $request->getData();
 
