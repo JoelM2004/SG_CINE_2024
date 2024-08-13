@@ -55,7 +55,7 @@ final class SalaController extends Controller implements InterfaceController, In
 
         $breadcrumbActual="Salas";
         $breadcrumbLink=APP_FRONT."sala/index";
-        $breadcrumbPasada="Inicio Sala";
+        $breadcrumbPasada="Inicio Salas";
         
         require_once APP_TEMPLATE."template.php";
 
@@ -69,7 +69,17 @@ final class SalaController extends Controller implements InterfaceController, In
     /*
     Invoca la vista corerspondiente para poder modificar los datos de una entidad existente
     */
-    public function edit($id):void{}
+    public function edit($id):void{
+        $this->view="sala/modificar.php";
+
+        $breadcrumbActual="Modificar Sala";
+        $breadcrumbLink=APP_FRONT."sala/create";
+        $breadcrumbPasada="Todas las Salas";
+        
+        require_once APP_TEMPLATE."template.php";
+
+
+    }
 
     /*
     Gestiona los servicios correspondientes apra la actualización de datos de una entidad existente

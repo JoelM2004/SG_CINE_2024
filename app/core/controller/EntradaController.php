@@ -56,6 +56,13 @@ final class EntradaController extends Controller implements InterfaceController,
     *@param int id parametro opcional que permite la conación del registro
      */
     public function create($id):void{
+        $this->view="entrada/alta.php";
+
+        $breadcrumbActual="Entradas";
+        $breadcrumbLink=APP_FRONT."entrada/index";
+        $breadcrumbPasada="Inicio Entradas";
+        
+        require_once APP_TEMPLATE."template.php";
 
 
     }
@@ -68,7 +75,17 @@ final class EntradaController extends Controller implements InterfaceController,
     /*
     Invoca la vista corerspondiente para poder modificar los datos de una entidad existente
     */
-    public function edit($id):void{}
+    public function edit($id):void{
+        $this->view="entrada/modificar.php";
+
+        $breadcrumbActual="Modificar Entrada";
+        $breadcrumbLink=APP_FRONT."entrada/create";
+        $breadcrumbPasada="Todas las Entradas";
+        
+        require_once APP_TEMPLATE."template.php";
+
+
+    }
 
     /*
     Gestiona los servicios correspondientes apra la actualización de datos de una entidad existente

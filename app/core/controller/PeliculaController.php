@@ -17,6 +17,7 @@ final class PeliculaController extends Controller implements InterfaceController
             //  "app/js/usuario/usuarioService.js",
             //  "app/js/perfil/perfilService.js",
             //  "app/js/perfil/perfilController.js"
+            "assets/libs/js/viewPelicula.js"
         ]);
     }
 
@@ -54,7 +55,13 @@ final class PeliculaController extends Controller implements InterfaceController
     *@param int id parametro opcional que permite la conación del registro
      */
     public function create($id):void{
+        $this->view="pelicula/alta.php";
 
+        $breadcrumbActual="Películas";
+        $breadcrumbLink=APP_FRONT."pelicula/index";
+        $breadcrumbPasada="Inicio Películas";
+        
+        require_once APP_TEMPLATE."template.php";
 
     }
 
@@ -66,7 +73,19 @@ final class PeliculaController extends Controller implements InterfaceController
     /*
     Invoca la vista corerspondiente para poder modificar los datos de una entidad existente
     */
-    public function edit($id):void{}
+    public function edit($id):void{
+
+
+        $this->view="pelicula/modificar.php";
+
+        $breadcrumbActual="Modificar Películas";
+        $breadcrumbLink=APP_FRONT."pelicula/create";
+        $breadcrumbPasada="Todas las Películas";
+        
+        require_once APP_TEMPLATE."template.php";
+
+
+    }
 
     /*
     Gestiona los servicios correspondientes apra la actualización de datos de una entidad existente

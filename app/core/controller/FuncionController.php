@@ -17,6 +17,7 @@ final class FuncionController extends Controller implements InterfaceController,
             //  "app/js/usuario/usuarioService.js",
             //  "app/js/perfil/perfilService.js",
             //  "app/js/perfil/perfilController.js"
+            "assets/libs/js/viewFuncion.js"
         ]);
     }
 
@@ -54,7 +55,13 @@ final class FuncionController extends Controller implements InterfaceController,
     *@param int id parametro opcional que permite la conación del registro
      */
     public function create($id):void{
+        $this->view="funcion/alta.php";
 
+        $breadcrumbActual="Funciones";
+        $breadcrumbLink=APP_FRONT."funcion/index";
+        $breadcrumbPasada="Inicio Funciones";
+        
+        require_once APP_TEMPLATE."template.php";
 
     }
 
@@ -66,7 +73,18 @@ final class FuncionController extends Controller implements InterfaceController,
     /*
     Invoca la vista corerspondiente para poder modificar los datos de una entidad existente
     */
-    public function edit($id):void{}
+    public function edit($id):void{
+
+        $this->view="funcion/modificar.php";
+
+        $breadcrumbActual="Modificar Función";
+        $breadcrumbLink=APP_FRONT."funcion/create";
+        $breadcrumbPasada="Todas las Funciones";
+        
+        require_once APP_TEMPLATE."template.php";
+
+
+    }
 
     /*
     Gestiona los servicios correspondientes apra la actualización de datos de una entidad existente

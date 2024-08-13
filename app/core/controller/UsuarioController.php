@@ -17,6 +17,7 @@ final class UsuarioController extends Controller implements InterfaceController,
             //  "app/js/usuario/usuarioService.js",
             //  "app/js/perfil/perfilService.js",
             //  "app/js/perfil/perfilController.js"
+            "assets/libs/js/viewUsuario.js"
         ]);
     }
 
@@ -54,7 +55,13 @@ final class UsuarioController extends Controller implements InterfaceController,
     *@param int id parametro opcional que permite la conación del registro
      */
     public function create($id):void{
+        $this->view="usuario/alta.php";
 
+        $breadcrumbActual="Usuarios";
+        $breadcrumbLink=APP_FRONT."usuario/index";
+        $breadcrumbPasada="Inicio Usuario";
+        
+        require_once APP_TEMPLATE."template.php";
 
     }
 
@@ -66,7 +73,17 @@ final class UsuarioController extends Controller implements InterfaceController,
     /*
     Invoca la vista corerspondiente para poder modificar los datos de una entidad existente
     */
-    public function edit($id):void{}
+    public function edit($id):void{
+        $this->view="usuario/modificar.php";
+
+        $breadcrumbActual="Modificar Usuario";
+        $breadcrumbLink=APP_FRONT."usuario/create";
+        $breadcrumbPasada="Todas los Usuarios";
+        
+        require_once APP_TEMPLATE."template.php";
+
+
+    }
 
     /*
     Gestiona los servicios correspondientes apra la actualización de datos de una entidad existente
