@@ -1,3 +1,4 @@
+# Negamos la indexación del directorio y los subdirectorios
 Options -Indexes
 
 RewriteEngine On

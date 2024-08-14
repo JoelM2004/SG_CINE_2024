@@ -27,6 +27,7 @@
                         <p><strong>Cuenta:</strong> usuario123</p>
                         <p><strong>Nombre:</strong> Juan</p>
                         <p><strong>Apellido:</strong> Pérez</p>
+                        <p><strong>Tipo de Usuario:</strong> Externo</p>
                         <p><strong>Correo:</strong> juan.perez@example.com</p>
                     </div>
                 </div>

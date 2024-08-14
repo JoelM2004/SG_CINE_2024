@@ -34,6 +34,12 @@ final class Response{
         $this->result = $result;
     }
 
+    public function getResult(){
+
+        return $this->result;
+
+    }
+
     public function send(): void{
         header("Content-Type: application/json; charset=utf-8");
         echo json_encode([

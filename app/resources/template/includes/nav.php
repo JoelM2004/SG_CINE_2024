@@ -60,6 +60,7 @@
               <li><a class="dropdown-item" href="<?= APP_FRONT . "funcion/index" ?>"> Gestionar Funciones</a></li>
               <li><a class="dropdown-item" href="<?= APP_FRONT . "entrada/index" ?>"> Gestionar Entradas</a></li>
               <li><a class="dropdown-item" href="<?= APP_FRONT . "usuario/index" ?>"> Gestionar Usuarios</a></li>
+              <li><a class="dropdown-item" href="<?= APP_FRONT . "perfil/index" ?>"> Gestionar Perfiles</a></li>
 
           </li>
         </ul>

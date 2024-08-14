@@ -33,6 +33,10 @@ final class Request{
         return $_SERVER["REQUEST_METHOD"];
     }
 
+    public function getParam(string $key) {
+        return $this->data[$key] ?? null;
+    }
+
     public function setController($controller): void{
         $this->controller = $controller;
     }

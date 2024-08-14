@@ -4,6 +4,7 @@ namespace app\core\model\base;
 
 use app\core\model\base\InterfaceDTO;
 
+
 interface InterfaceDAO{
 
     public function save(InterfaceDTO $object): void;
@@ -14,4 +15,5 @@ interface InterfaceDAO{
 
     public function delete($id): void;
 
+    public function list():array;
 }
