@@ -89,6 +89,25 @@ final class PerfilController extends Controller implements InterfaceController
         require_once APP_TEMPLATE."template.php";
     }
 
+    public function loadPerfil(Request $request, Response $response): void
+    { //listo
+        $service = new PerfilService();
+        $info = $service->load($request->getId());
+        $info=$info->toArray();
+        $response->setResult($info);
+        $response->setMessage("La cuenta se cargó correctamente");
+
+        $response->send();
+    }
+
+    public function listPerfil(Request $request, Response $response): void
+    {
+        $service = new PerfilService();
+        $response->setResult($service->list());
+        $response->setMessage("El perfil se listó correctamente");
+        $response->send();
+    }
+
 
     /*
     *Gestiona los servicios correspondientes, para el alta de una nueva entidad en el sistema

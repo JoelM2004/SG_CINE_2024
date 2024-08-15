@@ -1,37 +1,56 @@
+<?php
+
+use app\core\model\dao\PerfilDAO;
+use app\libs\connection\Connection;
+use app\core\model\dao\UsuarioDAO;
+
+$id = $_GET['id'];
+$conn = Connection::get();
+$dao = new UsuarioDAO($conn);
+$datos = $dao->load($id);
+
+$daoPerfil = new PerfilDAO($conn);
+$datosPerfiles = $daoPerfil->list();
+
+?>
 <div class="container-fluid row">
     <!-- Formulario de Edición de Usuario -->
-    <form id="formUsuario" class="col-lg-4 col-md-6 col-sm-12 p-3" autocomplete="off">
+    <form id="formUsuarioM" class="col-lg-4 col-md-6 col-sm-12 p-3" autocomplete="off">
         <h4 class="text-center text-secondary">Edición de Usuario</h4>
 
         <div class="mb-3">
-            <label for="cuentaUsuario" class="form-label">Cuenta</label>
-            <input type="text" class="form-control" id="cuentaUsuario" placeholder="Ingrese la cuenta del usuario">
+            <label for="cuentaUsuarioM" class="form-label">Cuenta</label>
+            <input value="<?= $datos->getCuenta() ?>" type="text" class="form-control" id="cuentaUsuarioM" placeholder="Ingrese la cuenta del usuario">
         </div>
 
         <div class="mb-3">
-            <label for="nombreUsuario" class="form-label">Nombre</label>
-            <input type="text" class="form-control" id="nombreUsuario" placeholder="Ingrese el nombre del usuario">
+            <label for="nombreUsuarioM" class="form-label">Nombre</label>
+            <input value="<?= $datos->getNombres() ?>" type="text" class="form-control" id="nombreUsuarioM" placeholder="Ingrese el nombre del usuario">
         </div>
 
         <div class="mb-3">
-            <label for="apellidoUsuario" class="form-label">Apellido</label>
-            <input type="text" class="form-control" id="apellidoUsuario" placeholder="Ingrese el apellido del usuario">
+            <label for="apellidoUsuarioM" class="form-label">Apellido</label>
+            <input value="<?= $datos->getApellido() ?>" type="text" class="form-control" id="apellidoUsuarioM" placeholder="Ingrese el apellido del usuario">
         </div>
 
         <div class="mb-3">
-            <label for="correoUsuario" class="form-label">Correo</label>
-            <input type="email" class="form-control" id="correoUsuario" placeholder="Ingrese el correo del usuario">
+            <label for="correoUsuarioM" class="form-label">Correo</label>
+            <input value="<?= $datos->getCorreo() ?>" type="email" class="form-control" id="correoUsuarioM" placeholder="Ingrese el correo del usuario">
         </div>
 
         <div class="mb-3">
-            <label for="tipoPerfilUsuario" class="form-label">Tipo de Perfil</label>
-            <select id="tipoPerfilUsuario" class="form-select">
-                <option value="admin">Administrador</option>
-                <option value="user">Usuario</option>
+            <label for="tipoPerfilUsuarioM" class="form-label">Tipo de Perfil</label>
+            <select id="tipoPerfilUsuarioM" class="form-select">
+                <?php
+                foreach ($datosPerfiles as $elemento) {
+                    $selected = $datos->getPerfilId() == $elemento['id'] ? 'selected' : '';
+                    echo '<option value="' . $elemento['id'] . '" ' . $selected . '>' . $elemento['nombre'] . '</option>';
+                }
+                ?>
             </select>
         </div>
 
-        <button type="button" id="btnGuardarUsuario" class="btn btn-primary w-100">Guardar Cambios</button>
+        <button type="button" id="btnModificarUsuario" class="btn btn-primary w-100">Guardar Cambios</button>
     </form>
 
     <!-- Tabla de Usuarios -->
@@ -51,7 +70,24 @@
                 </tr>
             </thead>
             <tbody id="tbodyUsuario">
-                <!-- Aquí se llenarán las filas con los usuarios desde la base de datos -->
+                <tr id="filaModificarUsuario" data-id=<?= $datos->getId() ?>>
+                    <th><?= 1 ?></th>
+                    <td><?= $datos->getCuenta() ?></td>
+                    <td><?= $datos->getNombres() ?></td>
+                    <td><?= $datos->getApellido() ?></td>
+                    <td><?= $datos->getCorreo() ?></td>
+                    <td>
+                        <?php
+                        $datosPerfil = $daoPerfil->load($datos->getPerfilId());
+                        echo $datosPerfil->getNombre()
+                        ?>
+                    </td>
+                    <td>
+                    <a id="btnEliminarUsuarios" href="<?= APP_FRONT . "usuario/create/0" ?>" class="btn btn-sm btn-danger">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>

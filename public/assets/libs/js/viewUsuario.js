@@ -1,4 +1,7 @@
-document.getElementById('filterType').addEventListener('change', function() {
+let config=document.getElementById('filterType');
+
+if(config!=null){
+config.addEventListener('change', function() {
     // Ocultar todos los filtros
     document.getElementById('filterCuenta').classList.add('d-none');
     document.getElementById('filterPerfil').classList.add('d-none');
@@ -11,4 +14,4 @@ document.getElementById('filterType').addEventListener('change', function() {
         document.getElementById('filterPerfil').classList.remove('d-none');
     }
 });
-
+}

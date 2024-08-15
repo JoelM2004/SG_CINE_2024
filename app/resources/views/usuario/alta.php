@@ -1,11 +1,28 @@
+<?php
+
+use app\core\model\dao\PerfilDAO;
+use app\core\model\dao\UsuarioDAO;
+use app\libs\connection\Connection;
+
+$conn = Connection::get();
+
+$daoPerfil = new PerfilDAO($conn);
+$datos = $daoPerfil->list();
+
+$daoUsuarios = new UsuarioDAO($conn);
+$datosUSU = $daoUsuarios->list();
+
+?>
+
+
 <div class="container-fluid row">
     <!-- Formulario de Alta de Usuario -->
     <form id="formUsuario" class="col-lg-4 col-md-6 col-sm-12 p-3" autocomplete="off">
         <h4 class="text-center text-secondary">Registro de Usuarios</h4>
 
         <div class="mb-3">
-            <label for="nombreCuenta" class="form-label">Nombre de Cuenta</label>
-            <input type="text" class="form-control" id="nombreCuenta" placeholder="Ingrese el nombre de cuenta">
+            <label for="cuentaUsuario" class="form-label">Nombre de Cuenta</label>
+            <input type="text" class="form-control" id="cuentaUsuario" placeholder="Ingrese el nombre de cuenta">
         </div>
 
         <div class="mb-3">
@@ -24,14 +41,29 @@
         </div>
 
         <div class="mb-3">
+            <label for="claveUsuario" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" id="claveUsuario" placeholder="Ingrese la contraseña    ">
+        </div>
+
+        <div class="mb-3">
             <label for="tipoPerfil" class="form-label">Tipo de Perfil</label>
             <select id="tipoPerfil" class="form-select">
-                <option value="admin">Administrador</option>
-                <option value="user">Usuario</option>
+
+                <?php
+                $txt = ''; // Inicializar $txt antes del bucle
+
+                foreach ($datos as $elemento) {
+                    $txt .= '<option value="' . $elemento['id'] . '">' . $elemento['nombre'] . '</option>';
+                }
+
+                echo $txt;
+                ?>
+
+
             </select>
         </div>
 
-        <button type="button" id="btnGuardarUsuario" class="btn btn-primary w-100">Registrar Usuario</button>
+        <button type="button" id="btnAltaUsuario" class="btn btn-primary w-100">Registrar Usuario</button>
     </form>
 
     <!-- Tabla de Usuarios -->
@@ -58,15 +90,21 @@
             <div class="mb-3 d-none" id="filterPerfil">
                 <label class="form-label">Tipo de Perfil</label>
                 <select class="form-select" id="filterTipoPerfil">
-                    <option value="">Todos</option>
-                    <option value="admin">Administrador</option>
-                    <option value="user">Usuario</option>
+                    <?php
+                $txt = ''; // Inicializar $txt antes del bucle
+
+                foreach ($datos as $elemento) {
+                    $txt .= '<option value="' . $elemento['id'] . '">' . $elemento['nombre'] . '</option>';
+                }
+                echo $txt;
+                ?>
                 </select>
             </div>
 
             <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary me-2">Buscar</button>
-                <button type="button" class="btn btn-success">PDF</button>
+                <button id="btnBuscarUsuario" type="button" class="btn btn-primary me-2">Buscar</button>
+                <button id="btnListarUsuario" type="button" class="btn btn-primary me-2">Listar</button>
+                <button id="btnImprimirUsuario" type="button" class="btn btn-success">PDF</button>
             </div>
         </form>
 
@@ -81,6 +119,9 @@
                     <th scope="col">Tipo de Perfil</th>
                     <th scope="col">Opciones</th>
                 </tr>
+
+                
+
             </thead>
             <tbody id="tbodyUsuario">
                 <!-- Aquí se llenarán las filas con los usuarios desde la base de datos -->

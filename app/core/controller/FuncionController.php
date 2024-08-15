@@ -17,7 +17,9 @@ final class FuncionController extends Controller implements InterfaceController,
             //  "app/js/usuario/usuarioService.js",
             //  "app/js/perfil/perfilService.js",
             //  "app/js/perfil/perfilController.js"
-            "assets/libs/js/viewFuncion.js"
+            "assets/libs/js/viewFuncion.js",
+            "app/js/singleton/singletonController.js",
+              "app/js/singleton/singletonService.js"
         ]);
     }
 

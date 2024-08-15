@@ -16,11 +16,11 @@ let singletonController = {
     return result;
   },
 
-  listAudio: () => {
+  listAudio:async () => {
     console.log("Listando audios...");
 
     let array = [];
-    singletonService
+    await singletonService
       .listAudio()
       .then((data) => {
         console.log("Audios listados:", data);
@@ -52,11 +52,11 @@ let singletonController = {
     return result;
   },
 
-  listIdioma: () => {
+  listIdioma:async () => {
     console.log("Listando idiomas...");
 
     let array = [];
-    singletonService
+    await singletonService
       .listIdioma()
       .then((data) => {
         console.log("idiomas listados:", data);
@@ -88,11 +88,11 @@ let singletonController = {
     return result;
   },
 
-  listGenero: () => {
+  listGenero:async () => {
     console.log("Listando géneros...");
 
     let array = [];
-    singletonService
+    await singletonService
       .listGenero()
       .then((data) => {
         console.log("géneros listados:", data);
@@ -124,11 +124,11 @@ let singletonController = {
     return result;
   },
 
-  listTipo: () => {
+  listTipo:async () => {
     console.log("Listando Tipos...");
 
     let array = [];
-    singletonService
+    await singletonService
       .listTipo()
       .then((data) => {
         console.log("Tipos listados:", data);
@@ -160,11 +160,11 @@ let singletonController = {
     return result;
   },
 
-  listPais: () => {
+  listPais:async () => {
     console.log("Listando Países...");
 
     let array = [];
-    singletonService
+    await singletonService
       .listPais()
       .then((data) => {
         console.log("Países listados:", data);
@@ -196,11 +196,11 @@ let singletonController = {
     return result;
   },
 
-  listCalificacion: () => {
+  listCalificacion:async () => {
     console.log("Listando Calificaciones...");
 
     let array = [];
-    singletonService
+    await singletonService
       .listCalificacion()
       .then((data) => {
         console.log("Calificaciones listadas:", data);
@@ -210,6 +210,43 @@ let singletonController = {
       })
       .catch((error) => {
         console.error("Error al listar Calificaciones:", error);
+      });
+
+    return array;
+  },
+
+  loadPerfil: (id) => {
+    let result;
+
+     singletonService
+      .loadPerfil(id)
+      .then((data) => {
+        console.log("Perfil listada:", data);
+
+        result = data.result;
+      })
+      .catch((error) => {
+        console.error("Error al listar Perfil:", error);
+      });
+
+    return result;
+  },
+
+  listPerfil: async () => {
+    console.log("Listando Perfiles...");
+
+    let array = [];
+    
+    await singletonService
+      .listPerfil()
+      .then((data) => {
+        console.log("Perfiles listadas:", data);
+        data.result.forEach((element) => {
+          array.push(element);
+        });
+      })
+      .catch((error) => {
+        console.error("Error al listar Perfiles:", error);
       });
 
     return array;
