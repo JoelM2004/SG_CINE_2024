@@ -21,7 +21,7 @@
             </select>
         </div>
 
-        <button type="button" id="btnGuardarProgramacion" class="btn btn-primary w-100">Registrar Programación</button>
+        <button type="button" id="btnAltaProgramacion" class="btn btn-primary w-100">Registrar Programación</button>
     </form>
 
     <!-- Tabla de Programación -->
@@ -39,8 +39,10 @@
             </div>
 
             <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary me-2">Buscar</button>
-                <button type="button" class="btn btn-success">PDF</button>
+                <button id="btnBuscarProgramacion" type="button" class="btn btn-primary me-2">Buscar</button>
+                <button id="btnListarProgramacion" type="button" class="btn btn-primary me-2">Listar</button>
+                <button id="btnPDFProgramacion" type="button" class="btn btn-success">PDF</button>
+                
             </div>
         </form>
 

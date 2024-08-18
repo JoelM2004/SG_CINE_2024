@@ -5,7 +5,7 @@
 
         <div class="mb-3">
             <label for="numeroSala" class="form-label">Número de Sala</label>
-            <input type="text" class="form-control" id="numeroSala" placeholder="Ingrese el número de sala">
+            <input type="number" class="form-control" id="numeroSala" placeholder="Ingrese el número de sala">
         </div>
 
         <div class="mb-3">
@@ -21,7 +21,7 @@
             </select>
         </div>
 
-        <button type="button" id="btnGuardarSala" class="btn btn-primary w-100">Cargar Sala</button>
+        <button type="button" id="btnAltaSala" class="btn btn-primary w-100">Cargar Sala</button>
     </form>
 
     <!-- Tabla de Salas -->
@@ -49,7 +49,6 @@
             <div class="mb-3 d-none" id="filterEstado">
                 <label class="form-label">Estado</label>
                 <select class="form-select" id="filterEstadoSelect">
-                    <option value="">Todos</option>
                     <option value="1">Habilitada</option>
                     <option value="0">Deshabilitada</option>
                 </select>
@@ -64,8 +63,9 @@
             </div>
 
             <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary me-2">Buscar</button>
-                <button type="button" class="btn btn-success">PDF</button>
+                <button id="btnBuscarSala" type="button" class="btn btn-primary me-2">Buscar</button>
+                <button id="btnListarSala" type="button" class="btn btn-primary me-2">Listar</button>
+                <button id="btnPDFSala" type="button" class="btn btn-success">PDF</button>
             </div>
         </form>
 

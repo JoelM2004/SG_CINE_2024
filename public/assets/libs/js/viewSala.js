@@ -1,3 +1,4 @@
+if(document.getElementById('filterType')!=null){
 document.getElementById('filterType').addEventListener('change', function() {
     // Ocultar todos los filtros
     document.getElementById('filterNumero').classList.add('d-none');
@@ -13,4 +14,4 @@ document.getElementById('filterType').addEventListener('change', function() {
     } else if (selectedFilter === 'capacidad') {
         document.getElementById('filterCapacidad').classList.remove('d-none');
     }
-});
+})}

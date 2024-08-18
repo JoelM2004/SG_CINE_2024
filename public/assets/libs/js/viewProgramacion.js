@@ -1,4 +1,6 @@
-ocument.getElementById('filterForm').addEventListener('submit', function(e) {
+
+if(document.getElementById('filterForm')!=null){
+document.getElementById('filterForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
     const vigenteFilter = document.getElementById('filterVigente').value;
@@ -7,3 +9,4 @@ ocument.getElementById('filterForm').addEventListener('submit', function(e) {
     // Por ejemplo:
     // Filtrar las programaciones donde el campo 'vigente' es igual a 'vigenteFilter'
 });
+}
