@@ -74,4 +74,20 @@ let singletonService = {
   loadPerfil: (id) => {
     return singletonService.fetchData(`perfil/loadPerfil/${id}`);
   },
+
+  listFuncion: () => {
+    return singletonService.fetchData("funcion/list");
+  },
+
+  loadCFuncion: (id) => {
+    return singletonService.fetchData(`funcion/load/${id}`);
+  },
+
+  listUsuario: () => {
+    return singletonService.fetchData("usuario/list");
+  },
+
+  loadUsuario: (id) => {
+    return singletonService.fetchData(`usuario/load/${id}`);
+  },
 };

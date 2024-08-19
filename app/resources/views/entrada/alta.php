@@ -14,12 +14,12 @@
         <!-- Filtros específicos -->
         <div class="mb-3 d-none" id="filterTicket">
             <label class="form-label">Número de Ticket</label>
-            <input type="text" class="form-control" id="filterNumeroTicket" placeholder="Número de Ticket">
+            <input type="number" class="form-control" id="filterNumeroTicket" placeholder="Número de Ticket">
         </div>
 
         <div class="mb-3 d-none" id="filterFuncion">
             <label class="form-label">Número de Función</label>
-            <input type="text" class="form-control" id="filterNumeroFuncion" placeholder="Número de Función">
+            <input type="number" class="form-control" id="filterNumeroFuncion" placeholder="Número de Función">
         </div>
 
         <div class="mb-3 d-none" id="filterCuenta">
@@ -28,8 +28,9 @@
         </div>
 
         <div class="d-flex justify-content-end">
-            <button type="submit" class="btn btn-primary me-2">Buscar</button>
-            <button type="button" class="btn btn-success">PDF</button>
+            <button id="btnBuscarEntrada" type="button" class="btn btn-primary me-2">Buscar</button>
+            <button id="btnListarEntrada" type="button" class="btn btn-primary me-2">Listar</button>
+            <button id="btnPDFEntrada" type="button" class="btn btn-success">PDF</button>
         </div>
     </form>
 

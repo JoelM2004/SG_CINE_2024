@@ -26,7 +26,7 @@
             <div class="col-md-12 text-center">
                 <h4>Información de Contacto</h4>
                 <p class="contact-info">
-                    <strong>Dirección:</strong> Calle del Cine, 123, Ciudad, País<br>
+                    <strong>Dirección:</strong> 9809 Margo Street<br>
                     <strong>Teléfono:</strong> +123 456 7890<br>
                     <strong>Email:</strong> contacto@cinepolloshermanos.com<br>
                     <strong>Horario:</strong> Lunes a Domingo, 10:00 - 22:00

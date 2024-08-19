@@ -77,7 +77,8 @@ if (document.getElementById("filterType") != null) {
     }
   });
 } else {
-    
+    if( document
+      .getElementById("btnToggleEntrada")!=null){
   document
     .getElementById("btnToggleEntrada")
     .addEventListener("click", function () {
@@ -91,5 +92,6 @@ if (document.getElementById("filterType") != null) {
           // Aquí se puede hacer una llamada para actualizar el estado a 0 (desactivado)
         }
       }
-    });
+    })
+  };
 }

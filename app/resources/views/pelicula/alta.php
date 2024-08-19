@@ -1,3 +1,36 @@
+<?php
+
+use app\core\model\dao\TipoDAO;
+use app\core\model\dao\CalificacionDAO;
+use app\core\model\dao\AudioDAO;
+use app\core\model\dao\PaisDAO;
+use app\core\model\dao\IdiomaDAO;
+use app\core\model\dao\GeneroDAO;
+
+use app\libs\connection\Connection;
+
+$conn = Connection::get();
+
+$daoTipo = new TipoDAO($conn);
+$datosTipo = $daoTipo->list();
+
+$daoCalificacion = new CalificacionDAO($conn);
+$datosCalificacion = $daoCalificacion->list();
+
+$daoAudio = new AudioDAO($conn);
+$datosAudio = $daoAudio->list();
+
+$daoPais = new PaisDAO($conn);
+$datosPais = $daoPais->list();
+
+$daoGenero = new GeneroDAO($conn);
+$datosGenero = $daoGenero->list();
+
+$daoIdioma = new IdiomaDAO($conn);
+$datosIdioma = $daoIdioma->list();
+?>
+
+
 <div class="container-fluid row">
     <!-- Formulario de Gestión de Películas -->
     <form id="formPelicula" class="col-lg-4 col-md-6 col-sm-12 p-3" autocomplete="off">
@@ -25,7 +58,10 @@
 
         <div class="mb-3">
             <label for="disponibilidad" class="form-label">Disponibilidad</label>
-            <input type="text" class="form-control" id="disponibilidad">
+            <select class="form-select" id="disponibilidad">
+                <option value="1">Habilitada</option>
+                <option value="0">Deshabilitada</option>
+            </select>
         </div>
 
         <div class="mb-3">
@@ -45,48 +81,96 @@
 
         <div class="mb-3">
             <label for="actores" class="form-label">Actores</label>
-            <input type="text" class="form-control" id="actores">
+            <textarea class="form-control" id="actores" rows="3"></textarea>
         </div>
 
         <div class="mb-3">
             <label for="genero" class="form-label">Género</label>
             <select class="form-select" id="genero">
-                <!-- Opciones de género aquí -->
+            <?php
+                $txt = ''; // Inicializar $txt antes del bucle
+
+                foreach ($datosGenero as $elemento) {
+                    $txt .= '<option value="' . $elemento['id'] . '">' . $elemento['nombre'] . '</option>';
+                }
+
+                echo $txt;
+                ?>
             </select>
         </div>
 
         <div class="mb-3">
             <label for="pais" class="form-label">País</label>
             <select class="form-select" id="pais">
-                <!-- Opciones de país aquí -->
+            <?php
+                $txt = ''; // Inicializar $txt antes del bucle
+
+                foreach ($datosPais as $elemento) {
+                    $txt .= '<option value="' . $elemento['id'] . '">' . $elemento['nombre'] . '</option>';
+                }
+
+                echo $txt;
+                ?>
             </select>
         </div>
 
         <div class="mb-3">
             <label for="idioma" class="form-label">Idioma</label>
             <select class="form-select" id="idioma">
-                <!-- Opciones de idioma aquí -->
+            <?php
+                $txt = ''; // Inicializar $txt antes del bucle
+
+                foreach ($datosIdioma as $elemento) {
+                    $txt .= '<option value="' . $elemento['id'] . '">' . $elemento['nombre'] . '</option>';
+                }
+
+                echo $txt;
+                ?>
             </select>
         </div>
 
         <div class="mb-3">
             <label for="calificacion" class="form-label">Calificación</label>
             <select class="form-select" id="calificacion">
-                <!-- Opciones de calificación aquí -->
+            <?php
+                $txt = ''; // Inicializar $txt antes del bucle
+
+                foreach ($datosCalificacion as $elemento) {
+                    $txt .= '<option value="' . $elemento['id'] . '">' . $elemento['nombre'] . '</option>';
+                }
+
+                echo $txt;
+                ?>
             </select>
         </div>
 
         <div class="mb-3">
             <label for="tipo" class="form-label">Tipo</label>
             <select class="form-select" id="tipo">
-                <!-- Opciones de tipo aquí -->
+            <?php
+                $txt = ''; // Inicializar $txt antes del bucle
+
+                foreach ($datosTipo as $elemento) {
+                    $txt .= '<option value="' . $elemento['id'] . '">' . $elemento['nombre'] . '</option>';
+                }
+
+                echo $txt;
+                ?>
             </select>
         </div>
 
         <div class="mb-3">
             <label for="audio" class="form-label">Audio</label>
             <select class="form-select" id="audio">
-                <!-- Opciones de audio aquí -->
+            <?php
+                $txt = ''; // Inicializar $txt antes del bucle
+
+                foreach ($datosAudio as $elemento) {
+                    $txt .= '<option value="' . $elemento['id'] . '">' . $elemento['nombre'] . '</option>';
+                }
+
+                echo $txt;
+                ?>
             </select>
         </div>
 
@@ -105,7 +189,7 @@
             <input type="file" class="form-control" id="imagen3" accept="image/*">
         </div>
 
-        <button type="button" id="btnGuardarPelicula" class="btn btn-primary w-100">Guardar Película</button>
+        <button type="button" id="btnAltaPelicula" class="btn btn-primary w-100">Guardar Película</button>
     </form>
 
     <!-- Tabla de Películas -->
@@ -130,28 +214,60 @@
             <div class="mb-3 d-none" id="filterGenero">
                 <label class="form-label">Género</label>
                 <select class="form-select" id="filterGeneroInput">
-                    <!-- Opciones de género aquí -->
+                <?php
+                $txt = ''; // Inicializar $txt antes del bucle
+
+                foreach ($datosGenero as $elemento) {
+                    $txt .= '<option value="' . $elemento['id'] . '">' . $elemento['nombre'] . '</option>';
+                }
+
+                echo $txt;
+                ?>
                 </select>
             </div>
 
             <div class="mb-3 d-none" id="filterPais">
                 <label class="form-label">País</label>
                 <select class="form-select" id="filterPaisInput">
-                    <!-- Opciones de país aquí -->
+                <?php
+                $txt = ''; 
+
+                foreach ($datosPais as $elemento) {
+                    $txt .= '<option value="' . $elemento['id'] . '">' . $elemento['nombre'] . '</option>';
+                }
+
+                echo $txt;
+                ?>
                 </select>
             </div>
 
             <div class="mb-3 d-none" id="filterIdioma">
                 <label class="form-label">Idioma</label>
                 <select class="form-select" id="filterIdiomaInput">
-                    <!-- Opciones de idioma aquí -->
+                <?php
+                $txt = ''; 
+
+                foreach ($datosIdioma as $elemento) {
+                    $txt .= '<option value="' . $elemento['id'] . '">' . $elemento['nombre'] . '</option>';
+                }
+
+                echo $txt;
+                ?>
                 </select>
             </div>
 
             <div class="mb-3 d-none" id="filterCalificacion">
                 <label class="form-label">Calificación</label>
                 <select class="form-select" id="filterCalificacionInput">
-                    <!-- Opciones de calificación aquí -->
+                <?php
+                $txt = '';  
+
+                foreach ($datosCalificacion as $elemento) {
+                    $txt .= '<option value="' . $elemento['id'] . '">' . $elemento['nombre'] . '</option>';
+                }
+
+                echo $txt;
+                ?>
                 </select>
             </div>
 
@@ -161,8 +277,9 @@
             </div>
 
             <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary me-2">Buscar</button>
-                <button type="button" class="btn btn-success">PDF</button>
+                <button id="btnBuscarPelicula" type="button" class="btn btn-primary me-2">Buscar</button>
+                <button id="btnListarPelicula" type="button" class="btn btn-primary me-2">Listar</button>
+                <button id="btnPDFPelicula" type="button" class="btn btn-success">PDF</button>
             </div>
         </form>
 
@@ -171,14 +288,14 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Nombre</th>
-                    <th scope="col">Título Original</th>
+                    <!-- <th scope="col">Título Original</th> -->
                     <th scope="col">Duración</th>
                     <th scope="col">Año de Estreno</th>
                     <th scope="col">Disponibilidad</th>
                     <th scope="col">Fecha de Ingreso</th>
-                    <th scope="col">Sitio Web</th>
-                    <th scope="col">Sinopsis</th>
-                    <th scope="col">Actores</th>
+                    <!-- <th scope="col">Sitio Web</th> -->
+                    <!-- <th scope="col">Sinopsis</th> -->
+                    <!-- <th scope="col">Actores</th> -->
                     <th scope="col">Género</th>
                     <th scope="col">País</th>
                     <th scope="col">Idioma</th>

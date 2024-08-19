@@ -25,7 +25,7 @@
             <div class="d-flex justify-content-end">
                 <button type="button" id="btnBuscarPerfil" class="btn btn-primary me-2">Buscar</button>
                 <button type="button" id="btnListarPerfil" class="btn btn-primary me-2">Listar</button>
-                <button type="button" class="btn btn-success">PDF</button>
+                <button type="button" id="btnPDFPerfil" class="btn btn-success">PDF</button>
             </div>
         </form>
 

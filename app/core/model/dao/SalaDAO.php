@@ -132,20 +132,30 @@ final class SalaDAO extends DAO implements InterfaceDAO
     }
 
     private function validate(SalaDTO $object): void
-    {
-        // Lista de métodos a verificar
-        $atributos = [
-            'getCapacidad',
-            'getEstado',
-            'getNumeroSala'
-        ];
+{
+    // Lista de métodos a verificar y sus mensajes de error
+    $atributos = [
+        'getCapacidad' => 'Capacidad',
+        'getEstado' => 'Estado',
+        'getNumeroSala' => 'Número de Sala'
+    ];
 
-        foreach ($atributos as $atributo) {
-            if (method_exists($object, $atributo) && $object->{$atributo}() === "") {
-                throw new \Exception("El dato de la sala es obligatorio: " . $atributo);
+    foreach ($atributos as $metodo => $nombre) {
+        if (method_exists($object, $metodo)) {
+            $valor = $object->{$metodo}();
+
+            // Validar que el valor no esté vacío y sea entero
+            if (!is_int($valor) || $valor < 0) {
+                throw new \Exception("El valor de {$nombre} debe ser un número entero positivo.");
+            }
+
+            // Validar que 'estado' solo pueda ser 0 o 1
+            if ($metodo === 'getEstado' && !in_array($valor, [0, 1], true)) {
+                throw new \Exception("El valor de {$nombre} debe ser 0 o 1.");
             }
         }
     }
+}
 
     private function validateNumeroSala(SalaDTO $object): void
     {

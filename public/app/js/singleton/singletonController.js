@@ -251,4 +251,45 @@ let singletonController = {
 
     return array;
   },
+
+
+  listFuncion: async () => {
+    console.log("Listando Funciones...");
+
+    let array = [];
+    
+    await singletonService
+      .listFuncion()
+      .then((data) => {
+        console.log("Funciones listadas:", data);
+        data.result.forEach((element) => {
+          array.push(element);
+        });
+      })
+      .catch((error) => {
+        console.error("Error al listar funciones:", error);
+      });
+
+    return array;
+  },
+
+  listUsuario: async () => {
+    console.log("Listando Usuarios...");
+
+    let array = [];
+    
+    await singletonService
+      .listUsuario()
+      .then((data) => {
+        console.log("Usuarios listadas:", data);
+        data.result.forEach((element) => {
+          array.push(element);
+        });
+      })
+      .catch((error) => {
+        console.error("Error al listar Usuarios:", error);
+      });
+
+    return array;
+  },
 };
