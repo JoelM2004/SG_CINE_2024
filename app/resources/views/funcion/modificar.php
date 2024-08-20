@@ -15,7 +15,7 @@
 
         <div class="mb-3">
             <label for="duracion" class="form-label">Duración</label>
-            <input type="text" class="form-control" id="duracion" value="2h" readonly>
+            <input type="text" class="form-control" id="duracion">
         </div>
 
         <div class="mb-3">

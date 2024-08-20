@@ -1,4 +1,4 @@
-document.getElementById('filterType').addEventListener('change', function() {
+if(document.getElementById('filterType')!=null){document.getElementById('filterType').addEventListener('change', function() {
     // Ocultar todos los filtros
     document.getElementById('filterNumeroSala').classList.add('d-none');
     document.getElementById('filterNombrePelicula').classList.add('d-none');
@@ -16,8 +16,9 @@ document.getElementById('filterType').addEventListener('change', function() {
     } else if (selectedFilter === 'fechaProgramacion') {
         document.getElementById('filterFechaProgramacion').classList.remove('d-none');
     }
-});
+});}
 
+if(document.getElementById('filterForm')!=null){
 document.getElementById('filterForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const filterType = document.getElementById('filterType').value;
@@ -38,4 +39,4 @@ document.getElementById('filterForm').addEventListener('submit', function(e) {
     }
 
     // Aquí puedes agregar la lógica para realizar el filtrado en la tabla
-});
+});}

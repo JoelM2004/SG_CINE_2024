@@ -73,9 +73,7 @@ let peliculaController = {
       peliculaController.data.paisId = parseInt(form.pais.value);
       peliculaController.data.generoId = parseInt(form.genero.value);
       peliculaController.data.idiomaId = parseInt(form.idioma.value);
-      peliculaController.data.calificacionId = parseInt(
-        form.calificacion.value
-      );
+      peliculaController.data.calificacionId = parseInt(form.calificacion.value);
       peliculaController.data.tipoId = parseInt(form.tipo.value);
       peliculaController.data.audioId = parseInt(form.audio.value);
 
@@ -97,10 +95,94 @@ let peliculaController = {
           console.error("Error en la Petición ", error);
           alert("Ocurrió un error al guardar el user");
         });
-    
     }
   },
 
+  update: () => {
+    if (confirm("¿Seguro que lo quieres actualizar?")) {
+      let form = document.forms["formPeliculaM"];
+      peliculaController.data.id = document.getElementById(
+        "borrarPelicula"
+      ).dataset.id;
+      peliculaController.data.nombre = form.nombre.value;
+      peliculaController.data.tituloOriginal = form.tituloOriginal.value;
+      peliculaController.data.id = parseInt(peliculaController.data.id);
+      peliculaController.data.duracion = parseInt(form.duracion.value);
+      peliculaController.data.anoEstreno = parseInt(form.anioEstreno.value);
+      peliculaController.data.fechaIngreso = form.fechaIngreso.value;
+      peliculaController.data.sitioWebOficial = form.sitioWeb.value;
+      peliculaController.data.sinopsis = form.sinopsis.value;
+      peliculaController.data.actores = form.actores.value;
+      peliculaController.data.paisId = parseInt(form.pais.value);
+      peliculaController.data.generoId = parseInt(form.genero.value);
+      peliculaController.data.idiomaId = parseInt(form.idioma.value);
+      peliculaController.data.calificacionId = parseInt(form.calificacion.value);
+      peliculaController.data.tipoId = parseInt(form.tipo.value);
+      peliculaController.data.audioId = parseInt(form.audio.value);
+
+      if (form.nombre.value.length > 255) {
+        alert("Superaste el límite de caracteres en el nombre.");
+      } else {
+        peliculaController.data.nombre = form.nombre.value;
+      }
+
+      if (form.tituloOriginal.value.length > 255) {
+        alert("Superaste el límite de caracteres en el título original.");
+      } else {
+        peliculaController.data.tituloOriginal = form.tituloOriginal.value;
+      }
+
+      if (form.duracion.value <= 0) {
+        alert("La duración debe ser mayor a 0.");
+      } else {
+        peliculaController.data.duracion = parseInt(form.duracion.value);
+      }
+
+      if (form.sinopsis.value.length > 255) {
+        alert("Superaste el límite de caracteres para la sinopsis");
+      } else {
+        peliculaController.data.sinopsis = form.sinopsis.value;
+      }
+
+      if (form.actores.value.length > 255) {
+        alert("Superaste el límite de caracteres para los actores.");
+      } else {
+        peliculaController.data.actores = form.actores.value;
+      }
+
+      if (form.sitioWeb.value.length > 255) {
+        alert("Superaste el límite de caracteres para los actores.");
+      } else {
+        peliculaController.data.sitioWebOficial = form.sitioWeb.value;
+      }
+
+      if (form.anioEstreno.value.length != 4) {
+        alert("El año de estreno debe tener 4 dígitos.");
+      } else {
+        peliculaController.data.anoEstreno = parseInt(form.anioEstreno.value);
+      }
+
+      peliculaService
+        .update(peliculaController.data)
+        .then((data) => {
+          console.log("Actualizando Datos");
+          // Aquí puedes manejar la respuesta
+          if (data.error !== "") {
+            alert("Error al actualizar el película: " + data.error);
+          } else {
+            alert("película actualizada con éxito");
+            setTimeout(() => {
+              location.reload();
+            }, 300);
+          }
+        })
+        .catch((error) => {
+          console.error("Error en la Petición ", error);
+          alert("Ocurrió un error al actualizar la película");
+        });
+    }
+  },
+ 
   print: () => {
     const $elementoParaConvertir = document.getElementById("tablaPelicula"); // <-- Aquí puedes elegir cualquier elemento del DOM
 
@@ -182,8 +264,7 @@ let peliculaController = {
         window.open(blobUrl, "_blank");
       })
       .catch((err) => console.log(err));
-  }
-,
+  },
   list: async () => {
     console.log("Listando Películas...");
 
@@ -192,8 +273,13 @@ let peliculaController = {
     generos = await singletonController.listGenero();
     calificaciones = await singletonController.listCalificacion();
     idiomas = await singletonController.listIdioma();
-    paises=await singletonController.listPais();
-    
+    paises = await singletonController.listPais();
+
+    const formatDate = (dateString) => {
+      const [year, month, day] = dateString.split("-");
+      return `${day}/${month}/${year}`;
+    };
+
     index = 0;
     await peliculaService
       .list()
@@ -206,41 +292,48 @@ let peliculaController = {
         data.result.forEach((element) => {
           txt += "<tr>";
           txt += "<th>" + (index = index + 1) + "</th>";
-          txt += "<td>" + element.nombre     + "</td>";
-          txt += "<td>" + element.duracion     + "</td>";
+          txt += "<td>" + element.nombre + "</td>";
+          txt += "<td>" + element.duracion + "</td>";
           txt += "<td>" + element.anoEstreno + "</td>";
 
           if (element.disponibilidad === 1) {
-            txt += "<td> <i class='fas fa-circle text-success' title='Activo'></i> </td>";
-        } else {
-            txt += "<td> <i class='fas fa-circle text-danger' title='Desactivado'></i> </td>";
-        }
+            txt +=
+              "<td> <i class='fas fa-circle text-success' title='Activo'></i> </td>";
+          } else {
+            txt +=
+              "<td> <i class='fas fa-circle text-danger' title='Desactivado'></i> </td>";
+          }
 
-          txt += "<td>" + element.fechaIngreso + "</td>";
-
+          txt += "<td>" + formatDate(element.fechaIngreso) + "</td>";
 
           generos.forEach((elemento) => {
-            if (elemento.id == element.generoId) txt+= "<td>"+elemento.nombre+"</td>";
+            if (elemento.id == element.generoId)
+              txt += "<td>" + elemento.nombre + "</td>";
           });
 
           paises.forEach((elemento) => {
-            if (elemento.id == element.paisId) txt+= "<td>"+elemento.nombre+"</td>";
+            if (elemento.id == element.paisId)
+              txt += "<td>" + elemento.nombre + "</td>";
           });
-          
+
           idiomas.forEach((elemento) => {
-            if (elemento.id == element.idiomaId) txt+= "<td>"+elemento.nombre+"</td>";
+            if (elemento.id == element.idiomaId)
+              txt += "<td>" + elemento.nombre + "</td>";
           });
 
           calificaciones.forEach((elemento) => {
-            if (elemento.id == element.calificacionId) txt+= "<td>"+elemento.nombre+"</td>";
+            if (elemento.id == element.calificacionId)
+              txt += "<td>" + elemento.nombre + "</td>";
           });
 
           tipos.forEach((elemento) => {
-            if (elemento.id == element.tipoId) txt+= "<td>"+elemento.nombre+"</td>";
+            if (elemento.id == element.tipoId)
+              txt += "<td>" + elemento.nombre + "</td>";
           });
 
           audios.forEach((elemento) => {
-            if (elemento.id == element.audioId) txt+= "<td>"+elemento.nombre+"</td>";
+            if (elemento.id == element.audioId)
+              txt += "<td>" + elemento.nombre + "</td>";
           });
 
           txt +=
@@ -255,27 +348,500 @@ let peliculaController = {
       .catch((error) => {
         console.error("Error al listar Usuarios:", error);
       });
-  }
+  },
+  delete: () => {
+    if (confirm("¿Quiere eliminar la película?")) {
+      peliculaController.data.id = document.getElementById(
+        "borrarPelicula"
+      ).dataset.id;
 
-};
-
-document.addEventListener("DOMContentLoaded",()=>{
-
-    let btnBuscarPelicula=document.getElementById("btnBuscarPelicula");
-    let btnListarPelicula=document.getElementById("btnListarPelicula");
-    let btnPDFPelicula=document.getElementById("btnPDFPelicula");
-    let btnAltaPelicula=document.getElementById("btnAltaPelicula");
-
-
-    if(btnAltaPelicula!=null){
-        peliculaController.list();
-        btnAltaPelicula.onclick=peliculaController.save
-        btnPDFPelicula.onclick=peliculaController.print
-        btnListarPelicula.onclick=peliculaController.list
-
+      peliculaService
+        .delete(peliculaController.data)
+        .then((data) => {
+          alert(data.mensaje); // Muestra el mensaje del servidor al usuario
+        })
+        .catch((error) => {
+          console.error("Error al eliminar la película:", error);
+          alert(
+            "Hubo un problema al eliminar la película. Por favor, inténtelo de nuevo más tarde." +
+              error
+          );
+        });
     }
+  },
+
+  loadByGenero: async () => {
+    console.log("Listando Películas...");
+
+    tipos = await singletonController.listTipo();
+    audios = await singletonController.listAudio();
+    generos = await singletonController.listGenero();
+    calificaciones = await singletonController.listCalificacion();
+    idiomas = await singletonController.listIdioma();
+    paises = await singletonController.listPais();
+
+    const formatDate = (dateString) => {
+      const [year, month, day] = dateString.split("-");
+      return `${day}/${month}/${year}`;
+    };
+
+    index = 0;
+    await peliculaService
+      .loadByGenero(document.getElementById("filterGeneroInput").value)
+      .then((data) => {
+        console.log("Películas listados:", data);
+        let tabla = document.getElementById("tbodyPelicula");
+        let txt = "";
+
+        // Obtener la lista de perfiles
+        data.result.forEach((element) => {
+          txt += "<tr>";
+          txt += "<th>" + (index = index + 1) + "</th>";
+          txt += "<td>" + element.nombre + "</td>";
+          txt += "<td>" + element.duracion + "</td>";
+          txt += "<td>" + element.anoEstreno + "</td>";
+
+          if (element.disponibilidad === 1) {
+            txt +=
+              "<td> <i class='fas fa-circle text-success' title='Activo'></i> </td>";
+          } else {
+            txt +=
+              "<td> <i class='fas fa-circle text-danger' title='Desactivado'></i> </td>";
+          }
+
+          txt += "<td>" + formatDate(element.fechaIngreso) + "</td>";
+
+          generos.forEach((elemento) => {
+            if (elemento.id == element.generoId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          paises.forEach((elemento) => {
+            if (elemento.id == element.paisId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          idiomas.forEach((elemento) => {
+            if (elemento.id == element.idiomaId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          calificaciones.forEach((elemento) => {
+            if (elemento.id == element.calificacionId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          tipos.forEach((elemento) => {
+            if (elemento.id == element.tipoId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          audios.forEach((elemento) => {
+            if (elemento.id == element.audioId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          txt +=
+            '<td><a href="http://localhost/SG_CINE_2024/public/pelicula/edit/' +
+            element.id +
+            '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
+          txt += "</tr>";
+        });
+
+        tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
+      })
+      .catch((error) => {
+        console.error("Error al listar Usuarios:", error);
+      })
+  },
+
+  loadByPais: async () => {
+    console.log("Listando Películas...");
+
+    tipos = await singletonController.listTipo();
+    audios = await singletonController.listAudio();
+    generos = await singletonController.listGenero();
+    calificaciones = await singletonController.listCalificacion();
+    idiomas = await singletonController.listIdioma();
+    paises = await singletonController.listPais();
+
+    const formatDate = (dateString) => {
+      const [year, month, day] = dateString.split("-");
+      return `${day}/${month}/${year}`;
+    };
+
+    index = 0;
+    await peliculaService
+      .loadByPais(document.getElementById("filterPaisInput").value)
+      .then((data) => {
+        console.log("Películas listados:", data);
+        let tabla = document.getElementById("tbodyPelicula");
+        let txt = "";
+
+        // Obtener la lista de perfiles
+        data.result.forEach((element) => {
+          txt += "<tr>";
+          txt += "<th>" + (index = index + 1) + "</th>";
+          txt += "<td>" + element.nombre + "</td>";
+          txt += "<td>" + element.duracion + "</td>";
+          txt += "<td>" + element.anoEstreno + "</td>";
+
+          if (element.disponibilidad === 1) {
+            txt +=
+              "<td> <i class='fas fa-circle text-success' title='Activo'></i> </td>";
+          } else {
+            txt +=
+              "<td> <i class='fas fa-circle text-danger' title='Desactivado'></i> </td>";
+          }
+
+          txt += "<td>" + formatDate(element.fechaIngreso) + "</td>";
+
+          generos.forEach((elemento) => {
+            if (elemento.id == element.generoId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          paises.forEach((elemento) => {
+            if (elemento.id == element.paisId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          idiomas.forEach((elemento) => {
+            if (elemento.id == element.idiomaId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          calificaciones.forEach((elemento) => {
+            if (elemento.id == element.calificacionId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          tipos.forEach((elemento) => {
+            if (elemento.id == element.tipoId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          audios.forEach((elemento) => {
+            if (elemento.id == element.audioId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          txt +=
+            '<td><a href="http://localhost/SG_CINE_2024/public/pelicula/edit/' +
+            element.id +
+            '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
+          txt += "</tr>";
+        });
+
+        tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
+      })
+      .catch((error) => {
+        console.error("Error al listar Usuarios:", error);
+      });
+  },
+
+  loadByIdioma: async () => {
+    console.log("Listando Películas...");
+
+    tipos = await singletonController.listTipo();
+    audios = await singletonController.listAudio();
+    generos = await singletonController.listGenero();
+    calificaciones = await singletonController.listCalificacion();
+    idiomas = await singletonController.listIdioma();
+    paises = await singletonController.listPais();
+
+    const formatDate = (dateString) => {
+      const [year, month, day] = dateString.split("-");
+      return `${day}/${month}/${year}`;
+    };
+
+    index = 0;
+    await peliculaService
+      .loadByIdioma(document.getElementById("filterIdiomaInput").value)
+      .then((data) => {
+        console.log("Películas listados:", data);
+        let tabla = document.getElementById("tbodyPelicula");
+        let txt = "";
+
+        // Obtener la lista de perfiles
+        data.result.forEach((element) => {
+          txt += "<tr>";
+          txt += "<th>" + (index = index + 1) + "</th>";
+          txt += "<td>" + element.nombre + "</td>";
+          txt += "<td>" + element.duracion + "</td>";
+          txt += "<td>" + element.anoEstreno + "</td>";
+
+          if (element.disponibilidad === 1) {
+            txt +=
+              "<td> <i class='fas fa-circle text-success' title='Activo'></i> </td>";
+          } else {
+            txt +=
+              "<td> <i class='fas fa-circle text-danger' title='Desactivado'></i> </td>";
+          }
+
+          txt += "<td>" + formatDate(element.fechaIngreso) + "</td>";
+
+          generos.forEach((elemento) => {
+            if (elemento.id == element.generoId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          paises.forEach((elemento) => {
+            if (elemento.id == element.paisId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          idiomas.forEach((elemento) => {
+            if (elemento.id == element.idiomaId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          calificaciones.forEach((elemento) => {
+            if (elemento.id == element.calificacionId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          tipos.forEach((elemento) => {
+            if (elemento.id == element.tipoId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          audios.forEach((elemento) => {
+            if (elemento.id == element.audioId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          txt +=
+            '<td><a href="http://localhost/SG_CINE_2024/public/pelicula/edit/' +
+            element.id +
+            '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
+          txt += "</tr>";
+        });
+
+        tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
+      })
+      .catch((error) => {
+        console.error("Error al listar Usuarios:", error);
+      });
+  },
+
+  loadByCalificacion: async () => {
+    console.log("Listando Películas...");
+
+    tipos = await singletonController.listTipo();
+    audios = await singletonController.listAudio();
+    generos = await singletonController.listGenero();
+    calificaciones = await singletonController.listCalificacion();
+    idiomas = await singletonController.listIdioma();
+    paises = await singletonController.listPais();
+
+    const formatDate = (dateString) => {
+      const [year, month, day] = dateString.split("-");
+      return `${day}/${month}/${year}`;
+    };
+
+    index = 0;
+    await peliculaService
+      .loadByCalificacion(document.getElementById("filterCalificacionInput").value)
+      .then((data) => {
+        console.log("Películas listados:", data);
+        let tabla = document.getElementById("tbodyPelicula");
+        let txt = "";
+
+        // Obtener la lista de perfiles
+        data.result.forEach((element) => {
+          txt += "<tr>";
+          txt += "<th>" + (index = index + 1) + "</th>";
+          txt += "<td>" + element.nombre + "</td>";
+          txt += "<td>" + element.duracion + "</td>";
+          txt += "<td>" + element.anoEstreno + "</td>";
+
+          if (element.disponibilidad === 1) {
+            txt +=
+              "<td> <i class='fas fa-circle text-success' title='Activo'></i> </td>";
+          } else {
+            txt +=
+              "<td> <i class='fas fa-circle text-danger' title='Desactivado'></i> </td>";
+          }
+
+          txt += "<td>" + formatDate(element.fechaIngreso) + "</td>";
+
+          generos.forEach((elemento) => {
+            if (elemento.id == element.generoId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          paises.forEach((elemento) => {
+            if (elemento.id == element.paisId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          idiomas.forEach((elemento) => {
+            if (elemento.id == element.idiomaId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          calificaciones.forEach((elemento) => {
+            if (elemento.id == element.calificacionId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          tipos.forEach((elemento) => {
+            if (elemento.id == element.tipoId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          audios.forEach((elemento) => {
+            if (elemento.id == element.audioId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          txt +=
+            '<td><a href="http://localhost/SG_CINE_2024/public/pelicula/edit/' +
+            element.id +
+            '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
+          txt += "</tr>";
+        });
+
+        tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
+      })
+      .catch((error) => {
+        console.error("Error al listar Usuarios:", error);
+      });
+  },
+
+  loadByNombrePelicula: async () => {
+    console.log("Listando Películas...");
+
+    tipos = await singletonController.listTipo();
+    audios = await singletonController.listAudio();
+    generos = await singletonController.listGenero();
+    calificaciones = await singletonController.listCalificacion();
+    idiomas = await singletonController.listIdioma();
+    paises = await singletonController.listPais();
+
+    const formatDate = (dateString) => {
+      const [year, month, day] = dateString.split("-");
+      return `${day}/${month}/${year}`;
+    };
+
+    index = 0;
+    await peliculaService
+      .loadByNombrePelicula(document.getElementById("filterTituloInput").value)
+      .then((data) => {
+        console.log("Películas listados:", data);
+        let tabla = document.getElementById("tbodyPelicula");
+        let txt = "";
+
+        element=data.result
+        // Obtener la lista de perfiles
+          txt += "<tr>";
+          txt += "<th>" + (index = index + 1) + "</th>";
+          txt += "<td>" + element.nombre + "</td>";
+          txt += "<td>" + element.duracion + "</td>";
+          txt += "<td>" + element.anoEstreno + "</td>";
+
+          if (element.disponibilidad === 1) {
+            txt +=
+              "<td> <i class='fas fa-circle text-success' title='Activo'></i> </td>";
+          } else {
+            txt +=
+              "<td> <i class='fas fa-circle text-danger' title='Desactivado'></i> </td>";
+          }
+
+          txt += "<td>" + formatDate(element.fechaIngreso) + "</td>";
+
+          generos.forEach((elemento) => {
+            if (elemento.id == element.generoId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          paises.forEach((elemento) => {
+            if (elemento.id == element.paisId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          idiomas.forEach((elemento) => {
+            if (elemento.id == element.idiomaId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          calificaciones.forEach((elemento) => {
+            if (elemento.id == element.calificacionId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          tipos.forEach((elemento) => {
+            if (elemento.id == element.tipoId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          audios.forEach((elemento) => {
+            if (elemento.id == element.audioId)
+              txt += "<td>" + elemento.nombre + "</td>";
+          });
+
+          txt +=
+            '<td><a href="http://localhost/SG_CINE_2024/public/pelicula/edit/' +
+            element.id +
+            '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
+          txt += "</tr>";
+          tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
+        })
+      .catch((error) => {
+        console.error("Error al listar Usuarios:", error);
+      });
+  },
+}
 
 
 
+document.addEventListener("DOMContentLoaded", () => {
+  let btnBuscarPelicula = document.getElementById("btnBuscarPelicula");
+  let btnListarPelicula = document.getElementById("btnListarPelicula");
+  let btnPDFPelicula = document.getElementById("btnPDFPelicula");
+  let btnAltaPelicula = document.getElementById("btnAltaPelicula");
 
-})
+  let btnBorrarPelicula = document.getElementById("btnBorrarPelicula");
+  let btnModificarPelicula = document.getElementById("btnModificarPelicula");
+
+  if (btnAltaPelicula != null) {
+    peliculaController.list();
+    btnAltaPelicula.onclick = peliculaController.save;
+    btnPDFPelicula.onclick = peliculaController.print;
+    btnListarPelicula.onclick = peliculaController.list;
+
+    btnBuscarPelicula.addEventListener("click",function(){
+      if(document.getElementById("filterType").value=="genero"){
+
+        peliculaController.loadByGenero()
+
+      }
+      else if(document.getElementById("filterType").value=="pais"){
+
+        peliculaController.loadByPais()
+
+      }
+      else if(document.getElementById("filterType").value=="titulo"){
+
+        peliculaController.loadByNombrePelicula()
+
+      }
+      else if(document.getElementById("filterType").value=="idioma"){
+
+        peliculaController.loadByIdioma()
+
+      }
+      else if(document.getElementById("filterType").value=="calificacion"){
+
+        peliculaController.loadByCalificacion()
+
+      }
+    })
+
+
+  } else if (btnModificarPelicula != null) {
+    btnModificarPelicula.onclick = peliculaController.update;
+    btnBorrarPelicula.onclick = peliculaController.delete;
+  }
+});

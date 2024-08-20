@@ -175,17 +175,17 @@ $datosIdioma = $daoIdioma->list();
         </div>
 
         <div class="mb-3">
-            <label for="imagen1" class="form-label">Imagen 1</label>
+            <label for="imagen1" class="form-label">Portada</label>
             <input type="file" class="form-control" id="imagen1" accept="image/*">
         </div>
 
         <div class="mb-3">
-            <label for="imagen2" class="form-label">Imagen 2</label>
+            <label for="imagen2" class="form-label">Secundaria</label>
             <input type="file" class="form-control" id="imagen2" accept="image/*">
         </div>
 
         <div class="mb-3">
-            <label for="imagen3" class="form-label">Imagen 3</label>
+            <label for="imagen3" class="form-label">Terciaria</label>
             <input type="file" class="form-control" id="imagen3" accept="image/*">
         </div>
 

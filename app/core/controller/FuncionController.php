@@ -13,8 +13,8 @@ final class FuncionController extends Controller implements InterfaceController,
     public function __construct()
     {
         parent::__construct([
-            // "app/js/usuario/usuarioController.js",
-            //  "app/js/usuario/usuarioService.js",
+             "app/js/funcion/funcionController.js",
+              "app/js/funcion/funcionService.js",
             //  "app/js/perfil/perfilService.js",
             //  "app/js/perfil/perfilController.js"
             "assets/libs/js/viewFuncion.js",

@@ -141,4 +141,83 @@ final class PeliculaController extends Controller implements InterfaceController
         $response->send();
 
     }
+
+    public function loadByNombrePelicula(Request $request, Response $response): void {
+        $service = new PeliculaService();
+        $nombre = $request->getParam('nombre'); 
+        $Pelicula = $service->loadByNombrePelicula($nombre);
+
+        $response->setResult($Pelicula->toArray()); // Convierte el objeto PerfilDTO a un array
+        $response->setMessage("Pelicula cargado correctamente");
+        $response->send();
+    }
+
+    public function loadByGenero(Request $request, Response $response):void{
+
+        $service = new PeliculaService();
+        $generoId = $request->getParam('genero');
+
+        $peliculas = $service->loadByGenero($generoId);
+
+        $peliculasArray = array_map(function($pelicula) {
+        return $pelicula->toArray(); // Convierte el objeto PeliculaDTO a un array
+        }, $peliculas);
+
+        $response->setResult($peliculasArray);
+        $response->setMessage("La/las películas se listaron correctamente");
+        $response->send();
+
+    }
+
+    public function loadByCalificacion(Request $request, Response $response):void{
+
+        $service = new PeliculaService();
+        $calificacionId = $request->getParam('calificacion');
+
+        $peliculas = $service->loadByCalificacion($calificacionId);
+
+        $peliculasArray = array_map(function($pelicula) {
+        return $pelicula->toArray(); // Convierte el objeto PeliculaDTO a un array
+        }, $peliculas);
+
+        $response->setResult($peliculasArray);
+        $response->setMessage("La/las películas se listaron correctamente");
+        $response->send();
+
+    }
+
+    public function loadByIdioma(Request $request, Response $response):void{
+
+        $service = new PeliculaService();
+        $idiomaId = $request->getParam('idioma');
+
+        $peliculas = $service->loadByIdioma($idiomaId);
+
+        $peliculasArray = array_map(function($pelicula) {
+        return $pelicula->toArray(); // Convierte el objeto PeliculaDTO a un array
+        }, $peliculas);
+
+        $response->setResult($peliculasArray);
+        $response->setMessage("La/las películas se listaron correctamente");
+        $response->send();
+
+    }
+
+    public function loadByPais(Request $request, Response $response):void{
+
+        $service = new PeliculaService();
+        $paisId = $request->getParam('pais');
+
+        $peliculas = $service->loadByPais($paisId);
+
+        $peliculasArray = array_map(function($pelicula) {
+        return $pelicula->toArray(); // Convierte el objeto PeliculaDTO a un array
+        }, $peliculas);
+
+        $response->setResult($peliculasArray);
+        $response->setMessage("La/las películas se listaron correctamente");
+        $response->send();
+
+    }
+
 }

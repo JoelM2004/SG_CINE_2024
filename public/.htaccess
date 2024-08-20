@@ -1,6 +1,5 @@
 # Negamos la indexación del directorio y los subdirectorios
 Options -Indexes
-
 RewriteEngine On
 RewriteRule ^([a-zA-Z]+)$ index.php?controller=$1
 RewriteRule ^([a-zA-Z]+)/([a-zA-Z]+)$ index.php?controller=$1&action=$2
