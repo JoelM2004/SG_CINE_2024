@@ -48,7 +48,14 @@ final class FuncionController extends Controller implements InterfaceController,
     *Gestiona los servicios correspondientes, para la busqueda de una entidad existente en el sistema, se debe enviar el id en la petición del cliente de la petición
     */
     public function load(Request $request, Response $response):void{
+        $service = new FuncionService();
+        $info = $service->load($request->getId());
+        $info->toArray();
+        $info=$info->toArray();
+        $response->setResult($info);
+        $response->setMessage("La Función se cargó correctamente");
 
+        $response->send();
 
     }
 
@@ -70,7 +77,14 @@ final class FuncionController extends Controller implements InterfaceController,
     /*
     *Gestiona los servicios correspondientes, para el alta de una nueva entidad en el sistema
     */
-    public function save(Request $request, Response $response):void{}
+    public function save(Request $request, Response $response):void{
+
+        $service = new FuncionService();
+        $service->save($request->getData());
+        $response->setMessage("La función se registró correctamente");
+        $response->send();
+
+    }
 
     /*
     Invoca la vista corerspondiente para poder modificar los datos de una entidad existente
@@ -91,16 +105,97 @@ final class FuncionController extends Controller implements InterfaceController,
     /*
     Gestiona los servicios correspondientes apra la actualización de datos de una entidad existente
     */
-    public function update(Request $request, Response $response):void{}
+    public function update(Request $request, Response $response):void{
+
+        $service = new FuncionService();
+
+        $data= $request->getData();
+        $info = $service->load($data["id"]);
+
+        $info=$info->toArray();
+        $service->update($data);
+        $response->setMessage("La función se actualizó correctamente");
+        $response->send();
+
+    }
 
     /*
     Gestiona los servicios correspondientes, para la eliminación fisica de la entidad
     */
-    public function delete(Request $request, Response $response):void{}
+    public function delete(Request $request, Response $response):void{
+
+        $service = new FuncionService();
+        $info=$request->getData();
+        $service->delete($info["id"]);
+        $response->setMessage("La función se eliminó con éxito");
+        $response->send();
+
+    }
 
     /*
     Gestiona los servicios correspondientes, para listar todas las entidades
     */
-    public function list(Request $request, Response $response):void{}
+    public function list(Request $request, Response $response):void{
+
+        $service = new FuncionService();
+        $response->setResult($service->list());
+        $response->setMessage("La función se listó correctamente");
+        $response->send();
+
+    }
+
+    public function loadByNumeroFuncion(Request $request, Response $response): void {
+        $service = new FuncionService();
+        $numeroFuncion = $request->getParam('numeroFuncion'); 
+        $funcion = $service->loadByNumeroFuncion($numeroFuncion);
+
+        $response->setResult($funcion->toArray()); // Convierte el objeto PerfilDTO a un array
+        $response->setMessage("Función cargada correctamente");
+        $response->send();
+    }
+
+    public function loadByNombrePelicula(Request $request, Response $response):void{
+
+        $service = new FuncionService();
+        $pelicula = $request->getParam('pelicula');
+        $funciones = $service->loadByNombrePelicula($pelicula);
+        $funcionesArray = array_map(function($funcion) {
+        return $funcion->toArray(); // Convierte el objeto UsuarioDTO a un array
+        }, $funciones);
+
+        $response->setResult($funcionesArray);
+        $response->setMessage("La/las funciones se listaron correctamente");
+        $response->send();
+    }
+
+    public function loadByNumeroSala(Request $request, Response $response):void{
+
+        $service = new FuncionService();
+        $sala = $request->getParam('sala');
+        $funciones = $service->loadByNumeroSala($sala);
+        $funcionesArray = array_map(function($funcion) {
+        return $funcion->toArray(); // Convierte el objeto UsuarioDTO a un array
+        }, $funciones);
+
+        $response->setResult($funcionesArray);
+        $response->setMessage("La/las funciones se listaron correctamente");
+        $response->send();
+    }
+
+    public function loadByFechaProgramacion(Request $request, Response $response):void{
+
+        $service = new FuncionService();
+        $programacion = $request->getParam('programacion');
+        $funciones = $service->loadByFechaProgramacion($programacion);
+        $funcionesArray = array_map(function($funcion) {
+        return $funcion->toArray(); // Convierte el objeto UsuarioDTO a un array
+        }, $funciones);
+
+        $response->setResult($funcionesArray);
+        $response->setMessage("La/las funciones se listaron correctamente");
+        $response->send();
+    }
+
+
 
 }

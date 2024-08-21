@@ -78,19 +78,23 @@ final class FuncionDTO implements InterfaceDTO
     {
         $this->fecha = (preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) ? $fecha : "";
     }
-    
-    public function setHoraInicio($horaInicio): void
-{
-    // Verifica que la hora y los minutos estén en el formato correcto
-    if (preg_match('/^([01]\d|2[0-3]):([0-5]\d)$/', $horaInicio)) {
-        // Agrega los segundos al final
-        $horaInicio .= ":00";
-        // Verifica que la hora completa sea válida
-        $this->horaInicio = (strtotime($horaInicio) !== false) ? $horaInicio : "";
-    } else {
-        $this->horaInicio = "";
+
+    public function setHoraInicio($hora): void
+    {
+        if(strlen($hora)==5){
+
+            $hora.=":00";
+
+        }
+
+        $pattern = '/^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d$/';
+
+        if (is_string($hora) && preg_match($pattern, $hora)) {
+            $this->horaInicio = $hora;
+        } else {
+            $this->horaInicio = "";
+        }
     }
-}
 
     public function setDuracion($duracion): void
     {
@@ -119,7 +123,7 @@ final class FuncionDTO implements InterfaceDTO
 
     public function setPrecio($precio): void
     {
-        $this->precio = (is_numeric($precio) && $precio > 0) ? (double) $precio : 0.0;
+        $this->precio = (is_numeric($precio) && $precio > 0) ? (float) $precio : 0.0;
     }
 
 

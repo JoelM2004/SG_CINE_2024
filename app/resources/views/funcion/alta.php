@@ -1,3 +1,26 @@
+<?php
+
+use app\core\model\dao\PeliculaDAO;
+use app\core\model\dao\SalaDAO;
+use app\core\model\dao\ProgramacionDAO;
+
+
+use app\libs\connection\Connection;
+
+$conn = Connection::get();
+
+$daoPelicula = new PeliculaDAO($conn);
+$datosPelicula = $daoPelicula->list();
+
+$daoSala = new SalaDAO($conn);
+$datosSala = $daoSala->list();
+
+$daoProgramacion = new ProgramacionDAO($conn);
+$datosProgramacion = $daoProgramacion->list();
+
+?>
+
+
 <div class="container-fluid row">
     <!-- Formulario de Alta de Funciones -->
     <form id="formFuncion" class="col-lg-4 col-md-6 col-sm-12 p-3" autocomplete="off">
@@ -14,8 +37,8 @@
         </div>
 
         <div class="mb-3">
-            <label for="duracion" class="form-label">Duración</label>
-            <input type="text" class="form-control" id="duracion">
+            <label for="duracion" class="form-label">Duración(en minutos)</label>
+            <input type="number" class="form-control" id="duracion">
         </div>
 
         <div class="mb-3">
@@ -26,21 +49,61 @@
         <div class="mb-3">
             <label for="nombrePelicula" class="form-label">Nombre de la Película</label>
             <select class="form-select" id="nombrePelicula">
-                <!-- Opciones de películas -->
+                <?php
+                $txt = ''; // Inicializar $txt antes del bucle
+
+                // Invertir el array para que las últimas películas aparezcan primero
+                $datosPeliculaInvertido = array_reverse($datosPelicula);
+
+                foreach ($datosPeliculaInvertido as $elemento) {
+                    $txt .= '<option value="' . $elemento['id'] . '">' . $elemento['nombre'] . '</option>';
+                }
+
+                echo $txt;
+                ?>
             </select>
         </div>
 
         <div class="mb-3">
             <label for="numeroSala" class="form-label">Número de Sala</label>
             <select class="form-select" id="numeroSala">
-                <!-- Opciones de salas -->
+                <?php
+                $txt = ''; // Inicializar $txt antes del bucle
+
+                foreach ($datosSala as $elemento) {
+                    $txt .= '<option value="' . $elemento['id'] . '">' . $elemento['numeroSala'] . '</option>';
+                }
+
+                echo $txt;
+                ?>
             </select>
         </div>
 
         <div class="mb-3">
             <label for="fechaProgramacion" class="form-label">Fecha de Programación</label>
             <select class="form-select" id="fechaProgramacion">
-                <!-- Opciones de fechas -->
+                <?php
+                $txt = ''; // Inicializar $txt antes del bucle
+
+                // Función para formatear la fecha en PHP
+                function formatDate($dateString)
+                {
+                    $dateParts = explode("-", $dateString);
+                    return $dateParts[2] . '/' . $dateParts[1] . '/' . $dateParts[0];
+                }
+
+                $datosProgramacionInvertidos = array_reverse($datosProgramacion);
+
+                foreach ($datosProgramacionInvertidos as $elemento) {
+                    $fechaInicioFormateada = formatDate($elemento['fechaInicio']);
+                    $fechaFinFormateada = formatDate($elemento['fechaFin']);
+
+                    $txt .= '<option value="' . $elemento['id'] . '">' . $fechaInicioFormateada . " --- " . $fechaFinFormateada . '</option>';
+                }
+
+                echo $txt;
+                ?>
+
             </select>
         </div>
 
@@ -49,7 +112,7 @@
             <input type="number" class="form-control" id="precio" step="0.01">
         </div>
 
-        <button type="button" id="btnGuardarFuncion" class="btn btn-primary w-100">Registrar Función</button>
+        <button type="button" id="btnAltaFuncion" class="btn btn-primary w-100">Registrar Función</button>
     </form>
 
     <!-- Tabla de Funciones -->
@@ -71,14 +134,36 @@
 
             <!-- Filtros específicos -->
             <div class="mb-3 d-none" id="filterNumeroSala">
-                <label class="form-label">Número de Sala</label>
-                <input type="number" class="form-control" id="filterNumeroSalaInput">
+                <label for="filterNumeroSalaInput" class="form-label">Número de Sala</label>
+                <select class="form-select" id="filterNumeroSalaInput">
+                    <?php
+                    $txt = ''; // Inicializar $txt antes del bucle
+
+                    foreach ($datosSala as $elemento) {
+                        $txt .= '<option value="' . $elemento['id'] . '">' . $elemento['numeroSala'] . '</option>';
+                    }
+
+                    echo $txt;
+                    ?>
+                </select>
+
             </div>
 
             <div class="mb-3 d-none" id="filterNombrePelicula">
                 <label class="form-label">Nombre de la Película</label>
                 <select class="form-select" id="filterNombrePeliculaInput">
-                    <!-- Opciones de películas -->
+                    <?php
+                    $txt = ''; // Inicializar $txt antes del bucle
+
+                    // Invertir el array para que las últimas películas aparezcan primero
+                    $datosPeliculaInvertido = array_reverse($datosPelicula);
+
+                    foreach ($datosPeliculaInvertido as $elemento) {
+                        $txt .= '<option value="' . $elemento['id'] . '">' . $elemento['nombre'] . '</option>';
+                    }
+
+                    echo $txt;
+                    ?>
                 </select>
             </div>
 
@@ -90,13 +175,30 @@
             <div class="mb-3 d-none" id="filterFechaProgramacion">
                 <label class="form-label">Fecha de Programación</label>
                 <select class="form-select" id="filterFechaProgramacionInput">
-                    <!-- Opciones de fechas -->
+                    <?php
+                    $txt = ''; // Inicializar $txt antes del bucle
+
+                    // Función para formatear la fecha en PHP
+
+
+                    $datosProgramacionInvertidos = array_reverse($datosProgramacion);
+
+                    foreach ($datosProgramacionInvertidos as $elemento) {
+                        $fechaInicioFormateada = formatDate($elemento['fechaInicio']);
+                        $fechaFinFormateada = formatDate($elemento['fechaFin']);
+
+                        $txt .= '<option value="' . $elemento['id'] . '">' . $fechaInicioFormateada . " --- " . $fechaFinFormateada . '</option>';
+                    }
+
+                    echo $txt;
+                    ?>
                 </select>
             </div>
 
             <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary me-2">Buscar</button>
-                <button type="button" class="btn btn-success">PDF</button>
+                <button id="btnBuscarFuncion" type="button" class="btn btn-primary me-2">Buscar</button>
+                <button id="btnListarFuncion" type="button" class="btn btn-primary me-2">Listar</button>
+                <button id="btnPDFFuncion" type="button" class="btn btn-success">PDF</button>
             </div>
         </form>
 
@@ -112,6 +214,7 @@
                     <th scope="col">Número de Sala</th>
                     <th scope="col">Fecha de Programación</th>
                     <th scope="col">Precio</th>
+                    <th scope="col">Opciones</th>
                 </tr>
             </thead>
             <tbody id="tbodyFunciones">

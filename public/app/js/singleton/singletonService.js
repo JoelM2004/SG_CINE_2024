@@ -90,4 +90,16 @@ let singletonService = {
   loadUsuario: (id) => {
     return singletonService.fetchData(`usuario/load/${id}`);
   },
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  listSala: () => {
+    return singletonService.fetchData("sala/list");
+  },
+
+  listProgramacion: () => {
+    return singletonService.fetchData("programacion/list");
+  },
+
+  listPelicula: () => {
+    return singletonService.fetchData("pelicula/list");
+  },
 };

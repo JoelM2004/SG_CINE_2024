@@ -27,12 +27,6 @@ final class FuncionService  extends Service implements InterfaceService {
         return $dao->load($id);   
     }
 
-    // public function loadByName($nombre): FuncionDTO {
-    //     $conn = Connection::get();
-    //     $dao = new FuncionDAO($conn);
-    //     return $dao->loadByName($nombre); // Retorna un único FuncionDTO
-    // }
-
     public function update(array $object):void{
         $conn= Connection::get();
         $dao= new FuncionDAO($conn);
@@ -52,5 +46,28 @@ final class FuncionService  extends Service implements InterfaceService {
         return $dao->list();
     }
 
-   
+    public function loadByNumeroFuncion($NumeroFuncio):FuncionDTO{
+        $conn= Connection::get();
+        $dao= new FuncionDAO($conn);
+        return $dao->loadByNumeroFuncion($NumeroFuncio);
+    }
+
+    public function loadByNombrePelicula($NombrePelicula):array{
+        $conn= Connection::get();
+        $dao= new FuncionDAO($conn);
+        return $dao->loadByNombrePelicula($NombrePelicula);
+    }
+
+    public function loadByNumeroSala($NumeroSala):array{
+        $conn= Connection::get();
+        $dao= new FuncionDAO($conn);
+        return $dao->loadByNumeroSala($NumeroSala);
+    }
+
+    public function loadByFechaProgramacion($FechaProgramacion):array{
+        $conn= Connection::get();
+        $dao= new FuncionDAO($conn);
+        return $dao->loadByFechaProgramacion($FechaProgramacion);
+    }
+
 }

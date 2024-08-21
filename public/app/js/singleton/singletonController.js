@@ -252,7 +252,6 @@ let singletonController = {
     return array;
   },
 
-
   listFuncion: async () => {
     console.log("Listando Funciones...");
 
@@ -288,6 +287,68 @@ let singletonController = {
       })
       .catch((error) => {
         console.error("Error al listar Usuarios:", error);
+      });
+
+    return array;
+  },
+
+  ////////////////////////////////////////////////////////////////////
+
+  listProgramacion: async () => {
+    console.log("Listando Programaciones...");
+
+    let array = [];
+    
+    await singletonService
+      .listProgramacion()
+      .then((data) => {
+        console.log("Programaciones listadas:", data);
+        data.result.forEach((element) => {
+          array.push(element);
+        });
+      })
+      .catch((error) => {
+        console.error("Error al listar Programaciones:", error);
+      });
+
+    return array;
+  },
+
+  listSala: async () => {
+    console.log("Listando Salas...");
+
+    let array = [];
+    
+    await singletonService
+      .listSala()
+      .then((data) => {
+        console.log("Salas listadas:", data);
+        data.result.forEach((element) => {
+          array.push(element);
+        });
+      })
+      .catch((error) => {
+        console.error("Error al listar Salas:", error);
+      });
+
+    return array;
+  },
+
+  listPelicula: async () => {
+    console.log("Listando Peliculas...");
+
+    let array = [];
+    
+    await singletonService
+      .listPelicula()
+      .then((data) => {
+        console.log("Peliculas listadas:", data);
+        data.result.forEach((element) => {
+          array.push(element);
+        });
+      })
+      .catch((error) => {
+        console.error("Error al listar Peliculas:", error);
       });
 
     return array;
