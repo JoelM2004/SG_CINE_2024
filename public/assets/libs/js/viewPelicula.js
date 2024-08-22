@@ -49,3 +49,20 @@ document.getElementById('filterForm').addEventListener('submit', function(e) {
     // Aquí puedes agregar la lógica para realizar el filtrado en la tabla
 });
 }
+if(document.getElementById('imagen1')!=null){
+document.getElementById('imagen1').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    const preview = document.getElementById('imagenPreview');
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+    } else {
+        preview.src = '#';
+        preview.style.display = 'none';
+    }
+});}

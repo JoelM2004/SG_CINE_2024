@@ -24,4 +24,6 @@ final class InfoController extends Controller
         
         require_once APP_TEMPLATE . "template.php";
     }
+
+    
 }

@@ -31,17 +31,71 @@ final class PeliculaDAO extends DAO implements InterfaceDAO
 
     public function load($id): PeliculaDTO
     {
+    $sql = "SELECT 
+                p.id,
+                p.nombre,
+                p.duracion,
+                p.fechaIngreso,
+                p.sinopsis,
+                p.actores,
+                p.sitioWebOficial,
+                g.nombre AS genero,
+                c.nombre AS calificacion,
+                a.nombre AS audio,
+                t.nombre AS tipo,
+                i.nombre AS idioma,
+                pa.nombre AS pais
+            FROM $this->table p 
+            INNER JOIN generos g ON p.generoId = g.id
+            INNER JOIN calificaciones c ON p.calificacionId = c.id
+            INNER JOIN audios a ON p.audioId = a.id
+            INNER JOIN tipos t ON p.tipoId = t.id 
+            INNER JOIN idiomas i ON p.idiomaId = i.id 
+            INNER JOIN paises pa ON p.paisId = pa.id
+            WHERE p.id = :id";
+    
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute(["id" => $id]);
 
-        $sql = "SELECT * FROM {$this->table} WHERE id = :id";
+    if ($stmt->rowCount() !== 1) {
+        throw new \Exception("La Pelicula no se cargó correctamente");
+    }
+
+    return new PeliculaDTO($stmt->fetch(\PDO::FETCH_ASSOC));
+    }
+
+    public function loadView($id):array{
+        $sql = "SELECT 
+                p.id,
+                p.nombre,
+                p.duracion,
+                p.fechaIngreso,
+                p.sinopsis,
+                p.actores,
+                p.sitioWebOficial,
+                g.nombre AS genero,
+                c.nombre AS calificacion,
+                a.nombre AS audio,
+                t.nombre AS tipo,
+                i.nombre AS idioma,
+                pa.nombre AS pais
+            FROM $this->table p 
+            INNER JOIN generos g ON p.generoId = g.id
+            INNER JOIN calificaciones c ON p.calificacionId = c.id
+            INNER JOIN audios a ON p.audioId = a.id
+            INNER JOIN tipos t ON p.tipoId = t.id 
+            INNER JOIN idiomas i ON p.idiomaId = i.id 
+            INNER JOIN paises pa ON p.paisId = pa.id
+            WHERE p.id = :id";
+    
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(["id" => $id]);
 
         if ($stmt->rowCount() !== 1) {
+        throw new \Exception("La Pelicula no se cargó correctamente");
+    }
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
 
-            throw new \Exception("La Pelicula no se cargó correctamente");
-        }
-
-        return new PeliculaDTO($stmt->fetch(\PDO::FETCH_ASSOC));
     }
 
     public function update(InterfaceDTO $object): void

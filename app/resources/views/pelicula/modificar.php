@@ -196,20 +196,8 @@ $datosPelicula = $daoPelicula->load($_GET["id"]);
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="mb-3">
-                                        <label for="imagen1" class="form-label">Portada 1</label>
+                                        <label for="imagen1" class="form-label">Portada </label>
                                         <input type="file" class="form-control" id="imagen1" accept="image/*" onchange="previewImage(event, 'imagenPreview1')">
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label for="imagen2" class="form-label">Secundaria </label>
-                                        <input type="file" class="form-control" id="imagen2" accept="image/*" onchange="previewImage(event, 'imagenPreview2')">
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label for="imagen3" class="form-label">Terciaria</label>
-                                        <input type="file" class="form-control" id="imagen3" accept="image/*" onchange="previewImage(event, 'imagenPreview3')">
                                     </div>
                                 </div>
                             </div>
