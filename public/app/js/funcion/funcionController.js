@@ -195,6 +195,7 @@ let funcionController = {
       })
       .catch((err) => console.log(err));
   },
+  
   list: async () => {
     console.log("Listando Funciones...");
 
@@ -239,7 +240,7 @@ let funcionController = {
               txt +=
                 "<td>" +
                 formatDate(elemento.fechaInicio) +
-                "---" +
+                " a " +
                 formatDate(elemento.fechaFin) +
                 "</td>";
           });
@@ -261,8 +262,9 @@ let funcionController = {
   },
   delete: () => {
     if (confirm("¿Quiere eliminar la función?")) {
-      funcionController.data.id =
-        document.getElementById("filaModificarFuncion").dataset.id;
+      funcionController.data.id = document.getElementById(
+        "filaModificarFuncion"
+      ).dataset.id;
 
       funcionService
         .delete(funcionController.data)
@@ -283,20 +285,20 @@ let funcionController = {
     if (confirm("¿Seguro que lo quieres actualizar?")) {
       let form = document.forms["formFuncionM"];
       let idElemento = document.getElementById("filaModificarFuncion");
-  
+
       if (!idElemento || !idElemento.dataset.id) {
         alert("No se pudo obtener el ID de la función.");
         return;
       }
-  
+
       funcionController.data.id = parseInt(idElemento.dataset.id);
-  
+
       // Validar el ID de la función
       if (isNaN(funcionController.data.id) || funcionController.data.id <= 0) {
         alert("ID de función no válido.");
         return;
       }
-  
+
       // Obtener los valores del formulario
       funcionController.data.fecha = form.fecha.value.trim();
       funcionController.data.horaInicio = form.horaInicio.value.trim();
@@ -304,58 +306,79 @@ let funcionController = {
       funcionController.data.numeroFuncion = parseInt(form.numeroFuncion.value);
       funcionController.data.peliculaId = parseInt(form.nombrePelicula.value);
       funcionController.data.salaId = parseInt(form.numeroSala.value);
-      funcionController.data.programacionId = parseInt(form.fechaProgramacion.value);
+      funcionController.data.programacionId = parseInt(
+        form.fechaProgramacion.value
+      );
       funcionController.data.precio = parseFloat(form.precio.value);
-  
+
       // Validar campos de fecha y hora
       if (!funcionController.data.fecha) {
         alert("La fecha es requerida.");
         return;
       }
-  
+
       if (!funcionController.data.horaInicio) {
         alert("La hora de inicio es requerida.");
         return;
       }
-  
+
       // Validar duración
-      if (isNaN(funcionController.data.duracion) || funcionController.data.duracion <= 0) {
+      if (
+        isNaN(funcionController.data.duracion) ||
+        funcionController.data.duracion <= 0
+      ) {
         alert("La duración debe ser un número mayor a 0.");
         return;
       }
-  
+
       // Validar número de función
-      if (isNaN(funcionController.data.numeroFuncion) || funcionController.data.numeroFuncion <= 0) {
+      if (
+        isNaN(funcionController.data.numeroFuncion) ||
+        funcionController.data.numeroFuncion <= 0
+      ) {
         alert("El número de función debe ser un número mayor a 0.");
         return;
       }
-  
+
       // Validar ID de película
-      if (isNaN(funcionController.data.peliculaId) || funcionController.data.peliculaId <= 0) {
+      if (
+        isNaN(funcionController.data.peliculaId) ||
+        funcionController.data.peliculaId <= 0
+      ) {
         alert("Debe seleccionar una película válida.");
         return;
       }
-  
+
       // Validar ID de sala
-      if (isNaN(funcionController.data.salaId) || funcionController.data.salaId <= 0) {
+      if (
+        isNaN(funcionController.data.salaId) ||
+        funcionController.data.salaId <= 0
+      ) {
         alert("Debe seleccionar una sala válida.");
         return;
       }
-  
+
       // Validar ID de programación
-      if (isNaN(funcionController.data.programacionId) || funcionController.data.programacionId <= 0) {
+      if (
+        isNaN(funcionController.data.programacionId) ||
+        funcionController.data.programacionId <= 0
+      ) {
         alert("Debe seleccionar una programación válida.");
         return;
       }
-  
+
       // Validar precio
-      if (isNaN(funcionController.data.precio) || funcionController.data.precio <= 0) {
+      if (
+        isNaN(funcionController.data.precio) ||
+        funcionController.data.precio <= 0
+      ) {
         alert("El precio debe ser un número mayor que 0.");
         return;
       }
-  
+
       // Enviar la solicitud al servicio
-      funcionService.update(funcionController.data)
+      funcionService
+        .update(funcionController.data)
         .then((data) => {
           console.log("Actualizando Datos");
           if (data.error !== "") {
@@ -372,9 +395,7 @@ let funcionController = {
           alert("Ocurrió un error al actualizar la función");
         });
     }
-  }
-  ,
-
+  },
   loadByNumeroSala: async () => {
     console.log("Listando Funciones...");
 
@@ -454,7 +475,9 @@ let funcionController = {
 
     index = 0;
     await funcionService
-      .loadByFechaProgramacion(document.getElementById("filterFechaProgramacionInput").value)
+      .loadByFechaProgramacion(
+        document.getElementById("filterFechaProgramacionInput").value
+      )
       .then((data) => {
         console.log("Funciones listadas:", data);
         let tabla = document.getElementById("tbodyFunciones");
@@ -519,7 +542,9 @@ let funcionController = {
 
     index = 0;
     await funcionService
-      .loadByNombrePelicula(document.getElementById("filterNombrePeliculaInput").value)
+      .loadByNombrePelicula(
+        document.getElementById("filterNombrePeliculaInput").value
+      )
       .then((data) => {
         console.log("Funciones listadas:", data);
         let tabla = document.getElementById("tbodyFunciones");
@@ -584,56 +609,129 @@ let funcionController = {
 
     index = 0;
     await funcionService
-      .loadByNumeroFuncion(document.getElementById("filterNumeroFuncionInput").value)
+      .loadByNumeroFuncion(
+        document.getElementById("filterNumeroFuncionInput").value
+      )
       .then((data) => {
         console.log("Funciones listadas:", data);
         let tabla = document.getElementById("tbodyFunciones");
         let txt = "";
 
         // Obtener la lista de perfiles
-        element= data.result 
-          txt += "<tr>";
-          txt += "<th>" + (index = index + 1) + "</th>";
-          txt += "<td>" + formatDate(element.fecha) + "</td>";
-          txt += "<td>" + element.horaInicio + "</td>";
-          txt += "<td>" + element.duracion + "</td>";
-          txt += "<td>" + element.numeroFuncion + "</td>";
+        element = data.result;
+        txt += "<tr>";
+        txt += "<th>" + (index = index + 1) + "</th>";
+        txt += "<td>" + formatDate(element.fecha) + "</td>";
+        txt += "<td>" + element.horaInicio + "</td>";
+        txt += "<td>" + element.duracion + "</td>";
+        txt += "<td>" + element.numeroFuncion + "</td>";
 
-          pelicula.forEach((elemento) => {
-            if (elemento.id == element.peliculaId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
+        pelicula.forEach((elemento) => {
+          if (elemento.id == element.peliculaId)
+            txt += "<td>" + elemento.nombre + "</td>";
+        });
 
-          sala.forEach((elemento) => {
-            if (elemento.id == element.salaId)
-              txt += "<td>" + elemento.numeroSala + "</td>";
-          });
+        sala.forEach((elemento) => {
+          if (elemento.id == element.salaId)
+            txt += "<td>" + elemento.numeroSala + "</td>";
+        });
 
-          programacion.forEach((elemento) => {
-            if (elemento.id == element.programacionId)
-              txt +=
-                "<td>" +
-                formatDate(elemento.fechaInicio) +
-                "---" +
-                formatDate(elemento.fechaFin) +
-                "</td>";
-          });
+        programacion.forEach((elemento) => {
+          if (elemento.id == element.programacionId)
+            txt +=
+              "<td>" +
+              formatDate(elemento.fechaInicio) +
+              "---" +
+              formatDate(elemento.fechaFin) +
+              "</td>";
+        });
 
-          txt += "<td>" + element.precio + "</td>";
+        txt += "<td>" + element.precio + "</td>";
 
-          txt +=
-            '<td><a href="http://localhost/SG_CINE_2024/public/funcion/edit/' +
-            element.id +
-            '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
-          txt += "</tr>";
-        ;
-
+        txt +=
+          '<td><a href="http://localhost/SG_CINE_2024/public/funcion/edit/' +
+          element.id +
+          '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
+        txt += "</tr>";
         tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
       })
       .catch((error) => {
         console.error("Error al listar Usuarios:", error);
       });
   },
+
+  listFunciones: async () => {
+    console.log("Listando Funciones...");
+
+    const formatDate = (dateString) => {
+      const [year, month, day] = dateString.split("-");
+      return `${day}/${month}/${year}`;
+    };
+
+    const formatHour = (dateString) => {
+      const [hour, minute] = dateString.split(":");
+      return `${hour}:${minute}`;
+    };
+
+    let salas = await singletonController.listSala();
+    let audios = await singletonController.listAudio();
+    let tipos = await singletonController.listTipo();
+    let peliculas = await singletonController.listPelicula();
+
+    let data = await funcionService.listFunciones(document.getElementById("peliculaId").dataset.id);
+    console.log("Funciones listadas:", data);
+
+    let listaFunciones = document.getElementById("funciones-lista");
+    let txt = "";
+
+    if (data.result.length === 0) {
+        // Si no hay funciones disponibles, muestra un mensaje
+        txt = `<p class="list-group-item">No hay funciones disponibles.</p>`;
+    } else {
+        // Generar dinámicamente las funciones
+        data.result.forEach((element) => {
+            let salatxt = "";
+            let audiotxt = "";
+            let tipotxt = "";
+
+            let id=element.id
+            console.log(element)
+
+
+            salas.forEach((elemento) => {
+                if (elemento.id == element.salaId) salatxt = elemento.numeroSala;
+            });
+
+            let pelicula = {};
+            peliculas.forEach((elemento) => {
+                if (elemento.id == element.peliculaId) {
+                    pelicula = elemento;
+                }
+            });
+
+            tipos.forEach((elemento) => {
+                if (elemento.id == pelicula.tipoId) tipotxt = elemento.nombre;
+            });
+
+            audios.forEach((elemento) => {
+                if (elemento.id == pelicula.audioId) audiotxt = elemento.nombre;
+            });
+
+            txt += `
+            <a href="http://localhost/SG_CINE_2024/public/entrada/view/${element.id}" class="list-group-item list-group-item-action py-3">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1" style="font-size: 1.25rem; font-weight: bold;">Función ${element.numeroFuncion} - ${formatDate(element.fecha)} a las ${formatHour(element.horaInicio)}</h5>
+                    <small style="font-size: 1rem;">Duración: ${element.duracion} min</small>
+                </div>
+                <p class="mb-1" style="font-size: 1.15rem;">Sala ${salatxt} - ${tipotxt} - ${audiotxt} - $${element.precio}</p>
+            </a>
+            `;
+        });
+    }
+
+    listaFunciones.innerHTML = txt; // Reemplaza el contenido HTML con las funciones generadas
+},
+
 
 };
 
@@ -655,17 +753,24 @@ document.addEventListener("DOMContentLoaded", () => {
     btnBuscarFuncion.addEventListener("click", function () {
       if (document.getElementById("filterType").value == "numeroSala") {
         funcionController.loadByNumeroSala();
-      } else if (document.getElementById("filterType").value == "nombrePelicula") {
+      } else if (
+        document.getElementById("filterType").value == "nombrePelicula"
+      ) {
         funcionController.loadByNombrePelicula();
-      } else if (document.getElementById("filterType").value == "numeroFuncion") {
+      } else if (
+        document.getElementById("filterType").value == "numeroFuncion"
+      ) {
         funcionController.loadByNumeroFuncion();
-      } else if (document.getElementById("filterType").value == "fechaProgramacion") {
+      } else if (
+        document.getElementById("filterType").value == "fechaProgramacion"
+      ) {
         funcionController.loadByFechaProgramacion();
-      } 
       }
-    );
+    });
   } else if (btnModificarFuncion != null) {
     btnModificarFuncion.onclick = funcionController.update;
     btnBorrarFuncion.onclick = funcionController.delete;
+  } else if (document.getElementById("funciones-lista") != null) {
+    funcionController.listFunciones();
   }
 });

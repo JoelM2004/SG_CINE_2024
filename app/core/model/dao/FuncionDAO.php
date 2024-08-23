@@ -20,7 +20,7 @@ final class FuncionDAO extends DAO implements InterfaceDAO
         $this->validateFuncion($object);
         $this->validateFechaYSala($object);
         $this->validateProgramacion($object);
-
+        $this->validateSala($object);
 
         $sql="INSERT INTO {$this->table} VALUES(DEFAULT,:fecha,:horaInicio,:duracion,:numeroFuncion,:peliculaId,:salaId,:programacionId,:precio)";//:apellido, variable reemplazada por un dato, o una consulta preparada
         $stmt=$this->conn->prepare($sql);
@@ -54,6 +54,7 @@ final class FuncionDAO extends DAO implements InterfaceDAO
         $this->validateFuncion($object);
         $this->validateFechaYSala($object);
         $this->validateProgramacion($object);
+        $this->validateSala($object);
 
         $sql="UPDATE {$this->table} SET 
         fecha=:fecha,
@@ -148,6 +149,46 @@ final class FuncionDAO extends DAO implements InterfaceDAO
 
    }
 
+   public function listFunciones($id): array
+{
+    $sql = "SELECT 
+        f.id AS id,
+        f.fecha AS fecha,
+        f.horaInicio AS horaInicio,
+        f.duracion AS duracion,
+        f.numeroFuncion AS numeroFuncion,
+        f.peliculaId AS peliculaId,
+        f.salaId AS salaId,
+        f.programacionId AS programacionId,
+        f.precio AS precio
+    FROM 
+        funciones f
+    INNER JOIN 
+        peliculas pf ON pf.id = f.peliculaId
+    INNER JOIN 
+        programaciones p ON f.programacionId = p.id
+    INNER JOIN 
+        audios a ON pf.audioId = a.id
+    INNER JOIN 
+        tipos t ON pf.tipoId = t.id
+    INNER JOIN
+        salas s ON f.salaId = s.id
+    WHERE 
+        p.vigente = 1 AND
+        f.fecha >= CURDATE() AND
+        pf.id = :id
+    ";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute(["id" => $id]);
+
+    $funciones = [];
+    while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+        $funciones[] = new FuncionDTO($row);
+    }
+
+    return $funciones;
+}
 
 
 
@@ -214,6 +255,28 @@ final class FuncionDAO extends DAO implements InterfaceDAO
         }
     }
     
+    private function validateSala(FuncionDTO $object): void {
+        $sql = "SELECT count(id) AS cantidad 
+                FROM salas 
+                WHERE estado != 1
+                AND id = :id";
+                
+        $stmt = $this->conn->prepare($sql);
+    
+        $params = [
+            ':id' => $object->getSalaId()
+        ];
+    
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ);
+    
+        if ($result->cantidad > 0) {
+            throw new \Exception("La sala que usted seleccionó no se encuentra disponible.");
+        }
+    }
+    
+
+
     private function validate(FuncionDTO $object): void
 {
 

@@ -13,7 +13,7 @@ final class Autentication
         $sql = "SELECT CONCAT(u.nombres,'.', u.apellido) AS usuario,
         
                u.cuenta,
-               u.contrasena,
+               u.clave,
                u.perfilId,
                p.nombre AS perfilNombre,
                u.id
@@ -35,7 +35,7 @@ final class Autentication
 
         $cuenta = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        if (!password_verify($pass, $cuenta['contrasena'])) {
+        if (!password_verify($pass, $cuenta['clave'])) {
             throw new \Exception("La contraseña o usuario es inválido contraseña");
         }
 
@@ -47,10 +47,6 @@ final class Autentication
         $_SESSION["id"] = $cuenta['id'];
 
     }
-
-
-
-
 
     public static function logout(): void
     {

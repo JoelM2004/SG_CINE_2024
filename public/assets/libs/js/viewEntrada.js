@@ -2,29 +2,43 @@ function updateTotal() {
   const availableTickets = parseInt(
     document.getElementById("available-tickets").innerText
   );
-  const ticketQuantity = parseInt(
-    document.getElementById("ticket-quantity").value
+  const ticketQuantityInput = document.getElementById("ticket-quantity");
+  const ticketQuantity = parseInt(ticketQuantityInput.value);
+  const ticketPrice = parseFloat(
+    document.getElementById("ticket-price").innerText
   );
-  const ticketPrice = 10.0;
   const errorMessage = document.getElementById("error-message");
   const confirmationCard = document.getElementById("confirmation-card");
 
-  if (ticketQuantity < 1) {
+  // Manejo del caso en que el campo de cantidad está vacío
+  if (isNaN(ticketQuantity) || ticketQuantity === '') {
     errorMessage.style.display = "block";
-    errorMessage.innerText =
-      "La cantidad de entradas no puede ser menor que 1.";
-    document.getElementById("total-price").innerText = "0.00";
-    confirmationCard.style.display = "none";
-  } else if (ticketQuantity > availableTickets) {
-    errorMessage.style.display = "block";
-    errorMessage.innerText =
-      "La cantidad de entradas seleccionadas excede las disponibles.";
+    errorMessage.innerText = "Ingrese una cantidad.";
     document.getElementById("total-price").innerText = "0.00";
     confirmationCard.style.display = "none";
   } else {
-    errorMessage.style.display = "none";
-    const totalPrice = ticketQuantity * ticketPrice;
-    document.getElementById("total-price").innerText = totalPrice.toFixed(2);
+    if (ticketQuantity < 1) {
+      errorMessage.style.display = "block";
+      errorMessage.innerText = "La cantidad de entradas no puede ser menor que 1.";
+      document.getElementById("total-price").innerText = "0.00";
+      confirmationCard.style.display = "none"; // Ocultar confirmación si hay error
+    } else if (ticketQuantity > availableTickets) {
+      errorMessage.style.display = "block";
+      errorMessage.innerText = "La cantidad de entradas seleccionadas excede las disponibles.";
+      document.getElementById("total-price").innerText = "0.00";
+      confirmationCard.style.display = "none"; // Ocultar confirmación si hay error
+    } else {
+      errorMessage.style.display = "none";
+      const totalPrice = ticketQuantity * ticketPrice;
+      document.getElementById("total-price").innerText = totalPrice.toFixed(2);
+
+      // Mostrar confirmación si la cantidad es válida
+      if (
+        document.getElementById("confirm-quantity").innerText != ticketQuantity
+      ) {
+        confirmationCard.style.display = "none";
+      }
+    }
   }
 }
 
@@ -53,20 +67,19 @@ function confirmPurchase() {
   const termsAccepted = document.getElementById("termsCheck").checked;
   if (termsAccepted) {
     alert("Compra confirmada. ¡Gracias por tu compra!");
-    // Aquí puedes agregar lógica para completar la compra
+    // Aquí puedes agregar lógica para completar la compra, como enviar datos al servidor.
   } else {
     alert("Debes aceptar los términos y condiciones para continuar.");
   }
 }
 
+// Manejo de filtros si es necesario
 if (document.getElementById("filterType") != null) {
   document.getElementById("filterType").addEventListener("change", function () {
-    // Ocultar todos los filtros
     document.getElementById("filterTicket").classList.add("d-none");
     document.getElementById("filterFuncion").classList.add("d-none");
     document.getElementById("filterCuenta").classList.add("d-none");
 
-    // Mostrar el filtro seleccionado
     const selectedFilter = this.value;
     if (selectedFilter === "ticket") {
       document.getElementById("filterTicket").classList.remove("d-none");
@@ -76,9 +89,7 @@ if (document.getElementById("filterType") != null) {
       document.getElementById("filterCuenta").classList.remove("d-none");
     }
   });
-} else {
-    if( document
-      .getElementById("btnToggleEntrada")!=null){
+} else if (document.getElementById("btnToggleEntrada") != null) {
   document
     .getElementById("btnToggleEntrada")
     .addEventListener("click", function () {
@@ -92,6 +103,5 @@ if (document.getElementById("filterType") != null) {
           // Aquí se puede hacer una llamada para actualizar el estado a 0 (desactivado)
         }
       }
-    })
-  };
+    });
 }

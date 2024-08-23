@@ -334,6 +334,24 @@ let singletonController = {
     return array;
   },
 
+  loadSala: (id) => {
+    let result;
+
+     singletonService
+      .loadSala(id)
+      .then((data) => {
+        console.log("Sala listada:", data);
+
+        result = data.result;
+      })
+      .catch((error) => {
+        console.error("Error al listar Sala:", error);
+      });
+
+    return result;
+  },
+
+
   listPelicula: async () => {
     console.log("Listando Peliculas...");
 
@@ -352,5 +370,22 @@ let singletonController = {
       });
 
     return array;
+  },
+
+  loadPelicula: (id) => {
+    let result;
+
+     singletonService
+      .loadPelicula(id)
+      .then((data) => {
+        console.log("Película listada:", data);
+
+        return data.result;
+      })
+      .catch((error) => {
+        console.error("Error al listar Película:", error);
+      });
+
+    
   },
 };

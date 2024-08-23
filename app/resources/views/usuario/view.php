@@ -1,3 +1,17 @@
+<?php
+                use app\core\model\dao\UsuarioDAO;
+                use app\libs\Connection\Connection;
+
+                
+                $id = $_SESSION["id"];
+                $conn = Connection::get();
+                $dao = new UsuarioDAO($conn);
+                $datos = $dao->load($id);
+                
+                
+            
+?>
+
 <div class="container mt-5">
         <!-- Logo de Los Pollos Hermanos -->
         <div class="text-center mb-4">
@@ -24,14 +38,16 @@
                 <div class="card">
                     <div class="card-body">
                         <h3 class="card-title">Información de la Cuenta</h3>
-                        <p><strong>Cuenta:</strong> usuario123</p>
-                        <p><strong>Nombre:</strong> Juan</p>
-                        <p><strong>Apellido:</strong> Pérez</p>
-                        <p><strong>Tipo de Usuario:</strong> Externo</p>
-                        <p><strong>Correo:</strong> juan.perez@example.com</p>
+                        <p><strong>Cuenta:</strong> <?=$datos->getCuenta() ?></p>
+                        <p><strong>Nombre:</strong>  <?=$datos->getNombres() ?></p>
+                        <p><strong>Apellido:</strong>  <?=$datos->getApellido() ?></p>
+                        <p><strong>Tipo de Usuario:</strong>  <?= $_SESSION["perfil"] ?></p>
+                        <p><strong>Correo:</strong>  <?=$datos->getCorreo() ?></p>
                     </div>
                 </div>
             </div>
+
+           
 
             <!-- Historial de Compras -->
             <div class="tab-pane fade" id="purchase-history" role="tabpanel" aria-labelledby="purchase-history-tab">

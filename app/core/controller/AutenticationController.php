@@ -13,8 +13,8 @@ final class AutenticationController extends Controller
     public function __construct()
     {
         parent::__construct([
-            // "app/js/autentication/authController.js",
-            //  "app/js/autentication/authService.js"
+            "app/js/autentication/authController.js",
+              "app/js/autentication/authService.js"
         ]);
     }
 
@@ -59,10 +59,10 @@ final class AutenticationController extends Controller
         
         Autentication::logout();
 
-        $this->view = "autenticacion/logout.php";
+        $this->view = "autentication/logout.php";
         $titulo = "Cerrando Sesión";
         
         require_once APP_TEMPLATE . "template.php";
-        header("refresh:5;url=" . APP_FRONT . "autenticacion/index");
+        header("refresh:5;url=" . APP_FRONT . "autentication/index");
     }
 }

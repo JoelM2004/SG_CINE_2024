@@ -38,7 +38,7 @@ final class FuncionController extends Controller implements InterfaceController,
 
         $this->view="funcion/view.php";
         $breadcrumbActual="Funciones";
-        $breadcrumbLink=APP_FRONT."pelicula/view";
+        $breadcrumbLink=APP_FRONT."pelicula/view/".$_GET["id"];
         $breadcrumbPasada="Película";
         require_once APP_TEMPLATE."template.php";
 
@@ -140,6 +140,21 @@ final class FuncionController extends Controller implements InterfaceController,
         $service = new FuncionService();
         $response->setResult($service->list());
         $response->setMessage("La función se listó correctamente");
+        $response->send();
+
+    }
+
+    public function listFunciones(Request $request, Response $response):void{
+
+        $service = new FuncionService();
+        $id = $request->getParam("id");
+        $funciones = $service->listFunciones($id);
+        $funcionesArray = array_map(function($funcion) {
+        return $funcion->toArray(); // Convierte el objeto UsuarioDTO a un array
+        }, $funciones);
+
+        $response->setResult($funcionesArray);
+        $response->setMessage("La/las funciones se listaron correctamente");
         $response->send();
 
     }

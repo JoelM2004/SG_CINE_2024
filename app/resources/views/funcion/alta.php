@@ -3,7 +3,8 @@
 use app\core\model\dao\PeliculaDAO;
 use app\core\model\dao\SalaDAO;
 use app\core\model\dao\ProgramacionDAO;
-
+use app\core\model\dao\AudioDAO;
+use app\core\model\dao\TipoDAO;
 
 use app\libs\connection\Connection;
 
@@ -18,6 +19,11 @@ $datosSala = $daoSala->list();
 $daoProgramacion = new ProgramacionDAO($conn);
 $datosProgramacion = $daoProgramacion->list();
 
+$daoAudio = new AudioDAO($conn);
+$datosAudio = $daoAudio->list();
+
+$daoTipo = new TipoDAO($conn);
+$datosTipo = $daoTipo->list();
 ?>
 
 
@@ -54,9 +60,9 @@ $datosProgramacion = $daoProgramacion->list();
 
                 // Invertir el array para que las últimas películas aparezcan primero
                 $datosPeliculaInvertido = array_reverse($datosPelicula);
-
+                $select="";
                 foreach ($datosPeliculaInvertido as $elemento) {
-                    $txt .= '<option value="' . $elemento['id'] . '">' . $elemento['nombre'] . '</option>';
+                    echo '<option value="' . $elemento['id'] . '" ' . $selected . '>' . $elemento['nombre']."-". $daoAudio->load($elemento["audioId"])->getNombre()."-".$daoTipo->load($elemento["tipoId"])->getNombre().'</option>';
                 }
 
                 echo $txt;
@@ -98,7 +104,7 @@ $datosProgramacion = $daoProgramacion->list();
                     $fechaInicioFormateada = formatDate($elemento['fechaInicio']);
                     $fechaFinFormateada = formatDate($elemento['fechaFin']);
 
-                    $txt .= '<option value="' . $elemento['id'] . '">' . $fechaInicioFormateada . " --- " . $fechaFinFormateada . '</option>';
+                    $txt .= '<option value="' . $elemento['id'] . '">' . $fechaInicioFormateada . " a " . $fechaFinFormateada . '</option>';
                 }
 
                 echo $txt;
@@ -159,7 +165,7 @@ $datosProgramacion = $daoProgramacion->list();
                     $datosPeliculaInvertido = array_reverse($datosPelicula);
 
                     foreach ($datosPeliculaInvertido as $elemento) {
-                        $txt .= '<option value="' . $elemento['id'] . '">' . $elemento['nombre'] . '</option>';
+                        echo '<option value="' . $elemento['id'] . '" ' . $selected . '>' . $elemento['nombre']."-". $daoAudio->load($elemento["audioId"])->getNombre()."-".$daoTipo->load($elemento["tipoId"])->getNombre().'</option>';
                     }
 
                     echo $txt;
@@ -187,7 +193,7 @@ $datosProgramacion = $daoProgramacion->list();
                         $fechaInicioFormateada = formatDate($elemento['fechaInicio']);
                         $fechaFinFormateada = formatDate($elemento['fechaFin']);
 
-                        $txt .= '<option value="' . $elemento['id'] . '">' . $fechaInicioFormateada . " --- " . $fechaFinFormateada . '</option>';
+                        $txt .= '<option value="' . $elemento['id'] . '">' . $fechaInicioFormateada . " a " . $fechaFinFormateada . '</option>';
                     }
 
                     echo $txt;

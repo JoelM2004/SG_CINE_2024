@@ -13,16 +13,17 @@ final class InicioDAO extends DAO
     }
 
     public function list(): array
-    {
-
-        $sql = "SELECT 
+{
+    $sql = "SELECT DISTINCT
         pf.id,
         pf.nombre,
         pf.duracion,
         pf.anoEstreno,
         pf.fechaIngreso,
         g.nombre AS genero,
-        c.nombre AS calificacion
+        c.nombre AS calificacion,
+        a.nombre AS audio,
+        t.nombre AS tipo
     FROM 
         peliculas pf
     INNER JOIN 
@@ -33,12 +34,18 @@ final class InicioDAO extends DAO
         generos g ON pf.generoId = g.id
     INNER JOIN 
         calificaciones c ON pf.calificacionId = c.id
+    INNER JOIN 
+        audios a ON pf.audioId = a.id
+    INNER JOIN 
+        tipos t ON pf.tipoId = t.id
     WHERE 
-        p.vigente = 1;
-        ";
+        p.vigente = 1
+    ";
 
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute();
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    }
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+}
+
+
 }

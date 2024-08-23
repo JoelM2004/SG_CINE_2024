@@ -41,8 +41,8 @@ $datos = $dao->loadView($id);
           <p><a href="<?= $datos['sitioWebOficial'] ?>" target="_blank" class="card-link">Visita el sitio web de la película</a></p>
 
           <div class="card-body">
-            <a href="<?= APP_FRONT . "funcion/view?id=" . $id ?>" class="btn btn-primary">Entradas y Funciones Disponibles</a>
-            <a href="<?= APP_FRONT . "comentario/index?id=" . $id ?>" class="btn btn-primary">Deja tu opinión acerca de la película</a>
+            <a href="<?= APP_FRONT . "funcion/view/" . $id ?>" class="btn btn-primary">Entradas y Funciones Disponibles</a>
+            <a href="<?= APP_FRONT . "comentario/index/" . $id ?>" class="btn btn-primary">Deja tu opinión acerca de la película</a>
           </div>
         </div>
       </div>

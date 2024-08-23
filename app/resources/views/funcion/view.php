@@ -1,40 +1,24 @@
-<div class="container mt-5">
-    <h2 class="mb-4">Entradas y Funciones Disponibles</h2>
-    
-    <div class="card mb-3 shadow-sm">
-        <div class="card-body">
-            <h5 class="card-title">Título de la Película</h5>
-            <p class="card-text">Selecciona una función para ver más detalles y comprar entradas.</p>
-            
-            <div class="list-group" id="funciones-lista">
-                <!-- Función 1 -->
-                <a href="<?= APP_FRONT . "entrada/view" ?>" class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h6 class="mb-1">Función 1 - 10:00 AM</h6>
-                        <small>Duración: 120 min</small>
-                    </div>
-                    <p class="mb-1">Sala 1 - Subtitulada - $10.00</p>
-                </a>
+<?php
+use app\core\model\dao\PeliculaDAO;
+use app\libs\connection\Connection;
 
-                <!-- Función 2 -->
-                <a href="#" class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h6 class="mb-1">Función 2 - 01:00 PM</h6>
-                        <small>Duración: 120 min</small>
-                    </div>
-                    <p class="mb-1">Sala 2 - Doblada - $10.00</p>
-                </a>
+$conn = Connection::get();
 
-                <!-- Función 3 -->
-                <a href="#" class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h6 class="mb-1">Función 3 - 04:00 PM</h6>
-                        <small>Duración: 120 min</small>
-                    </div>
-                    <p class="mb-1">Sala 3 - Subtitulada - $10.00</p>
-                </a>
-            </div>
+$id = $_GET['id'];
+
+$daoPelicula = new PeliculaDAO($conn);
+$datosPelicula = $daoPelicula->load($id);
+
+
+?>
+
+<div class="card mb-3 shadow-sm" id="peliculaId" data-id=<?=$id?>>
+    <div class="card-body">
+        <h2 class="card-title"><?=$datosPelicula->getNombre()?></h2>
+        <p class="card-text">Selecciona una función para ver más detalles y comprar entradas.</p>
+        
+        <div class="list-group" id="funciones-lista">
+            <!-- Funciones serán añadidas aquí dinámicamente -->
         </div>
     </div>
- 
 </div>

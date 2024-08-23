@@ -42,6 +42,13 @@ final class SalaController extends Controller implements InterfaceController, In
     *Gestiona los servicios correspondientes, para la busqueda de una entidad existente en el sistema, se debe enviar el id en la petición del cliente de la petición
     */
     public function load(Request $request, Response $response):void{
+        $service = new SalaService();
+        $info = $service->load($request->getId());
+        $info=$info->toArray();
+        $response->setResult($info);
+        $response->setMessage("La cuenta se cargó correctamente");
+
+        $response->send();
 
 
     }

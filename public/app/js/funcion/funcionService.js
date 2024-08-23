@@ -257,4 +257,29 @@ let funcionService = {
         throw error;
       });
   },
+
+  listFunciones: (id) => {
+    return fetch(`funcion/listFunciones`, {
+      method: "POST", // Cambié el método a POST
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({ id }), // Envío el parámetro en el cuerpo de la solicitud
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(response.status);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        return data;
+      })
+      .catch((error) => {
+        console.error("Error en la petición: ", error);
+        throw error;
+      });
+  },
+
 };

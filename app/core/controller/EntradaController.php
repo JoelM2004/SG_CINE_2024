@@ -7,6 +7,7 @@ use app\core\controller\base\Controller;
 use app\core\controller\base\InterfaceController;
 use app\core\controller\base\InterfaceControllerExtend;
 use app\core\service\EntradaService;
+use app\core\service\FuncionService;
 
 final class EntradaController extends Controller implements InterfaceController,InterfaceControllerExtend{
 
@@ -39,7 +40,11 @@ final class EntradaController extends Controller implements InterfaceController,
 
         $this->view="entrada/view.php";
         $breadcrumbActual="Entradas";
-        $breadcrumbLink=APP_FRONT."funcion/view";
+
+        $service = new FuncionService();
+        $info = $service->load($_GET["id"]);
+
+        $breadcrumbLink=APP_FRONT."funcion/view/".$info->getPeliculaId();
         $breadcrumbPasada="Funciones";
         require_once APP_TEMPLATE."template.php";
 

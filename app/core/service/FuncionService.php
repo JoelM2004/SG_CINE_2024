@@ -70,4 +70,10 @@ final class FuncionService  extends Service implements InterfaceService {
         return $dao->loadByFechaProgramacion($FechaProgramacion);
     }
 
+    public function listFunciones($id):array{
+        $conn= Connection::get();
+        $dao= new FuncionDAO($conn);
+        return $dao->listFunciones($id);
+    }
+
 }

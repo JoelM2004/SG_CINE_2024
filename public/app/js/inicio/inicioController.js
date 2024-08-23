@@ -9,7 +9,10 @@ let inicioController = {
         data.result.forEach((pelicula) => {
           // Crear la tarjeta de película
 
-
+          const formatDate = (dateString) => {
+            const [year, month, day] = dateString.split("-");
+            return `${day}/${month}/${year}`;
+          };
 
 
           let card = `
@@ -29,7 +32,9 @@ let inicioController = {
               <li class="list-group-item"><strong>Duración:</strong> ${pelicula.duracion} min</li>
               <li class="list-group-item"><strong>Género:</strong> ${pelicula.genero}</li>
               <li class="list-group-item"><strong>Calificación:</strong> ${pelicula.calificacion}</li>
-              <li class="list-group-item"><strong>Fecha de Ingreso:</strong> ${pelicula.fechaIngreso}</li>
+              <li class="list-group-item"><strong>Fecha de Ingreso:</strong> ${formatDate(pelicula.fechaIngreso)}</li>
+              <li class="list-group-item"><strong>Tipo:</strong> ${pelicula.tipo}</li>
+              <li class="list-group-item"><strong>Audio:</strong> ${pelicula.audio}</li>
               <li class="list-group-item"><strong>Fecha de Estreno:</strong> ${pelicula.anoEstreno}</li>
             </ul>
           </div>

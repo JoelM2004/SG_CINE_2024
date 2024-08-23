@@ -95,6 +95,10 @@ let singletonService = {
     return singletonService.fetchData("sala/list");
   },
 
+  loadSala: (id) => {
+    return singletonService.fetchData(`sala/load/${id}`);
+  },
+
   listProgramacion: () => {
     return singletonService.fetchData("programacion/list");
   },
@@ -102,4 +106,9 @@ let singletonService = {
   listPelicula: () => {
     return singletonService.fetchData("pelicula/list");
   },
+
+  loadPelicula: (id) => {
+    return singletonService.fetchData(`pelicula/load/${id}`);
+  },
+
 };

@@ -16,17 +16,26 @@ final class EntradaDAO extends DAO implements InterfaceDAO
 
 
     public function save(InterfaceDTO $object): void
-    {
-        // $this->validate($object);
-        // $this->validateNumeroEntrada($object);
+{
+    $data = $object->toArray();
+    
+    // Generar un número de ticket único
+    $data['numeroTicket'] = $this->generateUniqueTicketNumber();
 
-        $sql = "INSERT INTO {$this->table} VALUES(DEFAULT,:horarioFuncion,:horaVenta,:precio,:numeroTicket,:estado,:funcionId,:EntradaId)";
-        $stmt = $this->conn->prepare($sql);
-        $data = $object->toArray();
-        unset($data["id"]);
-        $stmt->execute($data);
-        $object->setId((int)$this->conn->lastInsertId());
-    }
+    // Preparar la consulta SQL
+    $sql = "INSERT INTO {$this->table} VALUES(DEFAULT,:horarioFuncion,:horaVenta,:precio,:numeroTicket,1,:funcionId,:usuarioId)";
+    $stmt = $this->conn->prepare($sql);
+
+    // Eliminar el id del array de datos
+    unset($data["id"]);
+
+    // Ejecutar la consulta
+    $stmt->execute($data);
+
+    // Establecer el ID en el objeto
+    $object->setId((int)$this->conn->lastInsertId());
+}
+    
 
     public function load($id): EntradaDTO
     {
@@ -97,7 +106,8 @@ final class EntradaDAO extends DAO implements InterfaceDAO
            }
    
 
-    public function delete($id): void
+    
+           public function delete($id): void
     {
         $sql = "DELETE FROM {$this->table} WHERE id= :id";
         $stmt = $this->conn->prepare($sql);
@@ -113,6 +123,23 @@ final class EntradaDAO extends DAO implements InterfaceDAO
         $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
+
+    private function generateUniqueTicketNumber(): string
+{
+    do {
+        // Generar un número aleatorio de 10 dígitos
+        $ticketNumber = str_pad(mt_rand(0, 9999999999), 10, '0', STR_PAD_LEFT);
+
+        // Verificar si el número ya existe en la base de datos
+        $sql = "SELECT COUNT(*) FROM {$this->table} WHERE numeroTicket = :numeroTicket";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(['numeroTicket' => $ticketNumber]);
+        $count = $stmt->fetchColumn();
+    } while ($count > 0);
+
+    return $ticketNumber;
+}
+
 
     private function validate(EntradaDTO $object): void
     {
@@ -147,7 +174,7 @@ final class EntradaDAO extends DAO implements InterfaceDAO
         if ($result->cantidad > 0) {
             throw new \Exception("El dato Número de Entrada ({$object->getNumeroEntrada()}) ya existe en la base de datos");
         }
-    }
+    }   
 
 
 }

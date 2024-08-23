@@ -4,7 +4,8 @@ use app\core\model\dao\PeliculaDAO;
 use app\core\model\dao\SalaDAO;
 use app\core\model\dao\ProgramacionDAO;
 use app\core\model\dao\FuncionDAO;
-
+use app\core\model\dao\AudioDAO;
+use app\core\model\dao\TipoDAO;
 use app\libs\connection\Connection;
 
 $conn = Connection::get();
@@ -21,6 +22,11 @@ $datosSala = $daoSala->list();
 $daoProgramacion = new ProgramacionDAO($conn);
 $datosProgramacion = $daoProgramacion->list();
 
+$daoAudio = new AudioDAO($conn);
+$datosAudio = $daoAudio->list();
+
+$daoTipo = new TipoDAO($conn);
+$datosTipo = $daoTipo->list();
 ?>
 
 
@@ -60,7 +66,10 @@ $datosProgramacion = $daoProgramacion->list();
 
                 foreach ($datosPeliculaInvertido as $elemento) {
                     $selected = $datosFuncion->getPeliculaId() == $elemento['id'] ? 'selected' : '';
-                    echo '<option value="' . $elemento['id'] . '" ' . $selected . '>' . $elemento['nombre'] . '</option>';
+
+
+
+                    echo '<option value="' . $elemento['id'] . '" ' . $selected . '>' . $elemento['nombre']."-". $daoAudio->load($elemento["audioId"])->getNombre()."-".$daoTipo->load($elemento["tipoId"])->getNombre().'</option>';
                 }
 
                 echo $txt;
@@ -103,7 +112,7 @@ $datosProgramacion = $daoProgramacion->list();
 
                 foreach ($datosProgramacionInvertido as $elemento) {
                     $selected = $datosFuncion->getProgramacionId() == $elemento['id'] ? 'selected' : '';
-                    echo '<option value="' . $elemento['id'] . '" ' . $selected . '>' . formatDate($elemento['fechaInicio'])."---".formatDate($elemento["fechaFin"]) . '</option>';
+                    echo '<option value="' . $elemento['id'] . '" ' . $selected . '>' . formatDate($elemento['fechaInicio'])." a ".formatDate($elemento["fechaFin"]) . '</option>';
                 }
 
                 echo $txt;
@@ -141,7 +150,7 @@ $datosProgramacion = $daoProgramacion->list();
             <tbody id="tbodyFunciones">
             <tr id="filaModificarFuncion" data-id=<?= $datosFuncion->getId() ?>>
                     <th><?= 1 ?></th>
-                    <td><?= $datosFuncion->getFecha() ?></td>
+                    <td><?= formatDate( $datosFuncion->getFecha()) ?></td>
                     <td><?= $datosFuncion->getHoraInicio() ?></td>
                     <td><?= $datosFuncion->getDuracion() ?></td>
                     <td><?= $datosFuncion->getNumeroFuncion() ?></td>
@@ -149,7 +158,8 @@ $datosProgramacion = $daoProgramacion->list();
                     <td>
                         <?php
                         $datosPelicula = $daoPelicula->load($datosFuncion->getPeliculaId());
-                        echo $datosPelicula->getNombre()
+
+echo $datosPelicula->getNombre()."-".$daoAudio->load($datosPelicula->getAudioId())->getNombre()."-".$daoTipo->load($datosPelicula->getTipoId())->getNombre()
                         ?>
                     </td>
 
@@ -162,8 +172,11 @@ $datosProgramacion = $daoProgramacion->list();
 
                     <td>
                         <?php
+
+
+
                         $datosProgramacion =$daoProgramacion->load($datosFuncion->getProgramacionId());
-                        echo $datosProgramacion->getFechaInicio()."---". $datosProgramacion->getFechaFin();
+                        echo formatDate($datosProgramacion->getFechaInicio())." a ". formatDate($datosProgramacion->getFechaFin());
                         ?>
                     </td>
 

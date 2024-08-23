@@ -19,7 +19,7 @@
                     <label for="password" class="form-label">Contraseña</label>
                     <input type="password" class="form-control" id="password" placeholder="Ingresa tu contraseña" required>
                 </div>
-                <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+                <button id="btnLogin" type="button" class="btn btn-primary w-100">Iniciar Sesión</button>
             </form>
 
             <!-- Enlaces adicionales -->
