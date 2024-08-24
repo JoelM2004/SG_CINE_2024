@@ -12,26 +12,32 @@
                 <!-- Formulario de Registro -->
                 <form id="register-form">
                     <div class="mb-3">
-                        <label for="first-name" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="first-name" placeholder="Ingresa tu nombre" required>
+                        <label for="nombres" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombres" placeholder="Ingresa tu nombre" required>
                     </div>
                     <div class="mb-3">
-                        <label for="last-name" class="form-label">Apellido</label>
-                        <input type="text" class="form-control" id="last-name" placeholder="Ingresa tu apellido" required>
+                        <label for="apellido" class="form-label">Apellido</label>
+                        <input type="text" class="form-control" id="apellido" placeholder="Ingresa tu apellido" required>
                     </div>
                     <div class="mb-3">
-                        <label for="account-name" class="form-label">Nombre de Usuario</label>
-                        <input type="text" class="form-control" id="account-name" placeholder="Ingresa tu nombre de Usuario" required>
+                        <label for="cuenta" class="form-label">Nombre de Usuario</label>
+                        <input type="text" class="form-control" id="cuenta" placeholder="Ingresa tu nombre de Usuario" required>
                     </div>
                     <div class="mb-3">
-                        <label for="email" class="form-label">Correo</label>
-                        <input type="email" class="form-control" id="email" placeholder="Ingresa tu correo electrónico" required>
+                        <label for="correo" class="form-label">Correo</label>
+                        <input type="email" class="form-control" id="correo" placeholder="Ingresa tu correo electrónico" required>
                     </div>
                     <div class="mb-3">
-                        <label for="password" class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" id="password" placeholder="Ingresa tu contraseña" required>
+                        <label for="clave" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="clave" placeholder="Ingresa tu contraseña" required>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+
+                    <div class="mb-3">
+                        <label for="claveConfirm" class="form-label">Repita su Contraseña</label>
+                        <input type="password" class="form-control" id="claveConfirm" placeholder="Ingresa tu contraseña" required>
+                    </div>
+
+                    <button id="btnRegister" type="button" class="btn btn-primary w-100">Registrarse</button>
                 </form>
             </div>
         </div>

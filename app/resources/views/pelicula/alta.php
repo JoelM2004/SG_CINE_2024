@@ -286,14 +286,10 @@ $datosIdioma = $daoIdioma->list();
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Nombre</th>
-                    <!-- <th scope="col">Título Original</th> -->
                     <th scope="col">Duración</th>
                     <th scope="col">Año de Estreno</th>
                     <th scope="col">Disponibilidad</th>
                     <th scope="col">Fecha de Ingreso</th>
-                    <!-- <th scope="col">Sitio Web</th> -->
-                    <!-- <th scope="col">Sinopsis</th> -->
-                    <!-- <th scope="col">Actores</th> -->
                     <th scope="col">Género</th>
                     <th scope="col">País</th>
                     <th scope="col">Idioma</th>

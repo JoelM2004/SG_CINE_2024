@@ -42,7 +42,7 @@ final class UsuarioService  extends Service implements InterfaceService {
     public function changePassword(array $object):void{
         $conn= Connection::get();
         $dao= new UsuarioDAO($conn);
-        $dao->changePassword(new UsuarioDTO($object));
+        $dao->changePassword($object);
     }
 
     public function update(array $object):void{

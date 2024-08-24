@@ -23,7 +23,7 @@
           <a class="nav-link active fw-bold" aria-current="page" href="<?= APP_FRONT . 'inicio/index' ?>">Inicio</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link fw-bold" href="<?= APP_FRONT . 'usuario/view' ?>">Mi Cuenta</a>
+          <a class="nav-link fw-bold" href="<?= APP_FRONT . 'usuario/view' ?>" <?php if (!isset($_SESSION["token"]) || $_SESSION["token"] != APP_TOKEN) echo 'hidden'; ?> >Mi Cuenta</a>
         </li>
         <li class="nav-item">
           <a class="nav-link fw-bold" href="#cartelera">Cartelera-Programación</a>
@@ -31,32 +31,35 @@
         <li class="nav-item">
           <a class="nav-link fw-bold" href="<?= APP_FRONT . 'info/index' ?>">Acerca de Nosotros</a>
         </li>
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown" <?php if ((!isset($_SESSION["token"]) || $_SESSION["token"] != APP_TOKEN)||(($_SESSION["perfil"]) !=="Administrador")&&(($_SESSION["perfil"]) !=="Operador")) echo 'hidden'; ?>>
           <a class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Funcionalidades para Operarios y Administradores
           </a>
           <ul class="dropdown-menu dropdown-menu-dark">
-            <li><a class="dropdown-item" href="<?= APP_FRONT . 'sala/index' ?>">Gestionar Salas</a></li>
-            <li><a class="dropdown-item" href="<?= APP_FRONT . 'pelicula/index' ?>">Gestionar Películas</a></li>
+            <li><a class="dropdown-item" href="<?= APP_FRONT . 'sala/index' ?>"<?php if (($_SESSION["perfil"]) !=="Administrador") echo 'hidden'; ?>>Gestionar Salas</a></li>
+            <li><a class="dropdown-item" href="<?= APP_FRONT . 'pelicula/index' ?>" <?php if (($_SESSION["perfil"]) !=="Administrador") echo 'hidden'; ?>>Gestionar Películas</a></li>
             <li><a class="dropdown-item" href="<?= APP_FRONT . 'programacion/index' ?>">Gestionar Programaciones</a></li>
             <li><a class="dropdown-item" href="<?= APP_FRONT . 'funcion/index' ?>">Gestionar Funciones</a></li>
             <li><a class="dropdown-item" href="<?= APP_FRONT . 'entrada/index' ?>">Gestionar Entradas</a></li>
-            <li><a class="dropdown-item" href="<?= APP_FRONT . 'usuario/index' ?>">Gestionar Usuarios</a></li>
-            <li><a class="dropdown-item" href="<?= APP_FRONT . 'perfil/index' ?>">Gestionar Perfiles</a></li>
+            <li><a class="dropdown-item" href="<?= APP_FRONT . 'usuario/index' ?>"<?php if (($_SESSION["perfil"]) !=="Administrador") echo 'hidden'; ?>>Gestionar Usuarios</a></li>
+            <li><a class="dropdown-item" href="<?= APP_FRONT . 'perfil/index' ?>"<?php if (($_SESSION["perfil"]) !=="Administrador") echo 'hidden'; ?>>Gestionar Perfiles</a></li>
           </ul>
         </li>
       </ul>
 
       <div class="mt-3 d-flex flex-column align-items-center">
-        <button class="btn btn-success w-100 mb-2" onclick="window.location.href='<?= APP_FRONT . 'autentication/index' ?>'">
+        <!-- Botón para iniciar sesión o registrarse -->
+        <button class="btn btn-success w-100 mb-2" onclick="window.location.href='<?= APP_FRONT . 'autentication/index' ?>'"
+          <?php if (isset($_SESSION["token"]) && $_SESSION["token"] == APP_TOKEN) echo 'hidden'; ?>>
           Iniciar Sesión o Registrarse
         </button>
 
-        <button class="btn btn-danger w-100" onclick="window.location.href='<?= APP_FRONT . 'autentication/logout' ?>'">
+        <!-- Botón para cerrar sesión -->
+        <button class="btn btn-danger w-100" onclick="window.location.href='<?= APP_FRONT . 'autentication/logout' ?>'" <?php if (!isset($_SESSION["token"]) || $_SESSION["token"] != APP_TOKEN) echo 'hidden'; ?>>
           Cerrar Sesión
         </button>
       </div>
+
     </div>
   </div>
 </nav>
-

@@ -76,30 +76,43 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
     // Ejecutar la consulta con los datos del objeto
         $stmt->execute($data);
 
-
-
-        // $stmt->execute([
-        //     ':nombres' => $object->getNombres(),
-        //     ':apellido' => $object->getApellido(),
-        //     ':cuenta' => $object->getCuenta(),
-        //     ':correo' => $object->getCorreo(),
-        //     ':perfilId' => $object->getPerfilId(),
-        //     ':id' => $object->getId()
-        // ]);
     }
 
-    public function changePassword(InterfaceDTO $object): void
+    public function changePassword(array $object): void
     {
 
-        $clave = password_hash($object->getClave(), PASSWORD_DEFAULT);
+        $this->verificarPassword($object);
+        $clave = password_hash($object["nueva"], PASSWORD_DEFAULT);
 
         $sql = "UPDATE {$this->table} SET clave = :clave WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([
             ':clave' => $clave,
-            ':id' => $object->getId()
+            ':id' => $object["id"]
         ]);
     }
+
+    private function verificarPassword(array $object): void
+{
+    // Consultar el hash de la contraseña actual desde la base de datos
+    $sql = "SELECT clave FROM {$this->table} WHERE id = :id";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([':id' => $object["id"]]);
+
+    $result = $stmt->fetch(\PDO::FETCH_OBJ);
+
+    if (!$result) {
+        throw new \Exception("El usuario no existe.");
+    }
+
+    $claveAlmacenada = $result->clave;
+
+    // Verificar la contraseña ingresada con el hash almacenado
+    if (!password_verify($object["actual"], $claveAlmacenada)) {
+        throw new \Exception("La contraseña actual es incorrecta, asegúrate de introducir la contraseña correcta para continuar.");
+    }
+}
+
 
     public function loadByNameAccount($cuenta):UsuarioDTO{
          $sql = "SELECT id,cuenta,nombres,clave,correo,perfilId,apellido  FROM {$this->table} WHERE cuenta = :cuenta";

@@ -15,3 +15,19 @@ config.addEventListener('change', function() {
     }
 });
 }
+
+if(document.getElementById("btnChangePassword")!=null){
+document.querySelectorAll('.toggle-password').forEach(item => {
+    item.addEventListener('click', event => {
+        const input = document.getElementById(item.getAttribute('data-toggle'));
+        if (input.type === 'password') {
+            input.type = 'text';
+            item.classList.remove('fa-eye');
+            item.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            item.classList.remove('fa-eye-slash');
+            item.classList.add('fa-eye');
+        }
+    });
+})}

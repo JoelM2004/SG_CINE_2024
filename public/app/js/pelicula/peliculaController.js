@@ -105,6 +105,7 @@ let peliculaController = {
         "borrarPelicula"
       ).dataset.id;
       peliculaController.data.nombre = form.nombre.value;
+      peliculaController.data.disponibilidad=form.disponibilidad.value
       peliculaController.data.tituloOriginal = form.tituloOriginal.value;
       peliculaController.data.id = parseInt(peliculaController.data.id);
       peliculaController.data.duracion = parseInt(form.duracion.value);

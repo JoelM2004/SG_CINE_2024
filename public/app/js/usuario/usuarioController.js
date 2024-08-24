@@ -250,42 +250,54 @@ let userController = {
       });
   },
 
+
+  dataPass:{
+    id:0,
+    actual:"",
+    nueva:""
+
+  }
+
+  ,
+
   changePassword: () => {
     if (confirm("¿Seguro que quieres cambiar la contraseña del Usuario?")) {
-      userController.data.id =
-        document.getElementById("filaVerUser").dataset.id;
-      userController.data.id = parseInt(userController.data.id);
 
-      $clave = document.getElementById("claveModificar").value;
+      let form=document.forms["change-password-form"];
 
-      if ($clave.length < 6) {
-        alert("La nueva contraseña es muy corta");
+      userController.dataPass.id = parseInt(document.getElementById("profile").dataset.id);
+      
+      if(form.claveActual.value.length>6 && form.claveActual.value.length<45){userController.dataPass.actual = form.claveActual.value}
+      else{alert("Su clave actual es demasiado corta o muy largo (7 a 44 caracteres)")
+        return
+      }
+
+
+      if (
+        form.claveNueva.value.length > 6 &&
+        form.claveNueva.value.length < 45
+        && form.claveNueva.value==form.claveConfirmacion.value
+      ) {
+        userController.dataPass.nueva = form.claveConfirmacion.value
       } else {
-        userController.data.clave = $clave;
+        alert("Su clave nueva es demasiado corta o muy largo (7 a 44 caracteres) o no coincide con la verificación solicitada" );
+        return
+      }
 
         userService
-          .changePassword(userController.data)
+          .changePassword(userController.dataPass)
           .then((data) => {
             alert(data.mensaje);
           })
           .catch((error) => {
             // Maneja cualquier error que ocurra durante el cambio de contraseña
-            console.error("Error al cambiar la contraseña:", error);
+            // console.error("Error al cambiar la contraseña:", error);
             alert(
-              "Hubo un problema al cambiar la contraseña. Por favor, inténtelo de nuevo más tarde."
+              "Hubo un problema al cambiar la contraseña. Por favor, inténtelo de nuevo más tarde."+ error
             );
           });
-      }
+      
 
-      // .then((data)=>{
-
-      // }
-
-      // );
-
-      //   setTimeout(() => {
-      //     location.reload();
-      //   }, 300);
     }
   },
 
@@ -424,11 +436,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let btnUsuarioListar = document.getElementById("btnListarUsuario");
   let modificarUsuario = document.getElementById("btnModificarUsuario");
   let btnBuscarUsuario=document.getElementById("btnBuscarUsuario")
-
-
   let imprimirUsuarios = document.getElementById("btnImprimirUsuario");
-
-  let cambiarPass = document.getElementById("cambiarPass");
+  let btnChangePassword = document.getElementById("btnChangePassword");
 
   if (btnUsuarioAlta != null) {
     userController.list();
@@ -447,9 +456,6 @@ document.addEventListener("DOMContentLoaded", () => {
         userController.loadByPerfil()
 
       }
-      
-
-
     })
 
 
@@ -463,7 +469,10 @@ document.addEventListener("DOMContentLoaded", () => {
     btnEliminarUsuarios.onclick = userController.delete;
     // btnUsuarioListar.onclick=userController.list;
   } else {
-    if (cambiarPass != null)
-      cambiarPass.onclick = userController.changePassword;
+    if(btnChangePassword!=null){
+
+      btnChangePassword.onclick=userController.changePassword
+
+    }
   }
 });

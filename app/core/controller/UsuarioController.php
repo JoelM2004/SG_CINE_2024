@@ -168,4 +168,18 @@ final class UsuarioController extends Controller implements InterfaceController,
 
     }
 
+    public function changePassword(Request $request, Response $response):void{
+
+        $service = new UsuarioService();
+        $data= $request->getData();
+        // $info = $service->load($data["id"]);
+        // $info=$info->toArray();
+        // // var_dump($data);
+        $service->changePassword($data);
+        $response->setMessage("La contraseña se cambió correctamente");
+        $response->send();
+
+    }
+
+
 }

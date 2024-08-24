@@ -6,6 +6,8 @@ use app\core\controller\base\Controller;
 use app\libs\autentication\Autentication;
 use app\libs\request\Request;
 use app\libs\response\Response;
+use app\core\service\UsuarioService;
+
 
 final class AutenticationController extends Controller
 {
@@ -35,6 +37,14 @@ final class AutenticationController extends Controller
         require_once APP_TEMPLATE . "template.php";
 
     }
+
+    public function registrarCuenta(Request $request, Response $response): void{
+        $service = new UsuarioService(); //REVISAR Y PREGUNTAR
+        $service->save($request->getData());
+        $response->setMessage("El usuario se registró correctamente");
+        $response->send();
+    }
+
 
     public function forgot():void{
 

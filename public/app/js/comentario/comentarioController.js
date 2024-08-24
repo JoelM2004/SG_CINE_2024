@@ -55,39 +55,44 @@ let comentarioController = {
 
         data.result.forEach((element) => {
           // Construimos el HTML para cada comentario
-
+          
           usuarios.forEach((elemento) => {
             if (element.usuarioId == elemento.id)
               nombreUsuario = elemento.cuenta;
           });
 
           txt += `
-  <div class="comment mb-4 p-3 border rounded">
-    <div class="d-flex justify-content-between">
-      <h5>${nombreUsuario}</h5>
-      <div>
-        <button class="btn btn-sm btn-warning me-2" data-id="${element.id}" >Editar</button>
-        <button class="btn btn-sm btn-danger" data-id="${element.id}">Eliminar</button>
-      </div>
-    </div>
-    <p class="comment-text">${element.comentario}</p>
-  </div>
-`;
+            <div class="comment mb-4 p-3 border rounded">
+              <div class="d-flex justify-content-between">
+                <h5>${nombreUsuario}</h5>
+                <div>
+                  
+                  <button class="btn btn-sm btn-danger eliminar" data-id="${element.id}">Eliminar</button>
+                </div>
+              </div>
+              <p class="comment-text">${element.comentario}</p>
+            </div>
+          `;
         });
 
         commentsList.innerHTML = txt; // Reemplazamos el contenido HTML de la lista de comentarios
-      })
+        document.querySelectorAll(".eliminar").forEach((button) => {
+          button.addEventListener("click", () => {
+            comentarioController.delete(button.dataset.id);
+            comentarioController.list();
+          });
+        });
+      }
+  
+    )
       .catch((error) => {
         console.error("Error al listar comentarios:", error);
       });
   },
 
-  delete: () => {
+  delete: (id) => {
     if (confirm("¿Quiere eliminar el comentario?")) {
-      comentarioController.data.id = document.getElementById(
-        "filaModificarPerfil"
-      ).dataset.id;
-
+      comentarioController.data.id = id
       comentarioService
         .delete(comentarioController.data)
         .then((data) => {
@@ -96,52 +101,29 @@ let comentarioController = {
         .catch((error) => {
           console.error("Error al eliminar el comentario:", error);
           alert(
-            "Hubo un problema al eliminar el comentario. Por favor, inténtelo de nuevo más tarde."+ error
+            "Hubo un problema al eliminar el comentario. Por favor, inténtelo de nuevo más tarde." +
+              error
           );
-        });
-    }
-  },
-
-  update: () => {
-    if (confirm("¿Quieres editar tu comentario?")) {
-        let comentarioForm = document.forms["comment-form"];
-  
-        comentarioController.data.usuarioId = parseInt(
-          comentarioForm.dataset.iduser
-        );
-        comentarioController.data.peliculaId = parseInt(
-          comentarioForm.dataset.idpelicula
-        );
-        comentarioController.data.comentario = comentarioForm.comment.value;
-
-      comentarioService
-        .update(comentarioController.data)
-        .then((data) => {
-          console.log("Actualizando Datos");
-          // Aquí puedes manejar la respuesta
-          if (data.error !== "") {
-            alert("Error al actualizar el comentario: " + data.error);
-          } else {
-            alert("Perfil actualizado con éxito");
-          }
-        })
-        .catch((error) => {
-          console.error("Error en la Petición ", error);
-          alert("Ocurrió un error al actualizar el comentario");
         });
     }
   },
 
 };
 
+
+
 // Al cargar la página, llamamos al método list para cargar los comentarios
 document.addEventListener("DOMContentLoaded", () => {
   let btnAltaComentario = document.getElementById("btnAltaComentario");
 
   comentarioController.list();
-
   btnAltaComentario.addEventListener("click", () => {
     comentarioController.save();
     comentarioController.list();
   });
+
+  
+
+
+
 });

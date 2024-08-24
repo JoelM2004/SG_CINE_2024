@@ -351,7 +351,6 @@ let singletonController = {
     return result;
   },
 
-
   listPelicula: async () => {
     console.log("Listando Peliculas...");
 
@@ -377,6 +376,23 @@ let singletonController = {
 
      singletonService
       .loadPelicula(id)
+      .then((data) => {
+        console.log("Película listada:", data);
+
+        return data.result;
+      })
+      .catch((error) => {
+        console.error("Error al listar Película:", error);
+      });
+
+    
+  },
+
+  loadUsuario: (id) => {
+    let result;
+
+     singletonService
+      .loadUsuario(id)
       .then((data) => {
         console.log("Película listada:", data);
 
