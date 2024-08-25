@@ -116,7 +116,7 @@ let entradaService = {
         });
     },
   
-    list: () => {
+    list: async () => {
       return fetch("entrada/list", {
         method: "GET",
         headers: {

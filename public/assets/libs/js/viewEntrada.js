@@ -73,6 +73,42 @@ function confirmPurchase() {
   }
 }
 
+toggleInputs = async () => {
+  const numeroFuncion = document.getElementById("numeroFuncion").value;
+  const fechaHoraFuncion = document.getElementById("fechaHoraFuncion");
+  const precio = document.getElementById("precio");
+  const cantidad=document.getElementById("cantidad")
+  const total=document.getElementById("total")
+  // Llamada a la función para cargar los detalles de la función.
+  let funcion = await singletonController.loadFuncion(numeroFuncion);
+
+  // Convertir fecha y hora a formato 'YYYY-MM-DDTHH:MM'
+  const fecha = funcion.fecha; // formato esperado 'YYYY-MM-DD'
+  const hora = funcion.horaInicio; // formato esperado 'HH:MM:SS'
+  cantidad.value=0;
+  total.value=0
+  // Asegurarse de que la hora está en formato 'HH:MM'
+  const horaFormateada = hora.substring(0, 5);
+
+  // Concatenar en formato requerido por datetime-local
+  const fechaHoraFormateada = `${fecha}T${horaFormateada}`;
+
+  // Asignar valor formateado
+  fechaHoraFuncion.value = fechaHoraFormateada;
+  precio.value = funcion.precio;
+
+  // Agregar evento onchange si el elemento existe
+};
+
+function updateTotal2 () {
+    const precio = parseFloat(document.getElementById("precio").value) || 0;
+    const cantidad = parseInt(document.getElementById("cantidad").value) || 0;
+    const total = precio * cantidad;
+    document.getElementById("total").value = total.toFixed(2); // Mostrar el total con dos decimales
+}
+
+
+
 // Manejo de filtros si es necesario
 if (document.getElementById("filterType") != null) {
   document.getElementById("filterType").addEventListener("change", function () {
@@ -103,5 +139,14 @@ if (document.getElementById("filterType") != null) {
           // Aquí se puede hacer una llamada para actualizar el estado a 0 (desactivado)
         }
       }
-    });
+    
+    
+    } );
+    
+}if (document.getElementById("numeroFuncion")) {
+  document.getElementById("numeroFuncion").onchange = toggleInputs;
 }
+
+
+document.getElementById("precio").addEventListener("input", updateTotal2);
+document.getElementById("cantidad").addEventListener("input", updateTotal2);

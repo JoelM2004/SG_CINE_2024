@@ -43,52 +43,61 @@ let comentarioController = {
 
     let comentarioForm = document.forms["comment-form"];
 
-    let usuarios = await singletonController.listUsuario();
+    // Obtener comentarios de la API
+    let data = await comentarioService.list(parseInt(comentarioForm.dataset.idpelicula));
+    console.log("Comentarios listados:", data);
 
-    await comentarioService
-      .list(parseInt(comentarioForm.dataset.idpelicula))
-      .then((data) => {
-        console.log("Comentarios listados:", data);
+    let commentsList = document.getElementById("comments-list");
+    let txt = ""; // Inicializamos la variable para construir el HTML dinámicamente
 
-        let commentsList = document.getElementById("comments-list");
-        let txt = ""; // Inicializamos la variable para construir el HTML dinámicamente
+    // Datos del usuario actual
+    let idUser = parseInt(comentarioForm.dataset.iduser);
+    let perfil = comentarioForm.dataset.perfil;
 
-        data.result.forEach((element) => {
-          // Construimos el HTML para cada comentario
-          
-          usuarios.forEach((elemento) => {
-            if (element.usuarioId == elemento.id)
-              nombreUsuario = elemento.cuenta;
-          });
+    // Procesar cada comentario
+    for (let element of data.result) {
+        // Obtener información del usuario que hizo el comentario
+        let usuarioData = await singletonController.loadUsuario(element.usuarioId);
 
-          txt += `
-            <div class="comment mb-4 p-3 border rounded">
-              <div class="d-flex justify-content-between">
-                <h5>${nombreUsuario}</h5>
-                <div>
-                  
-                  <button class="btn btn-sm btn-danger eliminar" data-id="${element.id}">Eliminar</button>
-                </div>
+        // Asegúrate de que `usuarioData` y `usuarioData.cuenta` existen antes de acceder a la propiedad `cuenta`
+        let nombreUsuario = usuarioData?.cuenta || 'Usuario Desconocido';
+
+        // Determinar si se debe mostrar el botón "Eliminar"
+        let mostrar = "";
+        if (usuarioData.id === idUser || perfil === "Administrador ") {
+            mostrar = ""; // Mostrar el botón
+        } else {
+            mostrar = "none"; // Ocultar el botón
+        }
+
+        // Construir el HTML para cada comentario
+        txt += `
+          <div class="comment mb-4 p-3 border rounded">
+            <div class="d-flex justify-content-between">
+              <h5>${nombreUsuario}</h5>
+              <div>
+                <button class="btn btn-sm btn-danger eliminar" data-id="${element.id}" style="display: ${mostrar};">Eliminar</button>
               </div>
-              <p class="comment-text">${element.comentario}</p>
             </div>
-          `;
-        });
+            <p class="comment-text">${element.comentario}</p>
+          </div>
+        `;
+    }
 
-        commentsList.innerHTML = txt; // Reemplazamos el contenido HTML de la lista de comentarios
-        document.querySelectorAll(".eliminar").forEach((button) => {
-          button.addEventListener("click", () => {
+    // Asignar el HTML construido a la lista de comentarios
+    commentsList.innerHTML = txt;
+
+    // Agregar eventos para los botones de eliminar
+    document.querySelectorAll(".eliminar").forEach((button) => {
+        button.addEventListener("click", () => {
             comentarioController.delete(button.dataset.id);
             comentarioController.list();
-          });
         });
-      }
+    });
+},
+
   
-    )
-      .catch((error) => {
-        console.error("Error al listar comentarios:", error);
-      });
-  },
+  
 
   delete: (id) => {
     if (confirm("¿Quiere eliminar el comentario?")) {

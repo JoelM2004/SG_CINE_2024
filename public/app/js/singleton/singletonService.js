@@ -79,7 +79,7 @@ let singletonService = {
     return singletonService.fetchData("funcion/list");
   },
 
-  loadCFuncion: (id) => {
+  loadFuncion: (id) => {
     return singletonService.fetchData(`funcion/load/${id}`);
   },
 
@@ -110,5 +110,8 @@ let singletonService = {
   loadPelicula: (id) => {
     return singletonService.fetchData(`pelicula/load/${id}`);
   },
+
+  
+
 
 };

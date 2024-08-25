@@ -1,19 +1,18 @@
 let singletonController = {
-  loadAudio: (id) => {
-    let result;
+  loadAudio: async (id) => {
+    console.log("Cargando Audio...");
+  
+      // Llamar al servicio para cargar el usuario
+      let data = await singletonService.loadAudio(id);
+  
+      // Verificar y retornar el resultado
+      if (data && data.result) {
+        console.log("Audio cargado:", data);
+        return data.result; // Devolver el objeto de usuario
+      } else {
+        throw new Error("No se encontró el Audio.");
+      }
     
-    singletonService
-      .loadAudio(id)
-      .then((data) => {
-        console.log("Audio listado:", data);
-
-        result = data.result;
-      })
-      .catch((error) => {
-        console.error("Error al listar perfiles:", error);
-      });
-
-    return result;
   },
 
   listAudio:async () => {
@@ -35,21 +34,20 @@ let singletonController = {
     return array;
   },
 
-  loadIdioma: (id) => {
-    let result;
-
-    singletonService
-      .loadIdioma(id)
-      .then((data) => {
-        console.log("Idioma listado:", data);
-
-        result = data.result;
-      })
-      .catch((error) => {
-        console.error("Error al listar idiomas:", error);
-      });
-
-    return result;
+  loadIdioma: async (id) => {
+    console.log("Cargando Idioma...");
+  
+      // Llamar al servicio para cargar el usuario
+      let data = await singletonService.loadIdioma(id);
+  
+      // Verificar y retornar el resultado
+      if (data && data.result) {
+        console.log("Idioma cargado:", data);
+        return data.result; // Devolver el objeto de usuario
+      } else {
+        throw new Error("No se encontró el Idioma.");
+      }
+    
   },
 
   listIdioma:async () => {
@@ -71,21 +69,20 @@ let singletonController = {
     return array;
   },
 
-  loadGenero: (id) => {
-    let result;
-
-    singletonService
-      .loadGenero(id)
-      .then((data) => {
-        console.log("Género listado:", data);
-
-        result = data.result;
-      })
-      .catch((error) => {
-        console.error("Error al listar géneros:", error);
-      });
-
-    return result;
+  loadGenero: async (id) => {
+    console.log("Cargando Genero...");
+  
+      // Llamar al servicio para cargar el usuario
+      let data = await singletonService.loadGenero(id);
+  
+      // Verificar y retornar el resultado
+      if (data && data.result) {
+        console.log("Genero cargado:", data);
+        return data.result; // Devolver el objeto de usuario
+      } else {
+        throw new Error("No se encontró el Genero.");
+      }
+    
   },
 
   listGenero:async () => {
@@ -107,21 +104,20 @@ let singletonController = {
     return array;
   },
 
-  loadTipo: (id) => {
-    let result;
-
-    singletonService
-      .loadTipo(id)
-      .then((data) => {
-        console.log("Tipo listado:", data);
-
-        result = data.result;
-      })
-      .catch((error) => {
-        console.error("Error al listar Tipos:", error);
-      });
-
-    return result;
+  loadTipo: async (id) => {
+    console.log("Cargando Tipo...");
+  
+      // Llamar al servicio para cargar el usuario
+      let data = await singletonService.loadTipo(id);
+  
+      // Verificar y retornar el resultado
+      if (data && data.result) {
+        console.log("Tipo cargado:", data);
+        return data.result; // Devolver el objeto de usuario
+      } else {
+        throw new Error("No se encontró el Tipo.");
+      }
+    
   },
 
   listTipo:async () => {
@@ -143,21 +139,20 @@ let singletonController = {
     return array;
   },
 
-  loadPais: (id) => {
-    let result;
-
-    singletonService
-      .loadPais(id)
-      .then((data) => {
-        console.log("País listado:", data);
-
-        result = data.result;
-      })
-      .catch((error) => {
-        console.error("Error al listar Países:", error);
-      });
-
-    return result;
+  loadPais: async (id) => {
+    console.log("Cargando Pais...");
+  
+      // Llamar al servicio para cargar el usuario
+      let data = await singletonService.loadPais(id);
+  
+      // Verificar y retornar el resultado
+      if (data && data.result) {
+        console.log("Pais cargado:", data);
+        return data.result; // Devolver el objeto de usuario
+      } else {
+        throw new Error("No se encontró el Pais.");
+      }
+    
   },
 
   listPais:async () => {
@@ -179,21 +174,20 @@ let singletonController = {
     return array;
   },
 
-  loadCalificacion: (id) => {
-    let result;
-
-    singletonService
-      .loadCalificacion(id)
-      .then((data) => {
-        console.log("Calificacion listada:", data);
-
-        result = data.result;
-      })
-      .catch((error) => {
-        console.error("Error al listar Calificaciones:", error);
-      });
-
-    return result;
+  loadCalificacion: async (id) => {
+    console.log("Cargando Calificacion...");
+  
+      // Llamar al servicio para cargar el usuario
+      let data = await singletonService.loadCalificacion(id);
+  
+      // Verificar y retornar el resultado
+      if (data && data.result) {
+        console.log("Calificacion cargado:", data);
+        return data.result; // Devolver el objeto de usuario
+      } else {
+        throw new Error("No se encontró el Calificacion.");
+      }
+    
   },
 
   listCalificacion:async () => {
@@ -215,21 +209,20 @@ let singletonController = {
     return array;
   },
 
-  loadPerfil: (id) => {
-    let result;
-
-     singletonService
-      .loadPerfil(id)
-      .then((data) => {
-        console.log("Perfil listada:", data);
-
-        result = data.result;
-      })
-      .catch((error) => {
-        console.error("Error al listar Perfil:", error);
-      });
-
-    return result;
+  loadPerfil: async (id) => {
+    console.log("Cargando Perfil...");
+  
+      // Llamar al servicio para cargar el usuario
+      let data = await singletonService.loadPerfil(id);
+  
+      // Verificar y retornar el resultado
+      if (data && data.result) {
+        console.log("Perfil cargado:", data);
+        return data.result; // Devolver el objeto de usuario
+      } else {
+        throw new Error("No se encontró el Perfil.");
+      }
+    
   },
 
   listPerfil: async () => {
@@ -334,21 +327,20 @@ let singletonController = {
     return array;
   },
 
-  loadSala: (id) => {
-    let result;
-
-     singletonService
-      .loadSala(id)
-      .then((data) => {
-        console.log("Sala listada:", data);
-
-        result = data.result;
-      })
-      .catch((error) => {
-        console.error("Error al listar Sala:", error);
-      });
-
-    return result;
+  loadSala: async (id) => {
+    console.log("Cargando Sala...");
+  
+      // Llamar al servicio para cargar el usuario
+      let data = await singletonService.loadSala(id);
+  
+      // Verificar y retornar el resultado
+      if (data && data.result) {
+        console.log("Sala cargado:", data);
+        return data.result; // Devolver el objeto de usuario
+      } else {
+        throw new Error("No se encontró el Sala.");
+      }
+    
   },
 
   listPelicula: async () => {
@@ -371,37 +363,52 @@ let singletonController = {
     return array;
   },
 
-  loadPelicula: (id) => {
-    let result;
-
-     singletonService
-      .loadPelicula(id)
-      .then((data) => {
-        console.log("Película listada:", data);
-
-        return data.result;
-      })
-      .catch((error) => {
-        console.error("Error al listar Película:", error);
-      });
-
+  loadPelicula: async (id) => {
+    console.log("Cargando Pelicula...");
+  
+      // Llamar al servicio para cargar el usuario
+      let data = await singletonService.loadPelicula(id);
+  
+      // Verificar y retornar el resultado
+      if (data && data.result) {
+        console.log("Pelicula cargado:", data);
+        return data.result; // Devolver el objeto de usuario
+      } else {
+        throw new Error("No se encontró el Pelicula.");
+      }
     
   },
 
-  loadUsuario: (id) => {
-    let result;
-
-     singletonService
-      .loadUsuario(id)
-      .then((data) => {
-        console.log("Película listada:", data);
-
-        return data.result;
-      })
-      .catch((error) => {
-        console.error("Error al listar Película:", error);
-      });
-
+  loadUsuario: async (id) => {
+    console.log("Cargando Usuario...");
+  
+      // Llamar al servicio para cargar el usuario
+      let data = await singletonService.loadUsuario(id);
+  
+      // Verificar y retornar el resultado
+      if (data && data.result) {
+        console.log("Usuario cargado:", data);
+        return data.result; // Devolver el objeto de usuario
+      } else {
+        throw new Error("No se encontró el usuario.");
+      }
     
   },
+
+  loadFuncion: async (id) => {
+    console.log("Cargando Funcion...");
+  
+      // Llamar al servicio para cargar el usuario
+      let data = await singletonService.loadFuncion(id);
+  
+      // Verificar y retornar el resultado
+      if (data && data.result) {
+        console.log("Funcion cargado:", data);
+        return data.result; // Devolver el objeto de usuario
+      } else {
+        throw new Error("No se encontró el Funcion.");
+      }
+    
+  },
+
 };

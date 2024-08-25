@@ -4,7 +4,7 @@
         <div class="card-body">
             <h2 class="card-title">Deja tu Comentario</h2>
             <div class="mb-3">
-                <form id="comment-form" data-idUser="<?=$_SESSION["id"]?>" data-idPelicula="<?= $_GET["id"]?>">
+                <form id="comment-form" data-idUser="<?=$_SESSION["id"]?>" data-idPelicula="<?= $_GET["id"]?> " data-perfil="<?= $_SESSION["perfil"]?> ">
                     <label for="comment" class="form-label">Comentario:</label>
                     <textarea class="form-control" id="comment" rows="3" placeholder="Escribe tu comentario aquí..."></textarea>
                 </form>

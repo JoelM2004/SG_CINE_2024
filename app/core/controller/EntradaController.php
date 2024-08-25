@@ -81,6 +81,17 @@ final class EntradaController extends Controller implements InterfaceController,
 
     }
 
+    public function cantidadEntrada(Request $request, Response $response):void{
+        $service = new EntradaService();
+        $funcion = $request->getParam('funcion'); 
+        $entrada = $service->cantidadEntrada($funcion);
+
+        $response->setResult($entrada); // Convierte el objeto PerfilDTO a un array
+        $response->setMessage("Entrada cargada correctamente");
+        $response->send();
+    }
+
+
     /*
     *Gestiona los servicios correspondientes, para el alta de una nueva entidad en el sistema
     */
@@ -89,9 +100,6 @@ final class EntradaController extends Controller implements InterfaceController,
         $service->save($request->getData());
         $response->setMessage("La Entrada se registró correctamente");
         $response->send();
-
-
-
     }
 
     /*

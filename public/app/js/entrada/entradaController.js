@@ -2,7 +2,7 @@ let entradaController = {
   data: {
     id: 0,
     horarioFuncion: "",
-    horaVenta: "",
+    horarioVenta: "",
     precio: 0,
     numeroTicket: 0,
     estado: 1,
@@ -10,131 +10,73 @@ let entradaController = {
     usuarioId: 0,
   },
 
-  save: async ()  => {
-    
-      let aux = await singletonController.listFuncion();
+  cantidad:{
 
-      aux.forEach((elemento) => {
-        if (
-          elemento.id ==
-          document.getElementById("getDatosEntrada").dataset.idFuncion
-        )
-          salida = elemento;
-      });
+    numero:0
 
-      // Concatenar fecha (date) y horaInicio (time) para crear un datetime en formato SQL
-      entradaController.data.horarioFuncion = `${salida.fecha} ${salida.horaInicio  }`;
+  }
+,
+save: () => {
+  let form = document.forms["formEntrada"];
 
-      // Obtener el datetime actual en formato SQL
-      entradaController.data.horaVenta = new Date()
-        .toISOString()
-        .slice(0, 19)
-        .replace("T", " ");
+  // Validación de los campos del formulario
+  const horarioFuncion = form.fechaHoraFuncion.value;
+  const precio = form.precio.value;
+  const funcionId = form.numeroFuncion.value;
+  const usuarioId = form.cuentaCliente.value;
+  const cantidad = form.cantidad.value;
 
-      // Obtener los valores para usuarioId, precio, y funcionId
-      entradaController.data.usuarioId =
-        document.getElementById("getDatosEntrada").dataset.idUser;
-      entradaController.data.precio =
-        document.getElementById("ticket-price").value;
-      entradaController.data.funcionId =
-        document.getElementById("getDatosEntrada").dataset.idFuncion;
+  // Validar que los campos no estén vacíos
+  if (!horarioFuncion || !precio || !funcionId || !usuarioId) {
+      alert("Por favor, complete todos los campos obligatorios.");
+      return; // Detener la ejecución si hay campos vacíos
+  }
 
+  // Validar que el precio sea un número positivo
+  if (isNaN(precio) || parseFloat(precio) <= 0 || parseInt(funcionId) == 0) {
+      alert("El precio debe ser un número positivo.");
+      return; // Detener la ejecución si el precio no es válido
+  }
+
+  // Obtener la fecha y hora actual en formato 'YYYY-MM-DDTHH:MM'
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const datetime = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+  // Asignar los valores validados al objeto `entradaController.data`
+  entradaController.data.horarioFuncion = horarioFuncion;
+  entradaController.data.horarioVenta = datetime;
+  entradaController.data.precio = parseFloat(precio);
+  entradaController.data.funcionId = parseInt(funcionId);
+  entradaController.data.usuarioId = parseInt(usuarioId);
+  entradaController.data.estado = entradaController.data.estado; // Asegúrate de que el estado se establece correctamente
+  entradaController.cantidad.numero = parseInt(cantidad);
+
+  // Llamada al servicio para guardar los datos
+  for (let index = 0; index < entradaController.cantidad.numero; index++) {
       entradaService
-        .save(entradaController.data)
-        .then((data) => {
-          console.log("Guardando Datos");
-          // Aquí puedes manejar la respuesta
-          if (data.error !== "") {
-            alert("Error al guardar el entrada: " + data.error);
-          } else {
-            alert("entrada guardado con éxito");
-            setTimeout(() => {
-              location.reload();
-            }, 300);
-          }
-        })
-        .catch((error) => {
-          console.error("Error en la Petición ", error);
-          alert("Ocurrió un error al guardar el entrada");
-        });
-    
-  },
+          .save(entradaController.data)
+          .then((data) => {
+              console.log("Guardando Datos");
+              if (data.error !== "") {
+                  alert("Error al guardar la entrada: " + data.error);
+              } else {
+                  // alert("Entrada guardada con éxito");
+                  // Puedes recargar la página o realizar otras acciones aquí
+              }
+          })
+          .catch((error) => {
+              console.error("Error en la Petición ", error);
+              alert("Ocurrió un error al guardar la entrada");
+          });
+  }
+}
 
-  // delete: () => {
-  //   if (confirm("¿Seguro que quieres eliminar al Usuario?")) {
-  //     entradaController.data.id = document.getElementById(
-  //       "filaModificarUsuario"
-  //     ).dataset.id;
-
-  //     entradaService
-  //       .delete(entradaController.data)
-  //       .then((data) => {
-  //         alert(data.mensaje);
-  //       })
-  //       .catch((error) => {
-  //         // Maneja cualquier error que ocurra durante el cambio de contraseña
-  //         console.error("Error al eliminar el Usuario:", error);
-  //         alert(
-  //           "Hubo un problema al eliminar el Usuario. Por favor, inténtelo de nuevo más tarde."
-  //         );
-  //       });
-  //   }
-  // },
-
-  // loadByNameAccount: async () => {
-  //   const nombre = document.getElementById("filterNombreCuenta").value;
-  //   aux = await singletonController.listPerfil();
-  //   console.log("Buscando entrada...");
-
-  //   await entradaService
-  //     .loadByNameAccount(nombre)
-  //     .then((data) => {
-  //       if (data.error == "") {
-  //         console.log("Usuario encontrado:", data);
-
-  //         let tabla = document.getElementById("tbodyUsuario");
-  //         let txt = "";
-
-  //         // Aquí se espera un solo objeto, no un array
-  //         const usuario = data.result;
-
-  //         if (usuario) {
-  //           txt += "<tr>";
-  //           txt += "<th>1</th>"; // Solo un perfil, por lo tanto, índice fijo en 1
-  //           txt += "<td>" + usuario.cuenta + "</td>";
-  //           txt += "<td>" + usuario.nombres + "</td>";
-  //           txt += "<td>" + usuario.apellido + "</td>";
-  //           txt += "<td>" + usuario.correo + "</td>";
-
-  //           let txts;
-  //           aux.forEach((elemento) => {
-  //             if (elemento.id == usuario.perfilId) txts = elemento.nombre;
-  //           });
-
-  //           // let perfil = perfiles.find(p => p.id === element.perfilId);
-  //           // let txtAux = perfil ? perfil.nombre : "Desconocido";
-
-  //           txt += "<td>" + txts + "</td>";
-
-  //           txt +=
-  //             '<td><a href="http://localhost/SG_CINE_2024/public/usuario/edit/' +
-  //             usuario.id +
-  //             '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
-  //           txt += "</tr>";
-  //         } else {
-  //           // Manejo si no se encuentra el perfil, puede ser opcional
-  //           txt += "<tr><td colspan='3'>No se encontró el perfil.</td></tr>";
-  //         }
-
-  //         tabla.innerHTML = txt;
-  //       } else {
-  //         alert("El Usuario "+ nombre +" no fue encontrado");
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error al buscar perfil:", error);
-  //     });
-  // },
+,
 
   update: () => {
     if (confirm("¿Seguro que lo quieres actualizar?")) {
@@ -165,37 +107,44 @@ let entradaController = {
   list: async () => {
     //listo
     console.log("Listando entrada...");
-    aux = await singletonController.listUsuario();
-    aux2 = await singletonController.listFuncion();
+
+    const formatDate = (dateString) => {
+      // Divide la fecha y la hora usando el espacio
+      const [datePart, timePart] = dateString.split(' ');
+      
+      // Divide la fecha en año, mes y día
+      const [year, month, day] = datePart.split("-");
+      
+      // Divide la hora en horas y minutos (después de eliminar los segundos)
+      const [hora, minutos] = timePart.split(":");
+    
+      // Retorna el formato deseado
+      return `${day}/${month}/${year} a las ${hora}:${minutos}`;
+    };
+    
 
     index = 0;
-    await entradaService
-      .list()
-      .then((data) => {
-        console.log("entrada listados:", data);
+    let data=await entradaService.list()
+    console.log("entrada listados:", data);
         let tabla = document.getElementById("tbodyEntradas");
         let txt = "";
 
-        // Obtener la lista de perfiles
-        data.result.forEach((element) => {
-          txt += "<tr>";
-          let txts2;
+
+    for(const element of data.result){
+
+      txt += "<tr>";
           txt += "<th>" + (index = index + 1) + "</th>";
-          aux2.forEach((elemento2) => {
-            if (elemento2.id == element.funcionId)
-              txts2 = elemento2.numeroFuncion;
-          });
-          txt += "<td>" + txts2 + "</td>";
-          txt += "<td>" + element.horaFuncion + "</td>";
-          txt += "<td>" + element.horaVenta + "</td>";
+          
+           let txts2 = await singletonController.loadFuncion(element.funcionId);
+          
+          txt += "<td>" + txts2.numeroFuncion + "</td>";
+          txt += "<td>" + formatDate(element.horarioFuncion) + "</td>";
+          txt += "<td>" + formatDate(element.horarioVenta) + "</td>";
           txt += "<td>" + element.precio + "</td>";
           txt += "<td>" + element.numeroTicket + "</td>";
 
-          let txts;
-          aux.forEach((elemento) => {
-            if (elemento.id == element.usuarioId) txts = elemento.cuenta;
-          });
-          txt += "<td>" + txts + "</td>";
+          let txts = await singletonController.loadUsuario(element.usuarioId)
+          txt += "<td>" + txts.cuenta + "</td>";
 
           if (element.estado === 1) {
             txt +=
@@ -210,14 +159,13 @@ let entradaController = {
             element.id +
             '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
           txt += "</tr>";
-        });
+        };
 
         tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
-      })
-      .catch((error) => {
-        console.error("Error al listar entrada:", error);
-      });
-  },
+      }
+
+
+    ,
 
   loadByCuenta: async () => {
     console.log("Listando entrada...");
@@ -516,10 +464,11 @@ let entradaController = {
       })
       .catch((err) => console.log(err));
   },
+  
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-  // let btnUsuarioAlta = document.getElementById("btnAltaUsuario");
+  let btnAltaEntrada = document.getElementById("btnAltaEntrada");
   let btnListarEntrada = document.getElementById("btnListarEntrada");
   let modificarUsuario = document.getElementById("btnModificarUsuario");
   let btnBuscarEntrada = document.getElementById("btnBuscarEntrada");
@@ -529,7 +478,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("btnGuardarEntrada") != null) {
 
 
-    btnGuardarEntrada.addEventListener("click",()=>{
+   /* btnGuardarEntrada.addEventListener("click",()=>{
 
       if(confirm("¿Quieres completar la compra?")){
         for (let index = 0; index < document.getElementById("ticket-quantity"); index++) {
@@ -537,21 +486,30 @@ document.addEventListener("DOMContentLoaded", () => {
           entradaController.save()
         }
       }
-
-
-
-
-    })
+    })*/
     
-    
-
-
-
   } else {
     if (btnPDFEntrada != null) {
       entradaController.list();
 
       btnPDFEntrada.onclick = entradaController.print;
+
+      btnAltaEntrada.addEventListener("click",()=>{
+
+        if(confirm("¿Quieres guardar las entradas?")){
+
+          entradaController.save();
+          alert("Entrada guardada con éxito");
+          entradaController.list()
+          /* alert("Entrada guardada con éxito");
+           setTimeout(() => {
+                location.reload();
+           }, 300);
+        */
+        }
+
+        
+      })
 
       btnBuscarEntrada.addEventListener("click", function () {
         if (document.getElementById("filterType").value == "ticket") {

@@ -1,42 +1,125 @@
+<?php
+
+use app\core\model\dao\PeliculaDAO;
+use app\core\model\dao\UsuarioDAO;
+use app\core\model\dao\FuncionDAO;
+use app\core\model\dao\AudioDAO;
+use app\core\model\dao\TipoDAO;
+
+use app\libs\connection\Connection;
+
+$conn = Connection::get();
+
+$daoPelicula = new PeliculaDAO($conn);
+
+$daoUsuario = new UsuarioDAO($conn);
+$datosUsuario = $daoUsuario->list();
+
+$daoFuncion = new FuncionDAO($conn);
+$datosFuncion = $daoFuncion->list();
+$datosFuncion=array_reverse($datosFuncion);
+?>
+
+
 <div class="container-fluid row">
-    <!-- Formulario de Filtros -->
-    <form class="mb-4" id="filterForm">
-        <div class="d-flex flex-column flex-md-row align-items-center mb-3">
-            <label class="form-label me-2">Filtrar por:</label>
-            <select class="form-select w-auto" id="filterType">
-                <option value="">Seleccione un filtro</option>
-                <option value="ticket">Número de Ticket</option>
-                <option value="funcion">Número de Función</option>
-                <option value="cuenta">Cuenta del Cliente</option>
+    <!-- Formulario de Alta de Entradas -->
+    <form id="formEntrada" class="col-lg-4 col-md-6 col-sm-12 p-3" autocomplete="off">
+        <h4 class="text-center text-secondary">Registro de Entrada</h4>
+
+        <div class="mb-3">
+            <label for="numeroFuncion" class="form-label">Número de Función</label>
+            <select class="form-select" id="numeroFuncion">
+                <option value="0">Seleccione una opción</option>
+                <?php
+                // Obtener funciones y llenar el select
+                foreach ($datosFuncion as $elemento) {
+
+                    $datosPelicula=$daoPelicula->load($elemento["peliculaId"]);
+                    echo '<option value="' . $elemento['id'] . '">' . $elemento['numeroFuncion'] ."-". $datosPelicula->getNombre(). '</option>';
+                }
+                ?>
             </select>
         </div>
 
-        <!-- Filtros específicos -->
-        <div class="mb-3 d-none" id="filterTicket">
-            <label class="form-label">Número de Ticket</label>
-            <input type="number" class="form-control" id="filterNumeroTicket" placeholder="Número de Ticket">
+        <div class="mb-3">
+            <label for="fechaHoraFuncion" class="form-label">Fecha y Hora de la Función</label>
+            <input type="datetime-local" class="form-control" id="fechaHoraFuncion" disabled>
         </div>
 
-        <div class="mb-3 d-none" id="filterFuncion">
-            <label class="form-label">Número de Función</label>
-            <input type="number" class="form-control" id="filterNumeroFuncion" placeholder="Número de Función">
+        <!-- <div class="mb-3">
+            <label for="fechaHoraVenta" class="form-label">Fecha y Hora de la Venta</label>
+            <input type="datetime-local" class="form-control" id="fechaHoraVenta">
+        </div> -->
+
+        <div class="mb-3">
+            <label for="precio" class="form-label">Precio</label>
+            <input type="number" class="form-control" id="precio" step="0.01" >
         </div>
 
-        <div class="mb-3 d-none" id="filterCuenta">
-            <label class="form-label">Cuenta del Cliente</label>
-            <input type="text" class="form-control" id="filterCuentaCliente" placeholder="Cuenta del Cliente">
+        <div class="mb-3">
+            <label for="cantidad" class="form-label">Cantidad</label>
+            <input type="number" class="form-control" id="cantidad">
+        </div> 
+
+        <div class="mb-3">
+            <label for="total" class="form-label">Total</label>
+            <input type="number" class="form-control" id="total" disabled>
+        </div> 
+
+        <div class="mb-3">
+            <label for="cuentaCliente" class="form-label">Cuenta del Cliente</label>
+            <select class="form-select" id="cuentaCliente">
+                <?php
+                // Obtener funciones y llenar el select
+                foreach ($datosUsuario as $elemento) {
+
+                    echo '<option value="' . $elemento['id'] . '">' . $elemento['cuenta'] . '</option>';
+                }
+                ?>
+            </select>
         </div>
 
-        <div class="d-flex justify-content-end">
-            <button id="btnBuscarEntrada" type="button" class="btn btn-primary me-2">Buscar</button>
-            <button id="btnListarEntrada" type="button" class="btn btn-primary me-2">Listar</button>
-            <button id="btnPDFEntrada" type="button" class="btn btn-success">PDF</button>
-        </div>
+        <button type="button" id="btnAltaEntrada" class="btn btn-primary w-100">Registrar Entrada</button>
     </form>
 
     <!-- Tabla de Entradas -->
-    <div class="col-lg-12 p-4">
+    <div class="col-lg-8 col-md-12 p-4">
         <h4 class="text-secondary">Listado de Entradas</h4>
+
+        <!-- Barra de búsqueda con selección de filtro -->
+        <form class="mb-4" id="filterForm">
+            <div class="d-flex flex-column flex-md-row align-items-center mb-3">
+                <label class="form-label me-2">Filtrar por:</label>
+                <select class="form-select w-auto" id="filterType">
+                    <option value="">Seleccione un filtro</option>
+                    <option value="numeroTicket">Número de Ticket</option>
+                    <option value="numeroFuncion">Número de Función</option>
+                    <option value="cuentaCliente">Cuenta del Cliente</option>
+                </select>
+            </div>
+
+            <!-- Filtros específicos -->
+            <div class="mb-3 d-none" id="filterNumeroTicket">
+                <label for="filterNumeroTicketInput" class="form-label">Número de Ticket</label>
+                <input type="number" class="form-control" id="filterNumeroTicketInput">
+            </div>
+
+            <div class="mb-3 d-none" id="filterNumeroFuncion">
+                <label class="form-label">Número de Función</label>
+                <input type="number" class="form-control" id="filterNumeroFuncionInput">
+            </div>
+
+            <div class="mb-3 d-none" id="filterCuentaCliente">
+                <label class="form-label">Cuenta del Cliente</label>
+                <input type="text" class="form-control" id="filterCuentaClienteInput">
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button id="btnBuscarEntrada" type="button" class="btn btn-primary me-2">Buscar</button>
+                <button id="btnListarEntrada" type="button" class="btn btn-primary me-2">Listar</button>
+                <button id="btnPDFEntrada" type="button" class="btn btn-success">PDF</button>
+            </div>
+        </form>
 
         <table id="tablaEntradas" class="table table-light">
             <thead>

@@ -21,6 +21,12 @@ final class EntradaService  extends Service implements InterfaceService {
         $dao->save(new EntradaDTO($object));
     }
 
+    public function cantidadEntrada($funcion):int{
+        $conn= Connection::get();
+        $dao= new EntradaDAO($conn);
+        return $dao->cantidadEntrada($funcion);
+    }
+
     public function load($id):EntradaDTO{
         $conn= Connection::get();
         $dao= new EntradaDAO($conn);
