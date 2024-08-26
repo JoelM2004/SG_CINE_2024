@@ -12,6 +12,7 @@ $datos = $dao->load($id);
 $daoPerfil = new PerfilDAO($conn);
 $datosPerfiles = $daoPerfil->list();
 
+
 ?>
 <div class="container-fluid row">
     <!-- Formulario de Edición de Usuario -->

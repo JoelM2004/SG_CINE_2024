@@ -1,6 +1,7 @@
 <?php
 
 namespace app\core\model\dao;
+
 use app\core\model\base\DAO;
 
 
@@ -22,45 +23,75 @@ final class EntradaDAO extends DAO implements InterfaceDAO
     {
         $data = $object->toArray();
 
+        $capacidadDisponible = $this->cantidadEntradasDisponibles($data["funcionId"]);
+        if ($capacidadDisponible <= 0) {
+            throw new \Exception("No hay suficientes entradas disponibles para esta función.");
+        }
         // Generar un número de ticket único
         $data['numeroTicket'] = $this->generateUniqueTicketNumber();
         $data['precio'] = (float)$data['precio'];
-
-
-
         $sql = "INSERT INTO {$this->table} VALUES(DEFAULT,:horarioFuncion,:horarioVenta,:precio,:numeroTicket,1,:funcionId,:usuarioId)";
         $stmt = $this->conn->prepare($sql);
 
         // Eliminar el id del array de datos
         unset($data["id"]);
         unset($data["estado"]);
-        
+
         // Ejecutar la consulta
         $stmt->execute($data);
 
         // Establecer el ID en el objeto
         $object->setId((int)$this->conn->lastInsertId());
-
     }
-    public function cantidadEntrada(int $funcionId): int
-{
-    $sql = "SELECT count(e.id) AS cantidad 
+    private function cantidadEntrada(int $funcionId): int
+    {
+        $sql = "SELECT count(e.id) AS cantidad 
             FROM {$this->table} e
             INNER JOIN funciones f ON e.funcionId = f.id
-            WHERE f.id = :funcionId";
-    
-    $stmt = $this->conn->prepare($sql);
-    
-    // Asignar el valor de $funcionId al parámetro :funcionId
-    $stmt->bindParam(':funcionId', $funcionId, \PDO::PARAM_INT);
-    
-    $stmt->execute();
-    
-    $result = $stmt->fetch(\PDO::FETCH_OBJ); // Trae el resultado como un objeto
-    
-    return $result->cantidad;
-}
+            WHERE f.id = :funcionId AND e.estado = 1"; // Asegúrate de que 'estado' es una columna de la tabla 'entradas'
 
+        $stmt = $this->conn->prepare($sql);
+
+        // Asignar el valor de $funcionId al parámetro :funcionId
+        $stmt->bindParam(':funcionId', $funcionId, \PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $result = $stmt->fetch(\PDO::FETCH_OBJ); // Trae el resultado como un objeto
+
+        return $result ? $result->cantidad : 0; // Asegúrate de manejar el caso en que no hay resultados
+    }
+
+    public function cantidadEntradasDisponibles(int $funcionId): int
+    {
+        $cantidadCompradas = $this->cantidadEntrada($funcionId);
+
+        $sql = "SELECT s.capacidad  
+            FROM salas s
+            INNER JOIN funciones f ON s.id = f.salaId
+            WHERE f.id = :funcionId";
+
+        $stmt = $this->conn->prepare($sql);
+
+        // Asignar el valor de $funcionId al parámetro :funcionId
+        $stmt->bindParam(':funcionId', $funcionId, \PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $result = $stmt->fetch(\PDO::FETCH_OBJ); // Trae el resultado como un objeto
+
+        if (!$result) {
+            throw new \Exception("No se pudo encontrar la capacidad de la sala para la función especificada.");
+        }
+
+        $capacidadDisponible = $result->capacidad - $cantidadCompradas;
+
+        if ($capacidadDisponible < 0) {
+            throw new \Exception("La cantidad de entradas compradas excede la capacidad disponible.");
+        }
+
+        return $capacidadDisponible;
+    }
 
     public function load($id): EntradaDTO
     {
@@ -81,6 +112,13 @@ final class EntradaDAO extends DAO implements InterfaceDAO
 
     public function update(InterfaceDTO $object): void
     {
+        
+        $capacidadDisponible = $this->cantidadEntradasDisponibles($object->getFuncionId());
+        if ($capacidadDisponible <= 0 && $object->getEstado()==1) {
+            throw new \Exception("No hay suficientes entradas disponibles para esta función.");
+        }
+
+
         $sql = "UPDATE {$this->table} SET estado = :estado WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([
@@ -89,11 +127,11 @@ final class EntradaDAO extends DAO implements InterfaceDAO
         ]);
     }
 
-    public function loadByCuenta($cuentaId): array
+    public function loadByCuenta($usuarioId): array
     {
-        $sql = "SELECT * FROM {$this->table} WHERE cuentaId = :cuentaId";
+        $sql = "SELECT * FROM {$this->table} WHERE usuarioId = :usuarioId";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(["cuentaId" => $cuentaId]);
+        $stmt->execute(["usuarioId" => $usuarioId]);
         // Recuperar todos los resultados y convertirlos a objetos EntradaDTO
         $Entradas = [];
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -117,12 +155,46 @@ final class EntradaDAO extends DAO implements InterfaceDAO
         return new EntradaDTO($stmt->fetch(\PDO::FETCH_ASSOC));
     }
 
-
     public function loadByFuncion($funcionId): array
     {
         $sql = "SELECT * FROM {$this->table} WHERE funcionId = :funcionId";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(["funcionId" => $funcionId]);
+        // Recuperar todos los resultados y convertirlos a objetos EntradaDTO
+        $Entradas = [];
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $Entradas[] = new EntradaDTO($row);
+        }
+        return $Entradas;
+    }
+
+    public function loadByProgramacion($programacionId): array
+    {
+        $sql = "SELECT * FROM {$this->table} e
+        Inner join funciones f on f.id= e.funcionId
+        inner join programaciones p on f.programacionId=p.id
+        WHERE programacionId = :programacionId";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(["programacionId" => $programacionId]);
+        // Recuperar todos los resultados y convertirlos a objetos EntradaDTO
+        $Entradas = [];
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $Entradas[] = new EntradaDTO($row);
+        }
+        return $Entradas;
+    }
+
+    public function loadByPelicula($peliculaId): array
+    {
+        $sql = "SELECT * FROM {$this->table} e
+        Inner join funciones f on f.id= e.funcionId
+        inner join peliculas p on f.peliculaId=p.id
+
+        WHERE peliculaId = :peliculaId";
+        
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(["peliculaId" => $peliculaId]);
         // Recuperar todos los resultados y convertirlos a objetos EntradaDTO
         $Entradas = [];
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -164,39 +236,4 @@ final class EntradaDAO extends DAO implements InterfaceDAO
         return $ticketNumber;
     }
 
-
-    private function validate(EntradaDTO $object): void
-    {
-        // Lista de métodos a verificar
-        $atributos = [
-            'getCapacidad',
-            'getEstado',
-            'getNumeroEntrada'
-        ];
-
-        foreach ($atributos as $atributo) {
-            if (method_exists($object, $atributo) && $object->{$atributo}() === "") {
-                throw new \Exception("El dato de la Entrada es obligatorio: " . $atributo);
-            }
-        }
-    }
-
-    private function validateNumeroEntrada(EntradaDTO $object): void
-    {
-        $sql = "SELECT count(id) AS cantidad FROM {$this->table} WHERE numeroEntrada = :numeroEntrada AND id != :id";
-        $stmt = $this->conn->prepare($sql);
-
-        // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
-        $params = [
-            ':numeroEntrada' => $object->getNumeroEntrada(),
-            ':id' => $object->getId()
-        ];
-
-        $stmt->execute($params);
-        $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
-
-        if ($result->cantidad > 0) {
-            throw new \Exception("El dato Número de Entrada ({$object->getNumeroEntrada()}) ya existe en la base de datos");
-        }
-    }
 }

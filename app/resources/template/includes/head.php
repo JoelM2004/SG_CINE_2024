@@ -5,7 +5,12 @@
     <base href="http://localhost/SG_CINE_2024/public/">
 
     <link rel="stylesheet" href="assets/libs/bootstrap-5.3.3-dist (1)/bootstrap-5.3.3-dist/css/bootstrap.min.css">
+    
     <link rel="stylesheet" href="assets/libs/css/viewIndex.css">
+    <link rel="stylesheet" href="assets/libs/css/viewInfo.css">
+    <link rel="stylesheet" href="assets/libs/css/viewInicio.css">
+    <!-- <link rel="stylesheet" href="assets/libs/css/viewPelicula.css"> -->
+
     <link rel="icon" type="image/png" href="assets/img/logo.png">
 
 

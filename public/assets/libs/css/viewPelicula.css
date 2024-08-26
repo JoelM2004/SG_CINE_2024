@@ -1,0 +1,52 @@
+/* Estilos generales para las tarjetas */
+.card {
+    border-radius: 15px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra de tarjeta */
+    overflow: hidden; /* Asegura que los bordes redondeados se apliquen a la imagen */
+    background-color: #fff; /* Fondo blanco */
+}
+
+/* Estilo para la imagen de la tarjeta */
+.card-img-top {
+    object-fit: cover; /* Asegura que la imagen cubra el área sin distorsionarse */
+    height: 100%; /* Asegura que la imagen cubra la altura del contenedor */
+    border-bottom: 5px solid #007bff; /* Línea inferior en azul */
+}
+
+/* Estilo para el título de la tarjeta */
+.card-title {
+    font-size: 2rem; /* Tamaño de fuente del título */
+    font-weight: bold; /* Negrita para el título */
+    color: #333; /* Color del texto */
+}
+
+/* Estilo para el contenido de la tarjeta */
+.card-text {
+    font-size: 1.125rem; /* Tamaño de fuente del texto */
+    color: #555; /* Color del texto */
+}
+
+/* Estilo para los botones dentro de la tarjeta */
+.card-body .btn {
+    margin-right: 0.5rem; /* Espacio entre los botones */
+    padding: 10px 20px; /* Tamaño del botón */
+    border-radius: 50px; /* Bordes redondeados */
+    background-color: #007bff; /* Color de fondo del botón */
+    color: #fff; /* Color del texto del botón */
+    transition: background-color 0.3s; /* Transición suave para el color de fondo */
+}
+
+.card-body .btn:hover {
+    background-color: #0056b3; /* Color de fondo al pasar el ratón */
+    text-decoration: none; /* Quita el subrayado del enlace en el botón */
+}
+
+/* Estilo para los enlaces del sitio web */
+.card-link {
+    color: #007bff; /* Color del enlace */
+    text-decoration: none; /* Quita el subrayado del enlace */
+}
+
+.card-link:hover {
+    text-decoration: underline; /* Subrayado del enlace al pasar el ratón */
+}

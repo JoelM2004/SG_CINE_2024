@@ -50,6 +50,7 @@ $datos = $dao->loadView($id);
   </div>
 </div>
 
+
 <!-- Carrusel de imágenes o tráiler -->
 <!-- <div id="movieCarousel" class="carousel slide mt-4">
   <div class="carousel-inner">

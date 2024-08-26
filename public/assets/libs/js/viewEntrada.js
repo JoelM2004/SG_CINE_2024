@@ -11,7 +11,7 @@ function updateTotal() {
   const confirmationCard = document.getElementById("confirmation-card");
 
   // Manejo del caso en que el campo de cantidad está vacío
-  if (isNaN(ticketQuantity) || ticketQuantity === '') {
+  if (isNaN(ticketQuantity) || ticketQuantity === "") {
     errorMessage.style.display = "block";
     errorMessage.innerText = "Ingrese una cantidad.";
     document.getElementById("total-price").innerText = "0.00";
@@ -19,12 +19,14 @@ function updateTotal() {
   } else {
     if (ticketQuantity < 1) {
       errorMessage.style.display = "block";
-      errorMessage.innerText = "La cantidad de entradas no puede ser menor que 1.";
+      errorMessage.innerText =
+        "La cantidad de entradas no puede ser menor que 1.";
       document.getElementById("total-price").innerText = "0.00";
       confirmationCard.style.display = "none"; // Ocultar confirmación si hay error
     } else if (ticketQuantity > availableTickets) {
       errorMessage.style.display = "block";
-      errorMessage.innerText = "La cantidad de entradas seleccionadas excede las disponibles.";
+      errorMessage.innerText =
+        "La cantidad de entradas seleccionadas excede las disponibles.";
       document.getElementById("total-price").innerText = "0.00";
       confirmationCard.style.display = "none"; // Ocultar confirmación si hay error
     } else {
@@ -77,16 +79,16 @@ toggleInputs = async () => {
   const numeroFuncion = document.getElementById("numeroFuncion").value;
   const fechaHoraFuncion = document.getElementById("fechaHoraFuncion");
   const precio = document.getElementById("precio");
-  const cantidad=document.getElementById("cantidad")
-  const total=document.getElementById("total")
+  const cantidad = document.getElementById("cantidad");
+  const total = document.getElementById("total");
   // Llamada a la función para cargar los detalles de la función.
   let funcion = await singletonController.loadFuncion(numeroFuncion);
 
   // Convertir fecha y hora a formato 'YYYY-MM-DDTHH:MM'
   const fecha = funcion.fecha; // formato esperado 'YYYY-MM-DD'
   const hora = funcion.horaInicio; // formato esperado 'HH:MM:SS'
-  cantidad.value=0;
-  total.value=0
+  cantidad.value = 0;
+  total.value = 0;
   // Asegurarse de que la hora está en formato 'HH:MM'
   const horaFormateada = hora.substring(0, 5);
 
@@ -98,55 +100,67 @@ toggleInputs = async () => {
   precio.value = funcion.precio;
 
   // Agregar evento onchange si el elemento existe
+  let cantidadDisponible = await entradaService.cantidadEntradaDisponibles(
+    numeroFuncion
+  );
+  console.log(cantidadDisponible);
+  document.getElementById("disponible").value = cantidadDisponible.result;
 };
 
-function updateTotal2 () {
-    const precio = parseFloat(document.getElementById("precio").value) || 0;
-    const cantidad = parseInt(document.getElementById("cantidad").value) || 0;
-    const total = precio * cantidad;
-    document.getElementById("total").value = total.toFixed(2); // Mostrar el total con dos decimales
+function updateTotal2() {
+  const precio = parseFloat(document.getElementById("precio").value) || 0;
+  const cantidad = parseInt(document.getElementById("cantidad").value) || 0;
+  const total = precio * cantidad;
+  document.getElementById("total").value = total.toFixed(2); // Mostrar el total con dos decimales
 }
-
-
 
 // Manejo de filtros si es necesario
 if (document.getElementById("filterType") != null) {
   document.getElementById("filterType").addEventListener("change", function () {
-    document.getElementById("filterTicket").classList.add("d-none");
-    document.getElementById("filterFuncion").classList.add("d-none");
-    document.getElementById("filterCuenta").classList.add("d-none");
+      // Ocultar todos los filtros específicos
+      document.getElementById("filterNumeroTicket").classList.add("d-none");
+      document.getElementById("filterNumeroFuncion").classList.add("d-none");
+      document.getElementById("filterCuentaCliente").classList.add("d-none");
+      document.getElementById("filterPelicula").classList.add("d-none");
+      document.getElementById("filterProgramacion").classList.add("d-none");
 
-    const selectedFilter = this.value;
-    if (selectedFilter === "ticket") {
-      document.getElementById("filterTicket").classList.remove("d-none");
-    } else if (selectedFilter === "funcion") {
-      document.getElementById("filterFuncion").classList.remove("d-none");
-    } else if (selectedFilter === "cuenta") {
-      document.getElementById("filterCuenta").classList.remove("d-none");
-    }
+      // Obtener el valor seleccionado
+      const selectedFilter = this.value;
+
+      // Mostrar el filtro correspondiente según el valor seleccionado
+      if (selectedFilter === "numeroTicket") {
+          document.getElementById("filterNumeroTicket").classList.remove("d-none");
+      } else if (selectedFilter === "numeroFuncion") {
+          document.getElementById("filterNumeroFuncion").classList.remove("d-none");
+      } else if (selectedFilter === "cuentaCliente") {
+          document.getElementById("filterCuentaCliente").classList.remove("d-none");
+      } else if (selectedFilter === "pelicula") {
+          document.getElementById("filterPelicula").classList.remove("d-none");
+      } else if (selectedFilter === "programacion") {
+          document.getElementById("filterProgramacion").classList.remove("d-none");
+      }
   });
-} else if (document.getElementById("btnToggleEntrada") != null) {
+}
+
+else if (document.getElementById("btnToggleEntrada") != null) {
   document
     .getElementById("btnToggleEntrada")
     .addEventListener("click", function () {
-      const button = this;
-      if (confirm("¿Seguro que quiere cambiar el estado de la entrada?")) {
-        if (button.textContent === "Activar Entrada") {
-          button.textContent = "Desactivar Entrada";
-          // Aquí se puede hacer una llamada para actualizar el estado a 1 (activado)
-        } else {
-          button.textContent = "Activar Entrada";
-          // Aquí se puede hacer una llamada para actualizar el estado a 0 (desactivado)
-        }
-      }
-    
-    
-    } );
-    
-}if (document.getElementById("numeroFuncion")) {
+      // const button = this;
+      // if (confirm("¿Seguro que quiere cambiar el estado de la entrada?")) {
+      //   if (button.textContent === "Activar Entrada") {
+      //     button.textContent = "Desactivar Entrada";
+      //     button.value = "0";
+      //   } else {
+      //     button.textContent = "Activar Entrada";
+      //     button.value = "1";
+      //   }
+      // }
+    });
+}
+if (document.getElementById("numeroFuncion")) {
   document.getElementById("numeroFuncion").onchange = toggleInputs;
 }
-
 
 document.getElementById("precio").addEventListener("input", updateTotal2);
 document.getElementById("cantidad").addEventListener("input", updateTotal2);

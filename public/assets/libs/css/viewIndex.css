@@ -1,33 +1,41 @@
+/* Estilos para la tarjeta de película */
+.card {
+    border-radius: 15px; /* Bordes redondeados */
+    overflow: hidden; /* Asegura que los bordes redondeados se apliquen también a la imagen */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra de tarjeta */
+    background-color: #fff; /* Fondo blanco */
+}
 
-        body, html {
-            height: 100%;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-        .bg-cover {
-            background-image: url('https://example.com/your-background-image.jpg');
-            background-size: cover;
-            background-position: center;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-        .card {
-            background-color: rgba(255, 255, 255, 0.85);
-            padding: 50px;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        h1 {
-            font-size: 3rem;
-            font-weight: bold;
-            margin-bottom: 30px;
-        }
-        .btn-custom {
-            padding: 15px 30px;
-            font-size: 1.5rem;
-            border-radius: 50px;
-        }
+.card img {
+    object-fit: cover; /* Asegura que la imagen cubra el área sin distorsionarse */
+}
+
+.card-body {
+    padding: 20px; /* Espaciado interno de la tarjeta */
+}
+
+.card-title {
+    font-size: 1.75rem; /* Tamaño de fuente del título */
+    font-weight: bold; /* Negrita para el título */
+    color: #333; /* Color del texto */
+}
+
+.list-group-item {
+    font-size: 1rem; /* Tamaño de fuente para los elementos de la lista */
+    border: none; /* Sin borde para los elementos de la lista */
+}
+
+.btn-primary {
+    background-color: #007bff; /* Color de fondo del botón */
+    border-color: #007bff; /* Color del borde del botón */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Color de fondo al pasar el ratón sobre el botón */
+    border-color: #004085; /* Color del borde al pasar el ratón sobre el botón */
+}
+
+.mt-3 {
+    margin-top: 1rem; /* Espaciado superior */
+}
 

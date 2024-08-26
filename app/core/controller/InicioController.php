@@ -14,7 +14,9 @@ final class InicioController extends Controller
     {
         parent::__construct([
             "app/js/inicio/inicioService.js",
-             "app/js/inicio/inicioController.js"
+             "app/js/inicio/inicioController.js",
+             "assets/libs/css/viewInicio.css",
+             
         ]);
     }
 

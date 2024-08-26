@@ -68,10 +68,13 @@ final class EntradaDTO implements InterfaceDTO
     public function setHoraFuncion($horaFuncion)
 {
     // Patrón para "año-mes-díaThora:minuto"
-    $pattern = '/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/';
+    $pattern1 = '/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/';
+    
+    // Patrón para "YYYY-MM-DD HH:MM:SS" (formato datetime de MySQL)
+    $pattern2 = '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/';
 
-    // Verifica si el formato coincide con "YYYY-MM-DDTHH:MM"
-    if (is_string($horaFuncion) && preg_match($pattern, $horaFuncion)) {
+    // Si el formato coincide con "YYYY-MM-DDTHH:MM"
+    if (is_string($horaFuncion) && preg_match($pattern1, $horaFuncion)) {
         // Separar fecha y hora
         list($date, $time) = explode('T', $horaFuncion);
 
@@ -89,10 +92,30 @@ final class EntradaDTO implements InterfaceDTO
             }
         }
     }
+    // Si el formato coincide con "YYYY-MM-DD HH:MM:SS"
+    elseif (is_string($horaFuncion) && preg_match($pattern2, $horaFuncion)) {
+        // Separar fecha y hora
+        list($date, $time) = explode(' ', $horaFuncion);
+
+        // Separar componentes de la fecha
+        list($year, $month, $day) = explode('-', $date);
+
+        // Verificar si la fecha es válida
+        if (checkdate((int)$month, (int)$day, (int)$year)) {
+            // Verificar si la hora es válida
+            list($hour, $minute, $second) = explode(':', $time);
+            if ($hour >= 0 && $hour <= 23 && $minute >= 0 && $minute <= 59 && $second >= 0 && $second <= 59) {
+                // Asignar directamente el valor si es válido
+                $this->horarioFuncion = $horaFuncion;
+                return;
+            }
+        }
+    }
 
     // Asignar cadena vacía si la validación falla
     $this->horarioFuncion = "";
 }
+
 
     /**
      * Get the value of horaVenta
@@ -110,10 +133,13 @@ final class EntradaDTO implements InterfaceDTO
     public function setHoraVenta($horaVenta)
 {
     // Patrón para "año-mes-díaThora:minuto"
-    $pattern = '/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/';
+    $pattern1 = '/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/';
+    
+    // Patrón para "YYYY-MM-DD HH:MM:SS" (formato datetime de MySQL)
+    $pattern2 = '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/';
 
-    // Verifica si el formato coincide con "YYYY-MM-DDTHH:MM"
-    if (is_string($horaVenta) && preg_match($pattern, $horaVenta)) {
+    // Si el formato coincide con "YYYY-MM-DDTHH:MM"
+    if (is_string($horaVenta) && preg_match($pattern1, $horaVenta)) {
         // Separar fecha y hora
         list($date, $time) = explode('T', $horaVenta);
 
@@ -131,10 +157,30 @@ final class EntradaDTO implements InterfaceDTO
             }
         }
     }
+    // Si el formato coincide con "YYYY-MM-DD HH:MM:SS"
+    elseif (is_string($horaVenta) && preg_match($pattern2, $horaVenta)) {
+        // Separar fecha y hora
+        list($date, $time) = explode(' ', $horaVenta);
+
+        // Separar componentes de la fecha
+        list($year, $month, $day) = explode('-', $date);
+
+        // Verificar si la fecha es válida
+        if (checkdate((int)$month, (int)$day, (int)$year)) {
+            // Verificar si la hora es válida
+            list($hour, $minute, $second) = explode(':', $time);
+            if ($hour >= 0 && $hour <= 23 && $minute >= 0 && $minute <= 59 && $second >= 0 && $second <= 59) {
+                // Asignar directamente el valor si es válido
+                $this->horarioVenta = $horaVenta;
+                return;
+            }
+        }
+    }
 
     // Asignar cadena vacía si la validación falla
     $this->horarioVenta = "";
 }
+
 
 
 

@@ -25,7 +25,7 @@ save: () => {
   const funcionId = form.numeroFuncion.value;
   const usuarioId = form.cuentaCliente.value;
   const cantidad = form.cantidad.value;
-
+  const disponible = form.disponible.value;
   // Validar que los campos no estén vacíos
   if (!horarioFuncion || !precio || !funcionId || !usuarioId) {
       alert("Por favor, complete todos los campos obligatorios.");
@@ -38,6 +38,11 @@ save: () => {
       return; // Detener la ejecución si el precio no es válido
   }
 
+  if(cantidad>disponible){
+    alert("Quiere comprar una cantidad de entradas que excede a la disponible")
+    return
+  }
+  
   // Obtener la fecha y hora actual en formato 'YYYY-MM-DDTHH:MM'
   const now = new Date();
   const year = now.getFullYear();
@@ -65,7 +70,8 @@ save: () => {
               if (data.error !== "") {
                   alert("Error al guardar la entrada: " + data.error);
               } else {
-                  // alert("Entrada guardada con éxito");
+
+                  alert("Entrada n°:"+ index+ "guardada con éxito");
                   // Puedes recargar la página o realizar otras acciones aquí
               }
           })
@@ -79,10 +85,11 @@ save: () => {
 ,
 
   update: () => {
-    if (confirm("¿Seguro que lo quieres actualizar?")) {
-      entradaController.data.estado =
-        document.getElementById("btnToggleEntrada").value;
+    if(confirm("¿Quieres actualizar el estado de la entrada?")){
 
+      entradaController.data.estado = parseInt(document.getElementById("btnToggleEntrada").value);
+      entradaController.data.id=parseInt(document.getElementById("tbodyEntradas").dataset.id)
+      entradaController.data.funcionId=parseInt(document.getElementById("tbodyEntradas").dataset.funcion)
       entradaService
         .update(entradaController.data)
         .then((data) => {
@@ -92,16 +99,19 @@ save: () => {
             alert("Error al actualizar el entrada: " + data.error);
           } else {
             alert("entrada actualizado con éxito");
-            setTimeout(() => {
-              location.reload();
-            }, 300);
+             setTimeout(() => {
+               location.reload();
+             }, 300);
           }
         })
         .catch((error) => {
           console.error("Error en la Petición ", error);
           alert("Ocurrió un error al actualizar el Usuario");
         });
+    
+
     }
+
   },
 
   list: async () => {
@@ -163,223 +173,373 @@ save: () => {
 
         tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
       }
+,
+loadByCuenta: async () => {
+  console.log("Listando entrada...");
 
+  // Obtener el valor de la cuenta desde el input y convertirlo en un número entero
+  let cuenta = document.getElementById("filterCuentaClienteInput").value;
+  console.log(cuenta);
+  cuenta = parseInt(cuenta);
 
-    ,
+  const formatDate = (dateString) => {
+    // Divide la fecha y la hora usando el espacio
+    const [datePart, timePart] = dateString.split(' ');
+    
+    // Divide la fecha en año, mes y día
+    const [year, month, day] = datePart.split("-");
+    
+    // Divide la hora en horas y minutos (después de eliminar los segundos)
+    const [hora, minutos] = timePart.split(":");
+  
+    // Retorna el formato deseado
+    return `${day}/${month}/${year} a las ${hora}:${minutos}`;
+  };
 
-  loadByCuenta: async () => {
-    console.log("Listando entrada...");
-    aux = await singletonController.listUsuario();
-    aux2 = await singletonController.listFuncion();
+  let index = 0;
 
-    let cuenta = document.getElementById("filterCuentaCliente").value;
-    if (typeof cuenta !== "string" || cuenta.trim() === "") {
-      alert("Por favor, ingresa una cuenta válida.");
-      return;
-    }
+      // Llamar al servicio para cargar las entradas por cuenta
+      const data = await entradaService.loadByCuenta(cuenta);
 
-    index = 0;
-    await entradaService
-      .loadByCuenta(cuenta)
-      .then((data) => {
-        if (data.result.length === 0) {
+      // Verificar si se encontraron resultados
+      if (!data.result || data.result.length === 0) {
           alert("Cuenta no encontrada");
           return;
-        }
+      }
 
-        console.log("Entrada listadas:", data);
-        let tabla = document.getElementById("tbodyEntradas");
-        let txt = "";
+      console.log("Entradas listadas:", data);
+      let tabla = document.getElementById("tbodyEntradas");
+      let txt = "";
 
-        data.result.forEach((element) => {
+      // Iterar sobre los resultados de las entradas y construir las filas de la tabla
+      for (const element of data.result) {
           txt += "<tr>";
-          let txts2;
-          txt += "<th>" + (index = index + 1) + "</th>";
-          aux2.forEach((elemento2) => {
-            if (elemento2.id == element.funcionId)
-              txts2 = elemento2.numeroFuncion;
-          });
-          txt += "<td>" + txts2 + "</td>";
-          txt += "<td>" + element.horaFuncion + "</td>";
-          txt += "<td>" + element.horaVenta + "</td>";
-          txt += "<td>" + element.precio + "</td>";
-          txt += "<td>" + element.numeroTicket + "</td>";
 
-          let txts;
-          aux.forEach((elemento) => {
-            if (elemento.id == element.usuarioId) txts = elemento.cuenta;
-          });
-          txt += "<td>" + txts + "</td>";
+          // Incrementar el índice para la fila actual
+          txt += "<th>" + (++index) + "</th>";
 
+          // Cargar el usuario asociado a la cuenta usando el singleton
+          let usuario;
+          let funcion;
+          funcion = await singletonController.loadFuncion(element.funcionId);
+          
+          txt += "<td>" + (funcion.numeroFuncion) + "</td>";
+          txt += "<td>" + (formatDate(element.horarioFuncion))  + "</td>";
+          txt += "<td>" + (formatDate(element.horarioVenta))  + "</td>";
+          txt += "<td>" + (element.precio ) + "</td>";
+          txt += "<td>" + (element.numeroTicket ) + "</td>";
+
+          // Cargar la función asociada usando el singleton
+          
+          
+          usuario = await singletonController.loadUsuario(cuenta);
+          
+          txt += "<td>" + (usuario.cuenta || "Desconocido") + "</td>";
+
+          // Mostrar el estado de la entrada con un ícono
           if (element.estado === 1) {
-            txt +=
-              "<td> <i class='fas fa-circle text-success' title='Activo'></i> </td>";
+              txt += "<td><i class='fas fa-circle text-success' title='Activo'></i></td>";
           } else {
-            txt +=
-              "<td> <i class='fas fa-circle text-danger' title='Desactivado'></i> </td>";
+              txt += "<td><i class='fas fa-circle text-danger' title='Desactivado'></i></td>";
           }
 
-          txt +=
-            '<td><a href="http://localhost/SG_CINE_2024/public/entrada/edit/' +
-            element.id +
-            '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
+          // Agregar un botón para editar la entrada
+          txt += `
+              <td>
+                  <a href="http://localhost/SG_CINE_2024/public/entrada/edit/${element.id}" class="btn btn-sm btn-warning">
+                      <i class="fas fa-edit"></i>
+                  </a>
+              </td>`;
           txt += "</tr>";
-        });
+      }
 
-        tabla.innerHTML = txt;
-      })
-      .catch((error) => {
-        console.error("Error al listar entrada:", error);
-      });
-  },
+      // Actualizar el contenido de la tabla con las filas generadas
+      tabla.innerHTML = txt;
 
-  loadByFuncion: async () => {
-    console.log("Listando entrada...");
-    aux = await singletonController.listUsuario();
-    aux2 = await singletonController.listFuncion();
+}
+,
 
-    let funcionId = parseInt(
-      document.getElementById("filterNumeroFuncion").value,
-      10
-    );
-    if (isNaN(funcionId) || funcionId <= 0) {
+
+loadByFuncion: async () => {
+  console.log("Listando entrada...");
+
+  // Obtener el valor de la función desde el input y convertirlo en un número entero
+  let funcionId = parseInt(document.getElementById("filterNumeroFuncionInput").value, 10);
+
+  // Validar el número de función
+  if (isNaN(funcionId) || funcionId <= 0) {
       alert("Por favor, ingresa un número de función válido.");
       return;
-    }
+  }
 
-    index = 0;
-    await entradaService
-      .loadByFuncion(funcionId)
-      .then((data) => {
-        if (data.result.length === 0) {
-          alert("Función no encontrada");
-          return;
-        }
+  let index = 0;
+  const data = await entradaService.loadByFuncion(funcionId);
 
-        console.log("Entrada listadas:", data);
-        let tabla = document.getElementById("tbodyEntradas");
-        let txt = "";
+  // Verificar si se encontraron resultados
+  if (!data.result || data.result.length === 0) {
+      alert("Función no encontrada");
+      return;
+  }
 
-        data.result.forEach((element) => {
-          txt += "<tr>";
-          let txts2;
-          txt += "<th>" + (index = index + 1) + "</th>";
-          aux2.forEach((elemento2) => {
-            if (elemento2.id == element.funcionId)
-              txts2 = elemento2.numeroFuncion;
-          });
-          txt += "<td>" + txts2 + "</td>";
-          txt += "<td>" + element.horaFuncion + "</td>";
-          txt += "<td>" + element.horaVenta + "</td>";
-          txt += "<td>" + element.precio + "</td>";
-          txt += "<td>" + element.numeroTicket + "</td>";
+  console.log("Entrada listadas:", data);
+  let tabla = document.getElementById("tbodyEntradas");
+  let txt = "";
 
-          let txts;
-          aux.forEach((elemento) => {
-            if (elemento.id == element.usuarioId) txts = elemento.cuenta;
-          });
-          txt += "<td>" + txts + "</td>";
+  // Iterar sobre los resultados de las entradas y construir las filas de la tabla
+  for (const element of data.result) {
+      txt += "<tr>";
 
-          if (element.estado === 1) {
-            txt +=
-              "<td> <i class='fas fa-circle text-success' title='Activo'></i> </td>";
-          } else {
-            txt +=
-              "<td> <i class='fas fa-circle text-danger' title='Desactivado'></i> </td>";
-          }
+      // Incrementar el índice para la fila actual
+      txt += "<th>" + (++index) + "</th>";
 
-          txt +=
-            '<td><a href="http://localhost/SG_CINE_2024/public/entrada/edit/' +
-            element.id +
-            '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
-          txt += "</tr>";
-        });
+      // Cargar la función asociada usando el singleton
+      let funcion = await singletonController.loadFuncion(element.funcionId);
+      txt += "<td>" + (funcion.numeroFuncion || "Desconocido") + "</td>";
+      
+      // Formatear y agregar horario de función y venta
+      txt += "<td>" + (formatDate(element.horarioFuncion))  + "</td>";
+          txt += "<td>" + (formatDate(element.horarioVenta))  + "</td>";
+      
+      // Agregar el precio y el número de ticket
+      txt += "<td>" + (element.precio) + "</td>";
+      txt += "<td>" + (element.numeroTicket) + "</td>";
 
-        tabla.innerHTML = txt;
-      })
-      .catch((error) => {
-        console.error("Error al listar entrada:", error);
-      });
-  },
+      // Cargar el usuario asociado usando el singleton
+      let usuario = await singletonController.loadUsuario(element.usuarioId);
+      txt += "<td>" + (usuario.cuenta || "Desconocido") + "</td>";
 
-  loadByNumeroTicket: async () => {
-    console.log("Listando entrada...");
-    aux = await singletonController.listUsuario();
-    aux2 = await singletonController.listFuncion();
+      // Mostrar el estado de la entrada con un ícono
+      if (element.estado === 1) {
+          txt += "<td><i class='fas fa-circle text-success' title='Activo'></i></td>";
+      } else {
+          txt += "<td><i class='fas fa-circle text-danger' title='Desactivado'></i></td>";
+      }
 
-    let numeroTicket = parseInt(
-      document.getElementById("filterNumeroTicket").value,
-      10
-    );
-    if (isNaN(numeroTicket) || numeroTicket <= 0) {
+      // Agregar un botón para editar la entrada
+      txt += `
+          <td>
+              <a href="http://localhost/SG_CINE_2024/public/entrada/edit/${element.id}" class="btn btn-sm btn-warning">
+                  <i class="fas fa-edit"></i>
+              </a>
+          </td>`;
+      txt += "</tr>";
+  }
+
+  // Actualizar el contenido de la tabla con las filas generadas
+  tabla.innerHTML = txt;
+}
+
+,
+loadByNumeroTicket: async () => {
+  console.log("Listando entrada...");
+
+  // Obtener el valor del número de ticket desde el input y convertirlo en un número entero
+  let numeroTicket = parseInt(document.getElementById("filterNumeroTicketInput").value, 10);
+
+  // Validar el número de ticket
+  if (isNaN(numeroTicket) || numeroTicket <= 0) {
       alert("Por favor, ingresa un número de ticket válido.");
       return;
-    }
+  }
 
-    index = 0;
-    await entradaService
-      .loadByNumeroTicket(numeroTicket)
-      .then((data) => {
-        if (data.result.length === 0) {
-          alert("Número de Ticket no encontrado");
-          return;
-        }
+  let index = 0;
+  const element = await entradaService.loadByNumeroTicket(numeroTicket);
 
-        console.log("Entrada listadas:", data);
-        let tabla = document.getElementById("tbodyEntradas");
-        let txt = "";
+  // Verificar si se encontraron resultados
+  if (!element.result || element.result.length === 0) {
+      alert("Número de Ticket no encontrado");
+      return;
+  }
 
-        data.result.forEach((element) => {
-          txt += "<tr>";
-          let txts2;
-          txt += "<th>" + (index = index + 1) + "</th>";
-          aux2.forEach((elemento2) => {
-            if (elemento2.id == element.funcionId)
-              txts2 = elemento2.numeroFuncion;
-          });
-          txt += "<td>" + txts2 + "</td>";
-          txt += "<td>" + element.horaFuncion + "</td>";
-          txt += "<td>" + element.horaVenta + "</td>";
-          txt += "<td>" + element.precio + "</td>";
-          txt += "<td>" + element.numeroTicket + "</td>";
+  console.log("Entrada listadas:", element);
+  let tabla = document.getElementById("tbodyEntradas");
+  let txt = "";
 
-          let txts;
-          aux.forEach((elemento) => {
-            if (elemento.id == element.usuarioId) txts = elemento.cuenta;
-          });
-          txt += "<td>" + txts + "</td>";
+  // Iterar sobre los resultados de las entradas y construir las filas de la tabla
+      txt += "<tr>";
 
-          if (element.estado === 1) {
-            txt +=
-              "<td> <i class='fas fa-circle text-success' title='Activo'></i> </td>";
-          } else {
-            txt +=
-              "<td> <i class='fas fa-circle text-danger' title='Desactivado'></i> </td>";
-          }
+      // Incrementar el índice para la fila actual
+      txt += "<th>" + (++index) + "</th>";
 
-          txt +=
-            '<td><a href="http://localhost/SG_CINE_2024/public/entrada/edit/' +
-            element.id +
-            '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
-          txt += "</tr>";
-        });
+      // Cargar la función asociada usando el singleton
+      let funcion = await singletonController.loadFuncion(element.result.funcionId);
+      txt += "<td>" + (funcion.numeroFuncion || "Desconocido") + "</td>";
+      
+      // Formatear y agregar horario de función y venta
+      txt += "<td>" + formatDate(element.result.horarioFuncion) + "</td>";
+      txt += "<td>" + formatDate(element.result.horarioVenta) + "</td>";
+      
+      // Agregar el precio y el número de ticket
+      txt += "<td>" + (element.result.precio) + "</td>";
+      txt += "<td>" + (element.result.numeroTicket) + "</td>";
 
-        tabla.innerHTML = txt;
-      })
-      .catch((error) => {
-        console.error("Error al listar entrada:", error);
-      });
-  },
+      // Cargar el usuario asociado usando el singleton
+      let usuario = await singletonController.loadUsuario(element.result.usuarioId);
+      txt += "<td>" + (usuario.cuenta || "Desconocido") + "</td>";
 
-  confirmPurchase: () =>{
-    const termsAccepted = document.getElementById("termsCheck").checked;
-    if (termsAccepted) {
-      alert("Compra confirmada. ¡Gracias por tu compra!");
-      // Aquí puedes agregar lógica para completar la compra, como enviar datos al servidor.
-    } else {
-      alert("Debes aceptar los términos y condiciones para continuar.");
-    }
-  },
+      // Mostrar el estado de la entrada con un ícono
+      if (element.result.estado==1) {
+        txt +=
+          "<td> <i class='fas fa-circle text-success' title='Activo'></i> </td>";
+      } else {
+        txt +=
+          "<td> <i class='fas fa-circle text-danger' title='Desactivado'></i> </td>";
+      }
+
+      // Agregar un botón para editar la entrada
+      txt += `
+          <td>
+              <a href="http://localhost/SG_CINE_2024/public/entrada/edit/${element.result.id}" class="btn btn-sm btn-warning">
+                  <i class="fas fa-edit"></i>
+              </a>
+          </td>`;
+      txt += "</tr>";
+  
+
+  // Actualizar el contenido de la tabla con las filas generadas
+  tabla.innerHTML = txt;
+}
+,
+
+loadByProgramacion: async () => {
+  console.log("Listando entradas por programación...");
+
+  // Obtener el valor de la programación desde el input y convertirlo en un número entero
+  let programacionId = parseInt(document.getElementById("filterProgramacionInput").value, 10);
+
+  // Validar el número de programación
+  if (isNaN(programacionId) || programacionId <= 0) {
+      alert("Por favor, ingresa un número de programación válido.");
+      return;
+  }
+
+  let index = 0;
+  const data = await entradaService.loadByProgramacion(programacionId);
+
+  // Verificar si se encontraron resultados
+  if (!data.result || data.result.length === 0) {
+      alert("Programación no encontrada");
+      return;
+  }
+
+  console.log("Entradas listadas:", data);
+  let tabla = document.getElementById("tbodyEntradas");
+  let txt = "";
+
+  // Iterar sobre los resultados de las entradas y construir las filas de la tabla
+  for (const element of data.result) {
+      txt += "<tr>";
+
+      // Incrementar el índice para la fila actual
+      txt += "<th>" + (++index) + "</th>";
+
+      // Cargar la programación asociada usando el singleton
+      let funcion = await singletonController.loadFuncion(element.funcionId);
+      txt += "<td>" + (funcion.numeroFuncion || "Desconocido") + "</td>";
+
+      // Formatear y agregar horario de función y venta
+      txt += "<td>" + (formatDate(element.horarioFuncion))  + "</td>";
+          txt += "<td>" + (formatDate(element.horarioVenta))  + "</td>";
+
+      // Agregar el precio y el número de ticket
+      txt += "<td>" + (element.precio) + "</td>";
+      txt += "<td>" + (element.numeroTicket) + "</td>";
+
+      // Cargar el usuario asociado usando el singleton
+      let usuario = await singletonController.loadUsuario(element.usuarioId);
+      txt += "<td>" + (usuario.cuenta || "Desconocido") + "</td>";
+
+      // Mostrar el estado de la entrada con un ícono
+      if (element.estado === 1) {
+          txt += "<td><i class='fas fa-circle text-success' title='Activo'></i></td>";
+      } else {
+          txt += "<td><i class='fas fa-circle text-danger' title='Desactivado'></i></td>";
+      }
+
+      // Agregar un botón para editar la entrada
+      txt += `
+          <td>
+              <a href="http://localhost/SG_CINE_2024/public/entrada/edit/${element.id}" class="btn btn-sm btn-warning">
+                  <i class="fas fa-edit"></i>
+              </a>
+          </td>`;
+      txt += "</tr>";
+  }
+
+  // Actualizar el contenido de la tabla con las filas generadas
+  tabla.innerHTML = txt;
+},
+
+loadByPelicula: async () => {
+  console.log("Listando entradas por película...");
+
+  // Obtener el valor de la película desde el input y convertirlo en un número entero
+  let peliculaId = parseInt(document.getElementById("filterPeliculaInput").value, 10);
+
+  // Validar el número de película
+  if (isNaN(peliculaId) || peliculaId <= 0) {
+      alert("Por favor, ingresa un número de película válido.");
+      return;
+  }
+
+  let index = 0;
+  const data = await entradaService.loadByPelicula(peliculaId);
+
+  // Verificar si se encontraron resultados
+  if (!data.result || data.result.length === 0) {
+      alert("Película no encontrada");
+      return;
+  }
+
+  console.log("Entradas listadas:", data);
+  let tabla = document.getElementById("tbodyEntradas");
+  let txt = "";
+
+  // Iterar sobre los resultados de las entradas y construir las filas de la tabla
+  for (const element of data.result) {
+      txt += "<tr>";
+
+      // Incrementar el índice para la fila actual
+      txt += "<th>" + (++index) + "</th>";
+
+      // Cargar la película asociada usando el singleton
+      let funcion = await singletonController.loadFuncion(element.funcionId);
+      txt += "<td>" + (funcion.numeroFuncion || "Desconocido") + "</td>";
+
+      // Formatear y agregar horario de función y venta
+      txt += "<td>" + (formatDate(element.horarioFuncion))  + "</td>";
+          txt += "<td>" + (formatDate(element.horarioVenta))  + "</td>";
+
+      // Agregar el precio y el número de ticket
+      txt += "<td>" + (element.precio) + "</td>";
+      txt += "<td>" + (element.numeroTicket) + "</td>";
+
+      // Cargar el usuario asociado usando el singleton
+      let usuario = await singletonController.loadUsuario(element.usuarioId);
+      txt += "<td>" + (usuario.cuenta || "Desconocido") + "</td>";
+
+      // Mostrar el estado de la entrada con un ícono
+      if (element.estado== 1) {
+          txt += "<td><i class='fas fa-circle text-success' title='Activo'></i></td>";
+      } else {
+          txt += "<td><i class='fas fa-circle text-danger' title='Desactivado'></i></td>";
+      }
+
+      // Agregar un botón para editar la entrada
+      txt += `
+          <td>
+              <a href="http://localhost/SG_CINE_2024/public/entrada/edit/${element.id}" class="btn btn-sm btn-warning">
+                  <i class="fas fa-edit"></i>
+              </a>
+          </td>`;
+      txt += "</tr>";
+  }
+
+  // Actualizar el contenido de la tabla con las filas generadas
+  tabla.innerHTML = txt;
+}
+,
+
 
   print: () => {
     //lista
@@ -467,10 +627,25 @@ save: () => {
   
 };
 
+const formatDate = (dateString) => {
+  // Divide la fecha y la hora usando el espacio
+  const [datePart, timePart] = dateString.split(' ');
+  
+  // Divide la fecha en año, mes y día
+  const [year, month, day] = datePart.split("-");
+  
+  // Divide la hora en horas y minutos (después de eliminar los segundos)
+  const [hora, minutos] = timePart.split(":");
+
+  // Retorna el formato deseado
+  return `${day}/${month}/${year} a las ${hora}:${minutos}`;
+};
+
+
 document.addEventListener("DOMContentLoaded", () => {
   let btnAltaEntrada = document.getElementById("btnAltaEntrada");
   let btnListarEntrada = document.getElementById("btnListarEntrada");
-  let modificarUsuario = document.getElementById("btnModificarUsuario");
+  let btnModificarEntrada = document.getElementById("btnToggleEntrada");
   let btnBuscarEntrada = document.getElementById("btnBuscarEntrada");
   let btnGuardarEntrada = document.getElementById("btnGuardarEntrada");
   let btnPDFEntrada = document.getElementById("btnPDFEntrada");
@@ -499,7 +674,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if(confirm("¿Quieres guardar las entradas?")){
 
           entradaController.save();
-          alert("Entrada guardada con éxito");
           entradaController.list()
           /* alert("Entrada guardada con éxito");
            setTimeout(() => {
@@ -512,18 +686,25 @@ document.addEventListener("DOMContentLoaded", () => {
       })
 
       btnBuscarEntrada.addEventListener("click", function () {
-        if (document.getElementById("filterType").value == "ticket") {
-          entradaController.loadByNumeroTicket();
-        } else if (document.getElementById("filterType").value == "funcion") {
-          entradaController.loadByFuncion();
-        } else if (document.getElementById("filterType").value == "cuenta") {
-          entradaController.loadByCuenta();
+        let filterType = document.getElementById("filterType").value;
+        
+        if (filterType === "numeroTicket") {
+            entradaController.loadByNumeroTicket();
+        } else if (filterType === "numeroFuncion") {
+            entradaController.loadByFuncion();
+        } else if (filterType === "cuentaCliente") {
+            entradaController.loadByCuenta();
+        } else if (filterType === "pelicula") {
+            entradaController.loadByPelicula();
+        } else if (filterType === "programacion") {
+            entradaController.loadByProgramacion();
         }
-      });
+    });
+    
 
       btnListarEntrada.onclick = entradaController.list;
-    } else if (modificarUsuario != null) {
-      modificarUsuario.onclick = entradaController.update;
+    } else if (btnModificarEntrada != null) {
+      btnModificarEntrada.onclick = entradaController.update;
     }
   }
 });

@@ -1,0 +1,57 @@
+/* Estilos para el contenedor general */
+.container {
+    margin-top: 3rem; /* Mayor espacio superior */
+}
+
+/* Estilos para la tarjeta de "Quiénes Somos" */
+.card {
+    border-radius: 15px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra de tarjeta */
+    background-color: #fff; /* Fondo blanco */
+    overflow: hidden; /* Asegura que los bordes redondeados se apliquen a la imagen */
+}
+
+/* Estilos para la imagen dentro de la tarjeta */
+.card img {
+    object-fit: cover; /* Asegura que la imagen cubra el área sin distorsionarse */
+    height: 100%; /* Asegura que la imagen cubra la altura del contenedor */
+}
+
+/* Estilos para el título de la tarjeta */
+.card-title {
+    font-size: 1.75rem; /* Tamaño de fuente del título */
+    font-weight: bold; /* Negrita para el título */
+    color: #333; /* Color del texto */
+}
+
+/* Estilos para el texto dentro de la tarjeta */
+.card-text {
+    font-size: 1rem; /* Tamaño de fuente del texto */
+    color: #555; /* Color del texto */
+}
+
+/* Estilos para la sección de contacto */
+.section {
+    padding: 2rem 0; /* Espaciado superior e inferior */
+}
+
+/* Estilos para la información de contacto */
+.contact-info {
+    font-size: 1.125rem; /* Tamaño de fuente de la información de contacto */
+    color: #333; /* Color del texto */
+    line-height: 1.6; /* Altura de línea para mejorar la legibilidad */
+}
+
+/* Estilos para los iconos de redes sociales */
+.fab {
+    color: #333; /* Color de los iconos */
+}
+
+.fab:hover {
+    color: #007bff; /* Color de los iconos al pasar el ratón */
+}
+
+/* Espaciado para los iconos de redes sociales */
+.text-center .d-flex a {
+    margin: 0 0.5rem; /* Espacio entre los iconos */
+}

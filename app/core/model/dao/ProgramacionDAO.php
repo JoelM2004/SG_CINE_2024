@@ -96,6 +96,21 @@ final class ProgramacionDAO extends DAO implements InterfaceDAO
         return $Programaciones;
     }
 
+    public function listVigente():ProgramacionDTO{
+
+        $sql = "SELECT * FROM {$this->table} WHERE vigente = 1";
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->execute();
+
+        if ($stmt->rowCount() !== 1) {
+            throw new \Exception("La programación no se cargó correctamente");
+        }
+
+        return new ProgramacionDTO($stmt->fetch(\PDO::FETCH_ASSOC)); //LO DEVUELVE EN UNA MATRIZ ASOCIATIVA
+
+
+    }
 
     public function delete($id): void
     {

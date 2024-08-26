@@ -190,6 +190,29 @@ final class FuncionDAO extends DAO implements InterfaceDAO
     return $funciones;
 }
 
+public function listActivas(): array
+{
+    $sql = "SELECT 
+       f.*
+    FROM 
+        funciones f
+    INNER JOIN 
+        programaciones p ON f.programacionId = p.id
+    WHERE 
+        p.vigente = 1 AND
+        f.fecha >= CURDATE() 
+    ";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+
+    $funciones = [];
+    while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+        $funciones[] = new FuncionDTO($row);
+    }
+
+    return $funciones;
+}
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -77,6 +77,31 @@ final class PeliculaDAO extends DAO implements InterfaceDAO
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
+    public function listPeliculasActivas(): array
+    {
+        $sql = "SELECT DISTINCT
+                p.*
+            FROM {$this->table} p
+            
+            INNER JOIN funciones f ON f.peliculaId = p.id
+            
+            INNER JOIN programaciones pro ON f.programacionId = pro.id
+            
+            WHERE pro.vigente = 1 AND
+        f.fecha >= CURDATE()";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+
+        // Recuperar todos los resultados y convertirlos a objetos PeliculaDTO
+        $Peliculas = [];
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $Peliculas[] = new PeliculaDTO($row);
+        }
+        return $Peliculas;
+    }
+
+
     public function update(InterfaceDTO $object): void
     {
         $this->validate($object);

@@ -3,8 +3,8 @@
 use app\core\model\dao\PeliculaDAO;
 use app\core\model\dao\UsuarioDAO;
 use app\core\model\dao\FuncionDAO;
-use app\core\model\dao\AudioDAO;
-use app\core\model\dao\TipoDAO;
+use app\core\model\dao\EntradaDAO;
+use app\core\model\dao\ProgramacionDAO;
 
 use app\libs\connection\Connection;
 
@@ -16,8 +16,19 @@ $daoUsuario = new UsuarioDAO($conn);
 $datosUsuario = $daoUsuario->list();
 
 $daoFuncion = new FuncionDAO($conn);
-$datosFuncion = $daoFuncion->list();
+$datosFuncion = $daoFuncion->listActivas();
 $datosFuncion=array_reverse($datosFuncion);
+
+$daoEntrada = new EntradaDAO($conn);
+
+$daoProgramacion = new ProgramacionDAO($conn);
+$datosProgramacion =$daoProgramacion->listVigente();
+
+function formatDate($date) {
+    $parts = explode('-', $date);
+    return isset($parts[2], $parts[1], $parts[0]) ? "{$parts[2]}/{$parts[1]}/{$parts[0]}" : $date;
+}
+
 ?>
 
 
@@ -34,8 +45,8 @@ $datosFuncion=array_reverse($datosFuncion);
                 // Obtener funciones y llenar el select
                 foreach ($datosFuncion as $elemento) {
 
-                    $datosPelicula=$daoPelicula->load($elemento["peliculaId"]);
-                    echo '<option value="' . $elemento['id'] . '">' . $elemento['numeroFuncion'] ."-". $datosPelicula->getNombre(). '</option>';
+                    $datosPelicula=$daoPelicula->load($elemento->getPeliculaId());
+                    echo '<option value="' . $elemento->getId() . '">' . $elemento->getNumeroFuncion() ."-". $datosPelicula->getNombre(). "-".$datosPelicula->getAudioId()."-".$datosPelicula->getTipoId().'</option>';
                 }
                 ?>
             </select>
@@ -45,11 +56,6 @@ $datosFuncion=array_reverse($datosFuncion);
             <label for="fechaHoraFuncion" class="form-label">Fecha y Hora de la Función</label>
             <input type="datetime-local" class="form-control" id="fechaHoraFuncion" disabled>
         </div>
-
-        <!-- <div class="mb-3">
-            <label for="fechaHoraVenta" class="form-label">Fecha y Hora de la Venta</label>
-            <input type="datetime-local" class="form-control" id="fechaHoraVenta">
-        </div> -->
 
         <div class="mb-3">
             <label for="precio" class="form-label">Precio</label>
@@ -61,6 +67,11 @@ $datosFuncion=array_reverse($datosFuncion);
             <input type="number" class="form-control" id="cantidad">
         </div> 
 
+        <div class="mb-3">
+            <label for="disponible" class="form-label">Entradas Disponibles</label>
+            <input type="number" class="form-control" id="disponible" disabled>
+        </div> 
+        
         <div class="mb-3">
             <label for="total" class="form-label">Total</label>
             <input type="number" class="form-control" id="total" disabled>
@@ -88,38 +99,88 @@ $datosFuncion=array_reverse($datosFuncion);
 
         <!-- Barra de búsqueda con selección de filtro -->
         <form class="mb-4" id="filterForm">
-            <div class="d-flex flex-column flex-md-row align-items-center mb-3">
-                <label class="form-label me-2">Filtrar por:</label>
-                <select class="form-select w-auto" id="filterType">
-                    <option value="">Seleccione un filtro</option>
-                    <option value="numeroTicket">Número de Ticket</option>
-                    <option value="numeroFuncion">Número de Función</option>
-                    <option value="cuentaCliente">Cuenta del Cliente</option>
-                </select>
-            </div>
+    <div class="d-flex flex-column flex-md-row align-items-center mb-3">
+        <label class="form-label me-2">Filtrar por:</label>
+        <select class="form-select w-auto" id="filterType">
+            <option value="">Seleccione un filtro</option>
+            <option value="numeroTicket">Número de Ticket</option>
+            <option value="numeroFuncion">Número de Función</option>
+            <option value="cuentaCliente">Cuenta del Cliente</option>
+            <option value="pelicula">Película</option>
+            <option value="programacion">Programación</option>
+        </select>
+    </div>
 
-            <!-- Filtros específicos -->
-            <div class="mb-3 d-none" id="filterNumeroTicket">
-                <label for="filterNumeroTicketInput" class="form-label">Número de Ticket</label>
-                <input type="number" class="form-control" id="filterNumeroTicketInput">
-            </div>
+    <!-- Filtros específicos -->
+    <div class="mb-3 d-none" id="filterNumeroTicket">
+        <label for="filterNumeroTicketInput" class="form-label">Número de Ticket</label>
+        <input type="number" class="form-control" id="filterNumeroTicketInput">
+    </div>
 
-            <div class="mb-3 d-none" id="filterNumeroFuncion">
-                <label class="form-label">Número de Función</label>
-                <input type="number" class="form-control" id="filterNumeroFuncionInput">
-            </div>
+    <div class="mb-3 d-none" id="filterNumeroFuncion">
+        <label for="filterNumeroFuncionInput" class="form-label">Número de Función</label>
+        <select class="form-select" id="filterNumeroFuncionInput">
+            <option value="">Seleccione una función</option>
+            <?php
+                // Obtener funciones y llenar el select
+                $funcionesActivar=$daoFuncion->listActivas();
+                foreach (($funcionesActivar) as $elemento) {
 
-            <div class="mb-3 d-none" id="filterCuentaCliente">
-                <label class="form-label">Cuenta del Cliente</label>
-                <input type="text" class="form-control" id="filterCuentaClienteInput">
-            </div>
+                    echo '<option value="' . $elemento->getId() . '">' . $elemento->getNumeroFuncion() . '</option>';
+                }
+                ?>
+        </select>
+    </div>
 
-            <div class="d-flex justify-content-end">
-                <button id="btnBuscarEntrada" type="button" class="btn btn-primary me-2">Buscar</button>
-                <button id="btnListarEntrada" type="button" class="btn btn-primary me-2">Listar</button>
-                <button id="btnPDFEntrada" type="button" class="btn btn-success">PDF</button>
-            </div>
-        </form>
+    <div class="mb-3 d-none" id="filterCuentaCliente">
+        <label for="filterCuentaClienteInput" class="form-label">Cuenta del Cliente</label>
+        <select class="form-select" id="filterCuentaClienteInput">
+            <option value="">Seleccione una cuenta</option>
+            <?php
+                // Obtener funciones y llenar el select
+                
+                foreach (($datosUsuario) as $elemento) {
+
+                    echo '<option value="' . $elemento["id"] . '">' . $elemento["cuenta"] . '</option>';
+                }
+                ?>
+        </select>
+    </div>
+
+    <div class="mb-3 d-none" id="filterPelicula">
+        <label for="filterPeliculaInput" class="form-label">Película</label>
+        <select class="form-select" id="filterPeliculaInput">
+            <option value="">Seleccione una película</option>
+            <?php
+
+            $datosPeliculasFunciones=$daoPelicula->listPeliculasActivas();
+            foreach ($datosPeliculasFunciones as $elemento) {
+                    echo '<option value="' . $elemento->getId() . '">' . $elemento->getNombre()."-".$elemento->getAudioId()."-".$elemento->getTipoId(). '</option>';
+                }
+
+                ?>
+        </select>
+    </div>
+
+    <div class="mb-3 d-none" id="filterProgramacion">
+        <label for="filterProgramacionInput" class="form-label">Programación</label>
+        <select class="form-select" id="filterProgramacionInput">
+            <option value="">Seleccione una programación</option>
+            <?php
+                // Obtener funciones y llenar el select
+                    echo '<option value="' . $datosProgramacion->getId() . '">' . formatDate($datosProgramacion->getFechaInicio())." a " . formatDate($datosProgramacion->getFechaFin()). '</option>';
+                
+            ?>
+        </select>
+    </div>
+
+    <div class="d-flex justify-content-end">
+        <button id="btnBuscarEntrada" type="button" class="btn btn-primary me-2">Buscar</button>
+        <button id="btnListarEntrada" type="button" class="btn btn-primary me-2">Listar</button>
+        <button id="btnPDFEntrada" type="button" class="btn btn-success">PDF</button>
+    </div>
+</form>
+
 
         <table id="tablaEntradas" class="table table-light">
             <thead>

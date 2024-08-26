@@ -1,0 +1,41 @@
+/* Carrusel */
+.carousel-inner img {
+    height: 60vh; /* Ajusta la altura del carrusel */
+    object-fit: cover; /* Ajusta la imagen para cubrir el área */
+  }
+  
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.5); /* Color de fondo de los controles del carrusel */
+    border-radius: 50%; /* Bordes redondeados de los controles */
+  }
+  
+  /* Sección de Cartelera */
+  #cartelera {
+    gap: 1.5rem; /* Espaciado entre elementos */
+  }
+  
+  /* Ajuste de los elementos de la cartelera */
+  #cartelera .card {
+    border: none; /* Sin borde en las tarjetas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave en las tarjetas */
+    transition: transform 0.3s ease; /* Transición suave en el hover */
+  }
+  
+  #cartelera .card:hover {
+    transform: scale(1.05); /* Efecto de zoom en el hover */
+  }
+  
+  /* Títulos */
+  h2 {
+    font-size: 2rem;
+    color: #343a40; /* Color del texto */
+  }
+  
+  /* Adaptación para dispositivos móviles */
+  @media (max-width: 768px) {
+    .carousel-inner img {
+      height: 40vh; /* Ajusta la altura del carrusel en pantallas más pequeñas */
+    }
+  }
+  

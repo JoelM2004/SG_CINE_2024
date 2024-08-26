@@ -8,68 +8,89 @@ use app\core\model\dao\EntradaDAO;
 use app\core\service\base\Service;
 use app\libs\connection\Connection;
 
-final class EntradaService  extends Service implements InterfaceService {
+final class EntradaService  extends Service implements InterfaceService
+{
 
     public function __construct()
     {
         parent::__construct();
     }
 
-    public function save(array $object):void{
-        $conn= Connection::get();
-        $dao= new EntradaDAO($conn);
+    public function save(array $object): void
+    {
+        $conn = Connection::get();
+        $dao = new EntradaDAO($conn);
         $dao->save(new EntradaDTO($object));
     }
 
-    public function cantidadEntrada($funcion):int{
-        $conn= Connection::get();
-        $dao= new EntradaDAO($conn);
-        return $dao->cantidadEntrada($funcion);
+    public function cantidadEntradasDisponibles($funcion): int
+    {
+        $conn = Connection::get();
+        $dao = new EntradaDAO($conn);
+        return $dao->cantidadEntradasDisponibles($funcion);
     }
 
-    public function load($id):EntradaDTO{
-        $conn= Connection::get();
-        $dao= new EntradaDAO($conn);
+    public function load($id): EntradaDTO
+    {
+        $conn = Connection::get();
+        $dao = new EntradaDAO($conn);
         return $dao->load($id);
     }
 
-    public function loadByNumeroTicket($numeroTicket):EntradaDTO{
-        $conn= Connection::get();
-        $dao= new EntradaDAO($conn);
+    public function loadByNumeroTicket($numeroTicket): EntradaDTO
+    {
+        $conn = Connection::get();
+        $dao = new EntradaDAO($conn);
         return $dao->loadByNumeroTicket($numeroTicket);
     }
 
-    public function loadByCuenta($cuenta):array{
-     $conn= Connection::get();
-     $dao= new EntradaDAO($conn);
-     return $dao->loadByCuenta($cuenta);
+    public function loadByCuenta($cuenta): array
+    {
+        $conn = Connection::get();
+        $dao = new EntradaDAO($conn);
+        return $dao->loadByCuenta($cuenta);
     }
 
-    public function loadByFuncion($funcion):array{
-        $conn= Connection::get();
-        $dao= new EntradaDAO($conn);
+    public function loadByFuncion($funcion): array
+    {
+        $conn = Connection::get();
+        $dao = new EntradaDAO($conn);
         return $dao->loadByFuncion($funcion);
-       }
-    
-    public function update(array $object):void{
-        $conn= Connection::get();
-        $dao= new EntradaDAO($conn);
+    }
+
+    public function loadByProgramacion($programacion): array
+    {
+        $conn = Connection::get();
+        $dao = new EntradaDAO($conn);
+        return $dao->loadByProgramacion($programacion);
+    }
+
+    public function loadByPelicula($pelicula): array
+    {
+        $conn = Connection::get();
+        $dao = new EntradaDAO($conn);
+        return $dao->loadByPelicula($pelicula);
+    }
+
+    public function update(array $object): void
+    {
+        $conn = Connection::get();
+        $dao = new EntradaDAO($conn);
         $dao->update(new EntradaDTO($object));
     }
 
-    public function delete($id):void{
+    public function delete($id): void
+    {
 
-        $conn= Connection::get();
-        $dao= new EntradaDAO($conn);
+        $conn = Connection::get();
+        $dao = new EntradaDAO($conn);
         $dao->delete($id);
-
     }
 
-    public function list():array{
-        $conn= Connection::get();
-        $dao= new EntradaDAO($conn);
+    public function list(): array
+    {
+        $conn = Connection::get();
+        $dao = new EntradaDAO($conn);
         return $dao->list();
     }
-
-   
 }
