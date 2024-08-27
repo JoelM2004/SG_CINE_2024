@@ -21,28 +21,28 @@ $datos = $dao->loadView($id);
       <!-- Contenido de la tarjeta -->
       <div class="col-md-8">
         <div class="card-body">
-          <h5 class="card-title mb-3"><?= $datos['nombre'] ?></h5>
-          <p class="card-text"><strong>Sinopsis:</strong> <?= $datos['sinopsis'] ?></p>
+          <h5 class="card-title mb-3"><i class="fas fa-film"></i> <?= $datos['nombre'] ?></h5>
+          <p class="card-text"><strong><i class="fas fa-scroll"></i> Sinopsis:</strong> <?= $datos['sinopsis'] ?></p>
           <ul class="list-group list-group-flush">
-            <li class="list-group-item"><strong>Duración:</strong> <?= $datos['duracion'] ?> min</li>
-            <li class="list-group-item"><strong>Género:</strong> <?= $datos['genero'] ?></li>
-            <li class="list-group-item"><strong>Calificación:</strong> <?= $datos['calificacion'] ?></li>
-            <li class="list-group-item"><strong>Fecha de Ingreso:</strong> <?= date('d/m/Y', strtotime($datos['fechaIngreso'])) ?></li>
-            <li class="list-group-item"><strong>Tipo:</strong> <?= $datos['tipo'] ?></li>
-            <li class="list-group-item"><strong>Audio:</strong> <?= $datos['audio'] ?></li>
-            <li class="list-group-item"><strong>Idioma:</strong> <?= $datos['idioma'] ?></li>
-            <li class="list-group-item"><strong>País de Origen:</strong> <?= $datos['pais'] ?></li>
+            <li class="list-group-item"><strong><i class="fas fa-clock"></i> Duración:</strong> <?= $datos['duracion'] ?> min</li>
+            <li class="list-group-item"><strong><i class="fas fa-theater-masks"></i> Género:</strong> <?= $datos['genero'] ?></li>
+            <li class="list-group-item"><strong><i class="fas fa-star"></i> Calificación:</strong> <?= $datos['calificacion'] ?></li>
+            <li class="list-group-item"><strong><i class="fas fa-calendar-alt"></i> Fecha de Ingreso:</strong> <?= date('d/m/Y', strtotime($datos['fechaIngreso'])) ?></li>
+            <li class="list-group-item"><strong><i class="fas fa-tag"></i> Tipo:</strong> <?= $datos['tipo'] ?></li>
+            <li class="list-group-item"><strong><i class="fas fa-volume-up"></i> Audio:</strong> <?= $datos['audio'] ?></li>
+            <li class="list-group-item"><strong><i class="fas fa-language"></i> Idioma:</strong> <?= $datos['idioma'] ?></li>
+            <li class="list-group-item"><strong><i class="fas fa-globe"></i> País de Origen:</strong> <?= $datos['pais'] ?></li>
           </ul>
 
-          <h6 class="mt-3 mb-2">Actores:</h6>
+          <h6 class="mt-3 mb-2"><i class="fas fa-users"></i> Actores:</h6>
           <p><?= $datos['actores'] ?></p>
 
-          <h6 class="mt-3 mb-2">Sitio Web:</h6>
-          <p><a href="<?= $datos['sitioWebOficial'] ?>" target="_blank" class="card-link">Visita el sitio web de la película</a></p>
+          <h6 class="mt-3 mb-2"><i class="fas fa-globe"></i> Sitio Web:</h6>
+          <p><a href="<?= $datos['sitioWebOficial'] ?>" target="_blank" class="card-link"><i class="fas fa-external-link-alt"></i> Visita el sitio web de la película</a></p>
 
           <div class="card-body">
-            <a href="<?= APP_FRONT . "funcion/view/" . $id ?>" class="btn btn-primary">Entradas y Funciones Disponibles</a>
-            <a href="<?= APP_FRONT . "comentario/index/" . $id ?>" class="btn btn-primary">Deja tu opinión acerca de la película</a>
+            <a href="<?= APP_FRONT . "funcion/view/" . $id ?>" class="btn btn-primary"><i class="fas fa-ticket-alt"></i> Entradas y Funciones Disponibles</a>
+            <a href="<?= APP_FRONT . "comentario/index/" . $id ?>" class="btn btn-primary"><i class="fas fa-comments"></i> Deja tu opinión acerca de la película</a>
           </div>
         </div>
       </div>

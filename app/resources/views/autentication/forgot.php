@@ -15,12 +15,12 @@
                     <label for="email" class="form-label">Correo Electrónico</label>
                     <input type="email" class="form-control" id="email" placeholder="Ingresa tu correo electrónico" required>
                 </div>
-                <button type="submit" class="btn btn-primary w-100">Enviar Instrucciones</button>
+                <button type="button" id="btnforgetAuth" class="btn btn-primary w-100">Enviar Instrucciones</button>
             </form>
 
-            <!-- Enlace de regreso -->
+            <!-- Botón de regreso -->
             <div class="text-center mt-3">
-                <a href="<?= APP_FRONT . 'autentication/index' ?>" id="back-to-login-link">Volver al inicio de sesión</a>
+                <a href="<?= APP_FRONT . 'autentication/index' ?>" class="btn btn-secondary w-100" id="back-to-login-button">Volver al inicio de sesión</a>
             </div>
         </div>
     </div>

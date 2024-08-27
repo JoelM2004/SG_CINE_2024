@@ -39,3 +39,47 @@
     margin-top: 1rem; /* Espaciado superior */
 }
 
+.custom-card {
+    background: linear-gradient(135deg, #00aaff, #0055ff); /* Gradiente de fondo azul */
+    border: none; /* Sin borde para un aspecto limpio */
+    border-radius: 15px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidad */
+    padding: 30px; /* Espaciado interno */
+    color: #fff; /* Texto blanco para contraste */
+    text-align: center; /* Centrado de texto */
+    max-width: 400px; /* Ancho máximo para controlar el tamaño */
+    margin: auto; /* Centrar la tarjeta horizontalmente */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transiciones suaves */
+}
+
+.custom-card h1 {
+    font-size: 2rem; /* Tamaño del encabezado principal */
+    margin-bottom: 20px; /* Espaciado inferior */
+}
+
+.custom-card .btn-custom {
+    background-color: #003366; /* Color de fondo del botón azul oscuro */
+    border: none; /* Sin borde */
+    color: #fff; /* Color del texto */
+    border-radius: 50px; /* Bordes redondeados */
+    padding: 10px 20px; /* Espaciado interno del botón */
+    font-size: 1rem; /* Tamaño de fuente */
+    margin-top: 20px; /* Separación del botón respecto al contenido de arriba */
+    transition: background-color 0.3s ease; /* Transición suave para el color de fondo */
+}
+
+.custom-card .btn-custom:hover {
+    background-color: #005bb5; /* Cambio de color al pasar el ratón a un azul más brillante */
+}
+
+/* Asegúrate de que el contenedor de la tarjeta también esté centrado */
+.bg-cover {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Asegura que ocupe al menos el alto de la vista */
+    background-image: url('path/to/your/background-image.jpg'); /* Imagen de fondo opcional */
+    background-size: cover;
+    background-position: center;
+}
+

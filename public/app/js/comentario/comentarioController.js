@@ -72,16 +72,19 @@ let comentarioController = {
 
         // Construir el HTML para cada comentario
         txt += `
-          <div class="comment mb-4 p-3 border rounded">
-            <div class="d-flex justify-content-between">
-              <h5>${nombreUsuario}</h5>
-              <div>
-                <button class="btn btn-sm btn-danger eliminar" data-id="${element.id}" style="display: ${mostrar};">Eliminar</button>
-              </div>
-            </div>
-            <p class="comment-text">${element.comentario}</p>
-          </div>
-        `;
+  <div class="comment mb-4 p-3 border rounded">
+    <div class="d-flex justify-content-between align-items-center">
+      <h5><i class="fas fa-user"></i> ${nombreUsuario}</h5>
+      <div>
+        <button class="btn btn-sm btn-danger eliminar" data-id="${element.id}" style="display: ${mostrar};">
+          <i class="fas fa-trash-alt"></i> Eliminar
+        </button>
+      </div>
+    </div>
+    <p class="comment-text mt-2"><i class="fas fa-comment"></i> ${element.comentario}</p>
+  </div>
+`;
+
     }
 
     // Asignar el HTML construido a la lista de comentarios

@@ -287,13 +287,17 @@ let userController = {
         userService
           .changePassword(userController.dataPass)
           .then((data) => {
-            alert(data.mensaje);
+            if (data.error =="") {
+              alert("Contraseña cambiada con éxito.");
+          } else {
+              alert(data.error);
+          }
           })
           .catch((error) => {
             // Maneja cualquier error que ocurra durante el cambio de contraseña
             // console.error("Error al cambiar la contraseña:", error);
             alert(
-              "Hubo un problema al cambiar la contraseña. Por favor, inténtelo de nuevo más tarde."+ error
+              "Hubo un problema al cambiar la contraseña. Por favor, inténtelo de nuevo más tarde."
             );
           });
       

@@ -18,6 +18,47 @@ let authController = {
         apellido:""
 
     },
+    
+    dataForget:{
+      correo:""
+
+    }
+    ,
+
+    forgetPassword:()=>{
+      if (!confirm("¿Quieres solicitar una nueva contraseña?")) {
+        return;
+    }
+    
+    let form=document.forms["password-reset-form"]
+
+    // Validación del apellido
+    if (form.email.value.length > 255||form.email.value.length < 5 ) {
+        alert("Introduzca un correo válido");
+        return;
+    } else {
+        authController.dataForget.correo = form.email.value;
+    }
+
+    authService.forgetPassword(authController.dataForget)
+        .then(response => {
+            if (response.error =="") {
+                alert("Contraseña recuperada con éxito, revise su correo para obtener la nueva clave");
+                console.log(response)
+                window.location.href = "autentication/index";
+            } else {
+                alert(response.error);
+            }
+        })
+        .catch(error => {
+            // Manejo de errores en caso de fallo en la llamada al servicio
+            alert("Ocurrió un error al crear la cuenta. Por favor, inténtelo de nuevo.");
+            console.error(error);
+        });
+
+    }
+
+    ,
 
     login: ()=>{
         let form = document.forms["auth-form"];
@@ -39,60 +80,85 @@ let authController = {
     }
   ,
 
-    registrarCuenta:()=>{
-        let form=document.forms["register-form"]
-        if(confirm("¿Quieres crear tu cuenta?")){
-        if (form.apellido.value.length > 45) {
-            alert("Supero el limite de caracteres con su apellido");
-          } else {
-            authController.dataRegister.apellido = form.apellido.value;
-          }
+  registrarCuenta: () => {
+    let form = document.forms["register-form"];
     
-          if (form.nombres.value.length > 45) {
-            alert("Supero el limite de caracteres con su nombre");
-          } else {
-            authController.dataRegister.nombres = form.nombres.value;
-          }
+    if (!confirm("¿Quieres crear tu cuenta?")) {
+        return;
+    }
     
-          if (form.cuenta.value.length > 45) {
-            alert("Supero el limite de caracteres con su cuenta");
-          } else {
-            authController.dataRegister.cuenta = form.cuenta.value;
-          }
+    // Validación del apellido
+    if (form.apellido.value.length > 45 ) {
+        alert("El apellido supera el límite de caracteres permitidos (45).");
+        return;
+    } else {
+        authController.dataRegister.apellido = form.apellido.value;
+    }
     
-
-
-
-          if (
-            form.clave.value.length > 6 &&
-            form.clave.value.length < 45
-            && form.clave.value==form.claveConfirm.value
-          ) {
-            authController.dataRegister.clave = form.clave.value;
-          } else {
-            alert("Su clave es demasiado corta o muy largo (7 a 44 caracteres) o no coincide con la verificación solicitada");
-          }
+    // Validación del nombre
+    if (form.nombres.value.length > 45) {
+        alert("El nombre supera el límite de caracteres permitidos (45).");
+        return;
+    } else {
+        authController.dataRegister.nombres = form.nombres.value;
+    }
     
-          if (form.correo.value.length > 255) {
-            alert("El correo es muy largo");
-          } else {
-            authController.dataRegister.correo = form.correo.value;
-          }
-
-          authService.save(authController.dataRegister)
+    // Validación del nombre de usuario
+    if (form.cuenta.value.length > 45) {
+        alert("El nombre de usuario supera el límite de caracteres permitidos (45).");
+        return;
+    } else {
+        authController.dataRegister.cuenta = form.cuenta.value;
+    }
+    
+    // Validación de la contraseña
+    const password = form.clave.value;
+    const confirmPassword = form.claveConfirm.value;
+    
+    if (password.length < 7 || password.length > 44) {
+        alert("La contraseña debe tener entre 7 y 44 caracteres.");
+        return;
+    }
+    
+    if (password !== confirmPassword) {
+        alert("La contraseña y su confirmación no coinciden.");
+        return;
+    }
+    
+    // Validación del correo electrónico
+    const email = form.correo.value;
+    if (email.length > 255) {
+        alert("El correo electrónico es demasiado largo.");
+        return;
+    }
+    
+    // Validación de formato de correo electrónico
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+        alert("El formato del correo electrónico no es válido.");
+        return;
+    }
+    
+    authController.dataRegister.clave = password;
+    authController.dataRegister.correo = email;
+    
+    // Llamada al servicio para guardar los datos
+    authService.save(authController.dataRegister)
         .then(response => {
-            if(response.error === "" && response.mensaje === "OK"){
-                alert("Cuenta creda con éxito")
-                window.location.href = "autentication/index"
-            }
-            else{
-  
-              alert(response.error)
-  
+            if (response.error =="") {
+                alert("Cuenta creada con éxito.");
+                window.location.href = "autentication/index";
+            } else {
+                alert(response.error);
             }
         })
-    }
-    }
+        .catch(error => {
+            // Manejo de errores en caso de fallo en la llamada al servicio
+            alert("Ocurrió un error al crear la cuenta. Por favor, inténtelo de nuevo.");
+            console.error(error);
+        });
+}
+
 
 
   
@@ -102,6 +168,7 @@ let authController = {
   document.addEventListener("DOMContentLoaded", ()=>{
     let btnLogin = document.getElementById("btnLogin")
     let btnRegister = document.getElementById("btnRegister")
+    let btnforgetAuth=document.getElementById("btnforgetAuth");
 
     if(btnLogin!=null){
 
@@ -117,5 +184,10 @@ let authController = {
         }
         }
 
+      if(btnforgetAuth!=null){
 
+        btnforgetAuth.onclick = () => {
+              authController.forgetPassword()
+          }
+          }
   })

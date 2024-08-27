@@ -16,7 +16,8 @@ final class AutenticationController extends Controller
     {
         parent::__construct([
             "app/js/autentication/authController.js",
-              "app/js/autentication/authService.js"
+              "app/js/autentication/authService.js",
+              "assets/libs/js/viewAutenticacion.js"
         ]);
     }
 
@@ -38,6 +39,8 @@ final class AutenticationController extends Controller
 
     }
 
+
+
     public function registrarCuenta(Request $request, Response $response): void{
         $service = new UsuarioService(); //REVISAR Y PREGUNTAR
         $service->save($request->getData());
@@ -45,6 +48,12 @@ final class AutenticationController extends Controller
         $response->send();
     }
 
+    public function forgetPassword(Request $request, Response $response): void{
+        $service = new UsuarioService(); //REVISAR Y PREGUNTAR
+        $service->forgetPassword($request->getData());
+        $response->setMessage("Usuario Formateado correctamente su contraseña");
+        $response->send();
+    }
 
     public function forgot():void{
 

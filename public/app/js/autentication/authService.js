@@ -50,5 +50,34 @@ let authService = {
           });
       },
 
+      forgetPassword: (data) => {
+        return fetch("autentication/forgetPassword", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(data),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(response.status);
+            }
     
+            return response.json();
+          }) //aca dentro está la funcion monitor
+          .then((data) => {
+            if (data.error != "") {
+              console.log("Error Interno");
+            } else {
+              console.info("todo bien");
+            }
+    
+            return data;
+          })
+          .catch((error) => {
+            console.error("Error en la Petición ", error);
+            throw error;
+          });
+      },
 }

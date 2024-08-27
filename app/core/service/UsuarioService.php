@@ -45,6 +45,13 @@ final class UsuarioService  extends Service implements InterfaceService {
         $dao->changePassword($object);
     }
 
+    public function forgetPassword(array $object):void{
+        $conn= Connection::get();
+        $dao= new UsuarioDAO($conn);
+        $dao->forgetPassword($object);
+    }
+
+
     public function update(array $object):void{
         $conn= Connection::get();
         $dao= new UsuarioDAO($conn);

@@ -718,14 +718,21 @@ let funcionController = {
             });
 
             txt += `
-            <a href="http://localhost/SG_CINE_2024/public/entrada/view/${element.id}" class="list-group-item list-group-item-action py-3">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1" style="font-size: 1.25rem; font-weight: bold;">Función ${element.numeroFuncion} - ${formatDate(element.fecha)} a las ${formatHour(element.horaInicio)}</h5>
-                    <small style="font-size: 1rem;">Duración: ${element.duracion} min</small>
-                </div>
-                <p class="mb-1" style="font-size: 1.15rem;">Sala ${salatxt} - ${tipotxt} - ${audiotxt} - $${element.precio}</p>
-            </a>
-            `;
+  <a href="http://localhost/SG_CINE_2024/public/entrada/view/${element.id}" class="list-group-item list-group-item-action py-3">
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1" style="font-size: 1.25rem; font-weight: bold;">
+        <i class="fas fa-film"></i> Función ${element.numeroFuncion} - ${formatDate(element.fecha)} a las ${formatHour(element.horaInicio)}
+      </h5>
+      <small style="font-size: 1rem;">
+        <i class="fas fa-clock"></i> Duración: ${element.duracion} min
+      </small>
+    </div>
+    <p class="mb-1" style="font-size: 1.15rem;">
+      <i class="fas fa-theater-masks"></i> Sala ${salatxt} - ${tipotxt} - <i class="fas fa-volume-up"></i> ${audiotxt} - <i class="fas fa-dollar-sign"></i> $${element.precio}
+    </p>
+  </a>
+`;
+
         });
     }
 

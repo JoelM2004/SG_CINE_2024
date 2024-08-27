@@ -68,10 +68,13 @@ function showConfirmation() {
 function confirmPurchase() {
   const termsAccepted = document.getElementById("termsCheck").checked;
   if (termsAccepted) {
-    alert("Compra confirmada. ¡Gracias por tu compra!");
-    // Aquí puedes agregar lógica para completar la compra, como enviar datos al servidor.
+      alert("Compra confirmada. ¡Gracias por tu compra!");
+      // Retornar true si los términos han sido aceptados
+      return true;
   } else {
-    alert("Debes aceptar los términos y condiciones para continuar.");
+      alert("Debes aceptar los términos y condiciones para continuar.");
+      // Retornar false si los términos no han sido aceptados
+      return false;
   }
 }
 
@@ -162,5 +165,7 @@ if (document.getElementById("numeroFuncion")) {
   document.getElementById("numeroFuncion").onchange = toggleInputs;
 }
 
+
+if(document.getElementById("precio")!=null){
 document.getElementById("precio").addEventListener("input", updateTotal2);
-document.getElementById("cantidad").addEventListener("input", updateTotal2);
+document.getElementById("cantidad").addEventListener("input", updateTotal2);}

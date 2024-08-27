@@ -9,6 +9,9 @@ define("APP_TEMPLATE", APP_URI."resources/template/");
 define("APP_VIEWS",APP_URI. "resources/views/");
 define("APP_CONTROLLERS",APP_URI. "core/controller/");
 
+
+const CORREO="lospolloshermanossoporte@hotmail.com";
+CONST CLAVECORREO="polloshermanos2004";
 CONST APP_TOKEN="CLAVE_SECRETA";
 CONST APP_DEFAULT_CONTROLLER = "inicio";
 CONST APP_DEFAULT_ACTION = "index";

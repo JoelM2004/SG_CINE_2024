@@ -81,9 +81,74 @@ save: () => {
           });
   }
 }
-
 ,
 
+saveCompra:()=>{
+  let form = document.forms["formEntrada"];
+
+  // Validación de los campos del formulario
+  const horarioFuncion = document.getElementById("getDatosEntrada").dataset.funcionhora;
+  const precio = document.getElementById("ticket-price").dataset.precio
+  const funcionId = document.getElementById("getDatosEntrada").dataset.idfuncion;
+  const usuarioId = document.getElementById("getDatosEntrada").dataset.iduser;
+  const cantidad = document.getElementById("ticket-quantity").value
+  const disponible = document.getElementById("available-tickets").value
+  // Validar que los campos no estén vacíos
+  if (!horarioFuncion || !precio || !funcionId || !usuarioId) {
+      alert("Por favor, complete todos los campos obligatorios.");
+      console.log(entradaController.data)
+      return; // Detener la ejecución si hay campos vacíos
+  }
+
+  // Validar que el precio sea un número positivo
+  if (isNaN(precio) || parseFloat(precio) <= 0 || parseInt(funcionId) == 0) {
+      alert("El precio debe ser un número positivo.");
+      return; // Detener la ejecución si el precio no es válido
+  }
+
+  if(cantidad>disponible){
+    alert("Quiere comprar una cantidad de entradas que excede a la disponible")
+    return
+  }
+  
+  // Obtener la fecha y hora actual en formato 'YYYY-MM-DDTHH:MM'
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const datetime = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+  // Asignar los valores validados al objeto `entradaController.data`
+  entradaController.data.horarioFuncion = horarioFuncion;
+  entradaController.data.horarioVenta = datetime;
+  entradaController.data.precio = parseFloat(precio);
+  entradaController.data.funcionId = parseInt(funcionId);
+  entradaController.data.usuarioId = parseInt(usuarioId);
+  entradaController.data.estado = entradaController.data.estado; // Asegúrate de que el estado se establece correctamente
+  entradaController.cantidad.numero = parseInt(cantidad);
+
+  // Llamada al servicio para guardar los datos
+  for (let index = 0; index < entradaController.cantidad.numero; index++) {
+      entradaService
+          .save(entradaController.data)
+          .then((data) => {
+              console.log("Guardando Datos");
+              if (data.error !== "") {
+                  alert("Error al guardar la entrada: " + data.error);
+              } else {
+
+              }
+          })
+          .catch((error) => {
+              console.error("Error en la Petición ", error);
+              alert("Ocurrió un error al guardar la entrada");
+          });
+  }
+
+}
+,
   update: () => {
     if(confirm("¿Quieres actualizar el estado de la entrada?")){
 
@@ -650,20 +715,17 @@ document.addEventListener("DOMContentLoaded", () => {
   let btnGuardarEntrada = document.getElementById("btnGuardarEntrada");
   let btnPDFEntrada = document.getElementById("btnPDFEntrada");
 
-  if (document.getElementById("btnGuardarEntrada") != null) {
-
-
-   /* btnGuardarEntrada.addEventListener("click",()=>{
-
-      if(confirm("¿Quieres completar la compra?")){
-        for (let index = 0; index < document.getElementById("ticket-quantity"); index++) {
-          entradaController.confirmPurchase()
-          entradaController.save()
+  if (btnGuardarEntrada != null) {
+    btnGuardarEntrada.addEventListener("click", () => {
+        // Verificar si la compra es confirmada por el usuario
+        if (confirmPurchase() === true) {     
+            entradaController.saveCompra();
+            setTimeout(() => {
+                location.reload();
+            }, 300);
         }
-      }
-    })*/
-    
-  } else {
+    });
+} else {
     if (btnPDFEntrada != null) {
       entradaController.list();
 
