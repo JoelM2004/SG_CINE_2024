@@ -1,5 +1,4 @@
-/* Carrusel */
-.carousel-inner img {
+  .carousel-inner img {
     height: 60vh; /* Ajusta la altura del carrusel */
     object-fit: cover; /* Ajusta la imagen para cubrir el área */
   }

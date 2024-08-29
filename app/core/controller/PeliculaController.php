@@ -19,7 +19,9 @@ final class PeliculaController extends Controller implements InterfaceController
             "app/js/singleton/singletonService.js",
             "app/js/pelicula/peliculaService.js",
             "app/js/pelicula/peliculaController.js",
-            "assets/libs/js/viewPelicula.js"
+            "assets/libs/js/viewPelicula.js",
+            "app/js/imagen/imagenController.js",
+            "app/js/imagen/imagenService.js",
         ]);
     }
 

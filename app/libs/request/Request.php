@@ -4,7 +4,7 @@ namespace app\libs\request;
 
 final class Request{
 
-    private $controller, $action, $id, $data ,$tipoUsuario;
+    private $controller, $action, $id, $data ;
     
     public function __construct(){
         $this->controller = $_GET["controller"] ?? APP_DEFAULT_CONTROLLER;

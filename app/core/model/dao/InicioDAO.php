@@ -39,7 +39,7 @@ final class InicioDAO extends DAO
     INNER JOIN 
         tipos t ON pf.tipoId = t.id
     WHERE 
-        p.vigente = 1
+        p.vigente = 1 AND pf.disponibilidad=1
     ";
 
     $stmt = $this->conn->prepare($sql);

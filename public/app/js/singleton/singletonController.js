@@ -411,4 +411,42 @@ let singletonController = {
     
   },
 
+  ////////////////////////////////////////////////////////////////////
+
+  loadImagen: async (id) => {
+    console.log("Cargando Usuario...");
+  
+      // Llamar al servicio para cargar el usuario
+      let data = await singletonService.loadImagen(id);
+  
+      // Verificar y retornar el resultado
+      if (data && data.result) {
+        console.log("Imagen cargado:", data);
+        return data.result; // Devolver el objeto de usuario
+      } else {
+        throw new Error("No se encontró el Imagen.");
+      }
+    
+  },
+
+  listImagenes: async (id) => {
+    console.log("Listando Peliculas...");
+
+    let array = [];
+    
+    await singletonService
+      .listImagenes(id)
+      .then((data) => {
+        console.log("Imagenes listadas:", data);
+        data.result.forEach((element) => {
+          array.push(element);
+        });
+      })
+      .catch((error) => {
+        console.error("Error al listar Imagenes:", error);
+      });
+
+    return array;
+  },
+
 };

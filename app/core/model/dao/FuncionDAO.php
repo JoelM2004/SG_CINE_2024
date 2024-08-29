@@ -21,7 +21,7 @@ final class FuncionDAO extends DAO implements InterfaceDAO
         $this->validateFechaYSala($object);
         $this->validateProgramacion($object);
         $this->validateSala($object);
-
+        $this->validatePelicula($object);
         $sql="INSERT INTO {$this->table} VALUES(DEFAULT,:fecha,:horaInicio,:duracion,:numeroFuncion,:peliculaId,:salaId,:programacionId,:precio)";//:apellido, variable reemplazada por un dato, o una consulta preparada
         $stmt=$this->conn->prepare($sql);
         $data=$object->toArray();
@@ -55,7 +55,7 @@ final class FuncionDAO extends DAO implements InterfaceDAO
         $this->validateFechaYSala($object);
         $this->validateProgramacion($object);
         $this->validateSala($object);
-
+        $this->validatePelicula($object);
         $sql="UPDATE {$this->table} SET 
         fecha=:fecha,
         horaInicio=:horaInicio, 
@@ -298,7 +298,25 @@ public function listActivas(): array
         }
     }
     
-
+    private function validatePelicula(FuncionDTO $object): void {
+        $sql = "SELECT count(id) AS cantidad 
+                FROM peliculas 
+                WHERE disponibilidad != 1
+                AND id = :id";
+                
+        $stmt = $this->conn->prepare($sql);
+    
+        $params = [
+            ':id' => $object->getPeliculaId()
+        ];
+    
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ);
+    
+        if ($result->cantidad > 0) {
+            throw new \Exception("La película que usted seleccionó no se encuentra disponible.");
+        }
+    }
 
     private function validate(FuncionDTO $object): void
 {

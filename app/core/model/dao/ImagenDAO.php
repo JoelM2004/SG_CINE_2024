@@ -16,18 +16,60 @@ final class ImagenDAO extends DAO implements InterfaceDAO
     public function save(InterfaceDTO $object): void
     {
         $this->validate($object);
+        $this->validateEstado($object);
+        
+        $sql = "INSERT INTO {$this->table} (id, peliculaId, imagen, estado,tipo) VALUES (DEFAULT, :peliculaId, :imagen, :estado,:tipo)";
 
-        $sql = "INSERT INTO {$this->table} VALUES(DEFAULT, :peliculaId, :imagen)";
+        
         $stmt = $this->conn->prepare($sql);
-        $data = $object->toArray();
-        unset($data["id"]);
-        $stmt->execute($data);
+        
+        $data = [
+            ':peliculaId' => $object->getPeliculaId(),
+            ':imagen' => $object->getImagen(),
+            ':estado' => $object->getEstado(),
+            ':tipo'=>$object->getTipo()
+        ];
+        
+        foreach ($data as $key => $value) {
+            if (is_string($value)) {
+                $stmt->bindValue($key, $value, (\PDO::PARAM_STR));
+            } elseif (is_int($value)) {
+                $stmt->bindValue($key, $value, (\PDO::PARAM_INT));
+            } else {
+                $stmt->bindValue($key, $value, (\PDO::PARAM_LOB));
+            }
+        }
+        
+        $stmt->execute();
+        
         $object->setId((int)$this->conn->lastInsertId());
     }
 
+
+    private function validateEstado(ImagenDTO $object): void
+    {
+        // Consultar si ya existe una programación vigente (vigente = 1), excluyendo el id actual
+        $sql = "SELECT COUNT(id) AS cantidad 
+            FROM {$this->table} 
+            WHERE estado = 1 AND peliculaId = :peliculaId";
+        $stmt = $this->conn->prepare($sql);
+
+        $params = [
+            ':peliculaId' => $object->getPeliculaId()
+        ];
+
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ);
+
+        if (($object->getEstado()==1) && ($result->cantidad > 0)) {
+            throw new \Exception("Ya hay una imagen determinada como portada");
+        }
+    } 
+
+
     public function load($id): ImagenDTO
     {
-        $sql = "SELECT * FROM {$this->table} WHERE id = :id";
+        $sql = "SELECT * FROM {$this->table} WHERE id = :id AND estado=1";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(["id" => $id]);
 
@@ -38,10 +80,50 @@ final class ImagenDAO extends DAO implements InterfaceDAO
         return new ImagenDTO($stmt->fetch(\PDO::FETCH_ASSOC));
     }
 
+    public function loadImagen($id): string
+{
+    $sql = "SELECT * FROM {$this->table} WHERE peliculaId = :peliculaId AND estado=1";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute(["peliculaId" => $id]);
+
+    if ($stmt->rowCount() !== 1) {
+        // En lugar de lanzar una excepción, puedes manejarlo de otra manera
+        return ''; // Devuelve una cadena vacía si no hay imagen
+    }
+
+    $imageData = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+    // Verifica que 'imagen' y 'tipo' están presentes
+    if (!empty($imageData["imagen"]) && !empty($imageData["tipo"])) {
+        return "data:" . $imageData["tipo"] . ";base64," . base64_encode($imageData["imagen"]);
+    } else {
+        return ''; // Devuelve una cadena vacía si no hay datos de imagen
+    }
+}
+
+public function listImagenes($id): array
+{
+    $sql = "SELECT * FROM {$this->table} WHERE peliculaId = :peliculaId";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute(["peliculaId" => $id]);
+
+    $Imagenes = [];
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            if (!empty($row["imagen"]) && !empty($row["tipo"])) {
+                $Imagenes[]= "data:" . $row["tipo"] . ";base64," . base64_encode($row["imagen"]);
+            } 
+        }
+        return $Imagenes;
+
+    
+}
+
+
+
     public function update(InterfaceDTO $object): void
     {
         $this->validate($object);
-
+        $this->validateEstado($object);
         $sql = "UPDATE {$this->table} SET imagen = :imagen WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         $data = $object->toArray();
@@ -80,15 +162,10 @@ final class ImagenDAO extends DAO implements InterfaceDAO
             throw new \Exception("La imagen no puede estar vacía y debe ser una cadena válida.");
         }
 
-        // // Validar que no haya más de una imagen por película
-        // $sql = "SELECT COUNT(*) FROM {$this->table} WHERE peliculaId = :peliculaId";
-        // $stmt = $this->conn->prepare($sql);
-        // $stmt->execute(['peliculaId' => $object->getPeliculaId()]);
-        // $count = $stmt->fetchColumn();
+        if (empty($object->getTipo()) || !is_string($object->getTipo())) {
+            throw new \Exception("El tipo de imagen no puede estar vacía y debe ser una cadena válida.");
+        }
 
-        // // Si existe al menos una imagen con el mismo peliculaId, lanzar una excepción
-        // if ($count > 0) {
-        //     throw new \Exception("Ya existe una imagen para la película con ID {$object->getPeliculaId()}. Cada película debe tener una única imagen.");
-        // }
+        
     }
 }

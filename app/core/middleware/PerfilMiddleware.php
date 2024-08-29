@@ -19,30 +19,31 @@ final class PerfilMiddleware extends Middleware implements InterfaceMiddleware {
         }
 
         // Obtener la ruta actual
-        $ruta = $request->getController() . '/' . $request->getAction();
+        $ruta = $request->getController()."/";
+        $rutaAccion=$request->getController()."/".$request->getAction();
 
         // Verificación para redireccionar si ya está autenticado y está intentando acceder a autenticación
-        if (isset($_SESSION["token"]) && $_SESSION["token"] === APP_TOKEN && $request->getController() == "autenticacion") {
+        if (isset($_SESSION["token"]) && $_SESSION["token"] === APP_TOKEN && $request->getController() == "autentication" &&$request->getAction()!="logout") {
             header("Location: " . APP_FRONT . "inicio/index");
-            die(); // Detener la ejecución después de redireccionar
+            die();
         }
 
         // Verificar si el usuario tiene permisos para la ruta específica
-        if ($this->tienePermiso($perfil, $ruta, $request)) {
+        if ($this->tienePermisoController($perfil, $ruta)||$this->tienePermisoAccion($perfil, $rutaAccion)) {
             // Pasar el control al siguiente middleware
             $this->next($request, $response);
         } else {
             // Si no tiene permiso, redirigir a la página de inicio
             header("Location: " . APP_FRONT . "inicio/index");
-            die(); // Detener la ejecución después de redireccionar
+            die();
         }
     }
 
-    private function tienePermiso(string $tipoUsuario, string $ruta, Request $request): bool {
+    private function tienePermisoController(string $tipoUsuario, string $ruta): bool {
         $permisos = [
             'Administrador' => ['*'], // El administrador tiene acceso a todas las rutas
-            'Operador' => ["inicio/", "autenticacion/", "usuario/changePassword", "entrada/", "programacion/", "info", $request->getController() . "/view","comentario/"], // Definir rutas permitidas para el operador
-            'Externos' => ["inicio/", "autenticacion/", "usuario/changePassword", "info/", $request->getController() . "/view","comentario/"] // Definir rutas permitidas para los externos
+            'Operador' => ["inicio/", "autentication/","entrada/", "programacion/","funcion/","info/","comentario/"], 
+            'Externos' => ["inicio/", "autentication/","info/","comentario/"]
         ];
 
         // Asegurarse de que el tipo de usuario se ajuste a uno de los permitidos
@@ -53,4 +54,21 @@ final class PerfilMiddleware extends Middleware implements InterfaceMiddleware {
         // Comprobar permisos
         return in_array('*', $permisos[$tipoUsuario]) || in_array($ruta, $permisos[$tipoUsuario]);
     }
+
+    private function tienePermisoAccion(string $tipoUsuario, string $ruta): bool {
+        $permisos = [
+            'Administrador' => ['*'], // El administrador tiene acceso a todas las rutas
+            'Operador' => ["usuario/view","usuario/changePassword","sala/list","pelicula/list","pelicula/view","usuario/load"], 
+            'Externos' => ["usuario/view","usuario/changePassword","pelicula/view","entrada/view","usuario/load","funcion/view","funcion/listFunciones","entrada/save"]
+        ];
+        // Asegurarse de que el tipo de usuario se ajuste a uno de los permitidos
+        if (!in_array($tipoUsuario, array_keys($permisos))) {
+            $tipoUsuario = "Externos";
+        }
+        // Comprobar permisos
+        return in_array('*', $permisos[$tipoUsuario]) || in_array($ruta, $permisos[$tipoUsuario]);
+
+    }
+
+
 }

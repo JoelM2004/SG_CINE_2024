@@ -27,6 +27,12 @@ final class ImagenService  extends Service implements InterfaceService {
         return $dao->load($id);   
     }
 
+    public function loadImagen($id):string{
+         $conn= Connection::get();
+         $dao= new ImagenDAO($conn);
+         return $dao->loadImagen($id);   
+     }
+
     public function update(array $object):void{
         $conn= Connection::get();
         $dao= new ImagenDAO($conn);
@@ -46,5 +52,9 @@ final class ImagenService  extends Service implements InterfaceService {
         return $dao->list();
     }
 
-   
+    public function listImagenes($id):array{
+        $conn=Connection::get();
+        $dao= new ImagenDAO($conn);
+        return $dao->listImagenes($id);
+    }
 }

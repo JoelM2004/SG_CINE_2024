@@ -13,6 +13,7 @@ $datos = $dao->load($id);
 
 $daoEntrada = new EntradaDAO($conn);
 $entradas = $daoEntrada->loadByCuenta($id);
+$entradas=array_reverse($entradas);
 
 $daoPelicula = new PeliculaDAO($conn);
 $daoFuncion = new FuncionDAO($conn);

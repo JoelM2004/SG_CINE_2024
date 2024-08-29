@@ -111,7 +111,14 @@ let singletonService = {
     return singletonService.fetchData(`pelicula/load/${id}`);
   },
 
-  
+  listImagenes: (id) => {
+    return singletonService.fetchData(`imagen/listImagenes/${id}`);
+  },
+
+  loadImagen: (id) => {
+    return singletonService.fetchData(`imagen/loadImagen/${id}`);
+  },
+
 
 
 };

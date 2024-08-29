@@ -105,7 +105,7 @@ let peliculaController = {
         "borrarPelicula"
       ).dataset.id;
       peliculaController.data.nombre = form.nombre.value;
-      peliculaController.data.disponibilidad=form.disponibilidad.value
+      peliculaController.data.disponibilidad=parseInt(form.disponibilidad.value)
       peliculaController.data.tituloOriginal = form.tituloOriginal.value;
       peliculaController.data.id = parseInt(peliculaController.data.id);
       peliculaController.data.duracion = parseInt(form.duracion.value);
@@ -793,7 +793,82 @@ let peliculaController = {
         console.error("Error al listar Usuarios:", error);
       });
   },
-}
+
+  listImagenes:async()=>{
+
+    // Llama a la función del controlador para obtener las imágenes
+    const peliculaId = parseInt(document.getElementById("borrarPelicula").dataset.id);
+    const imagenes = await singletonController.listImagenes(peliculaId);
+
+    // console.log(imagenes)
+    // Selecciona el contenedor del carrusel
+    const carouselInner = document.querySelector("#carruselFotos .carousel-inner");
+
+    // Limpiar contenido previo (si hay)
+    carouselInner.innerHTML = '';
+
+    // Verifica si hay imágenes
+    if (imagenes.length > 0) {
+        imagenes.forEach((imgSrc, index) => {
+            // Crea un div para cada imagen
+            const carouselItem = document.createElement('div');
+            carouselItem.className = 'carousel-item';
+            if (index === 0) {
+                // Establece la primera imagen como activa
+                carouselItem.classList.add('active');
+            }
+            // Crea la etiqueta de imagen
+            const imgElement = document.createElement('img');
+            imgElement.src = imgSrc;
+            imgElement.className = 'd-block w-100';
+            imgElement.alt = 'Imagen de la película';
+
+            // Agrega la imagen al div
+            carouselItem.appendChild(imgElement);
+            // Agrega el div al carrusel
+            carouselInner.appendChild(carouselItem);
+        });
+    } 
+  }
+,
+  listImagenesUsuarios:async()=>{
+    // Llama a la función del controlador para obtener las imágenes
+    const peliculaId = parseInt(document.getElementById("peliculaUsuario").dataset.id);
+    const imagenes = await singletonController.listImagenes(peliculaId);
+
+    // console.log(imagenes)
+    // Selecciona el contenedor del carrusel
+    const carouselInner = document.querySelector("#movieCarousel .carousel-inner");
+
+    // Limpiar contenido previo (si hay)
+    carouselInner.innerHTML = '';
+
+    // Verifica si hay imágenes
+    if (imagenes.length > 0) {
+        imagenes.forEach((imgSrc, index) => {
+            // Crea un div para cada imagen
+            const carouselItem = document.createElement('div');
+            carouselItem.className = 'carousel-item';
+            if (index === 0) {
+                // Establece la primera imagen como activa
+                carouselItem.classList.add('active');
+            }
+            // Crea la etiqueta de imagen
+            const imgElement = document.createElement('img');
+            imgElement.src = imgSrc;
+            imgElement.className = 'd-block w-100';
+            imgElement.alt = 'Imagen de la película';
+
+            // Agrega la imagen al div
+            carouselItem.appendChild(imgElement);
+            // Agrega el div al carrusel
+            carouselInner.appendChild(carouselItem);
+        });
+    } 
+  }
+
+  }
+
 
 
 
@@ -842,7 +917,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   } else if (btnModificarPelicula != null) {
+    peliculaController.listImagenes()
     btnModificarPelicula.onclick = peliculaController.update;
     btnBorrarPelicula.onclick = peliculaController.delete;
+  }else if(document.getElementById("divListarImagenes")!=null){
+    peliculaController.listImagenesUsuarios()
   }
 });

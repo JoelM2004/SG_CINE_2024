@@ -66,3 +66,23 @@ document.getElementById('imagen1').addEventListener('change', function(event) {
         preview.style.display = 'none';
     }
 });}
+
+
+if(document.getElementById("inputImagen")!=null){
+    document.getElementById('inputImagen').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById('previsualizarImagen');
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = '#';
+            preview.style.display = 'none';
+        }
+    });
+
+}

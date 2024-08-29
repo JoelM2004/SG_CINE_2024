@@ -1,12 +1,15 @@
 <?php
 use app\core\model\dao\PeliculaDAO;
 use app\libs\Connection\Connection;
+use app\core\model\dao\ImagenDAO;
 
 $id = $_GET['id'];
 $conn = Connection::get();
 $dao = new PeliculaDAO($conn);
 $datos = $dao->loadView($id);
 
+
+$daoImagen = new ImagenDAO($conn);
 // var_dump($datos)
 ?>
 
@@ -15,11 +18,20 @@ $datos = $dao->loadView($id);
     <div class="row g-0">
       <!-- Imagen de la película -->
       <div class="col-md-4">
-        <img src="assets/img/pelicula.jpg" class="card-img-top" alt="Imagen de la película">
+        <img src="<?php
+                                    // Obtén la imagen desde el DAO
+                                    $img = $daoImagen->loadImagen($_GET['id']);
+
+                                    // Verifica si la imagen no está disponible
+                                    if (!empty($img)) {
+                                        // Si hay imagen, muestra el src adecuado
+                                        echo htmlspecialchars($img, ENT_QUOTES, 'UTF-8');
+                                    }   
+                                    ?>" class="card-img-top" alt="Imagen de la película">
       </div>
 
       <!-- Contenido de la tarjeta -->
-      <div class="col-md-8">
+      <div class="col-md-8" data-id=<?=$id?> id="peliculaUsuario">
         <div class="card-body">
           <h5 class="card-title mb-3"><i class="fas fa-film"></i> <?= $datos['nombre'] ?></h5>
           <p class="card-text"><strong><i class="fas fa-scroll"></i> Sinopsis:</strong> <?= $datos['sinopsis'] ?></p>
@@ -40,7 +52,7 @@ $datos = $dao->loadView($id);
           <h6 class="mt-3 mb-2"><i class="fas fa-globe"></i> Sitio Web:</h6>
           <p><a href="<?= $datos['sitioWebOficial'] ?>" target="_blank" class="card-link"><i class="fas fa-external-link-alt"></i> Visita el sitio web de la película</a></p>
 
-          <div class="card-body">
+          <div class="card-body" id="divListarImagenes">
             <a href="<?= APP_FRONT . "funcion/view/" . $id ?>" class="btn btn-primary"><i class="fas fa-ticket-alt"></i> Entradas y Funciones Disponibles</a>
             <a href="<?= APP_FRONT . "comentario/index/" . $id ?>" class="btn btn-primary"><i class="fas fa-comments"></i> Deja tu opinión acerca de la película</a>
           </div>
@@ -52,17 +64,10 @@ $datos = $dao->loadView($id);
 
 
 <!-- Carrusel de imágenes o tráiler -->
-<!-- <div id="movieCarousel" class="carousel slide mt-4">
+
+<div id="movieCarousel" class="carousel slide mt-4">
   <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img src="assets/img/trailer1.jpg" class="d-block w-100" alt="Imagen 1">
-    </div>
-    <div class="carousel-item">
-      <img src="assets/img/trailer2.jpg" class="d-block w-100" alt="Imagen 2">
-    </div>
-    <div class="carousel-item">
-      <img src="assets/img/trailer3.jpg" class="d-block w-100" alt="Imagen 3">
-    </div>
+    
   </div>
   <button class="carousel-control-prev" type="button" data-bs-target="#movieCarousel" data-bs-slide="prev">
     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -72,4 +77,4 @@ $datos = $dao->loadView($id);
     <span class="carousel-control-next-icon" aria-hidden="true"></span>
     <span class="visually-hidden">Next</span>
   </button>
-</div> -->
+</div> 

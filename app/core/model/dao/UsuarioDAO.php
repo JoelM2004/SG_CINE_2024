@@ -148,7 +148,7 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
                         <p>Has solicitado recuperar tu contraseña. Aquí está tu nueva contraseña:</p>
                         <p class="password"><strong>' . htmlspecialchars($password) . '</strong></p>
                         <p>Por favor, cámbiala después de iniciar sesión.</p>
-                        <a href="http://'. APP_FRONT .'autentication/index" class="button">Iniciar Sesión</a>
+                        <a href="'. APP_FRONT .'autentication/index" class="button">Iniciar Sesión</a>
                         <div class="footer">
                             <p>Saludos,</p>
                             <p>El equipo de soporte de <strong>Los Pollos Hermanos</strong></p>

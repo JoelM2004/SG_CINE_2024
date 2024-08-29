@@ -19,7 +19,7 @@ final class App{
 
         $pipeline->pipe(new ExceptionHandlerMiddleware());
         $pipeline->pipe(new AuthenticationMiddleware());
-        // $pipeline->pipe(new PerfilMiddleware());
+         $pipeline->pipe(new PerfilMiddleware());
         $pipeline->pipe(new RoutingMiddleware());
         $pipeline->process(new Request(), new Response());
 

@@ -174,18 +174,6 @@ $datosIdioma = $daoIdioma->list();
             </select>
         </div>
 
-        <div class="mb-3">
-            <label for="imagen1" class="form-label">Portada</label>
-            <input type="file" class="form-control" id="imagen1" accept="image/*">
-        </div>
-
-        <!-- Contenedor para la vista previa de la imagen -->
-        <div class="mb-3">
-            <label for="previewImagen" class="form-label">Vista Previa</label>
-            <div id="previewImagen" class="border" style="width: 100%; height: 300px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-                <img id="imagenPreview" src="#" alt="Vista previa de la imagen" style="display: none; max-width: 100%; max-height: 100%;">
-            </div>
-        </div>
 
         <button type="button" id="btnAltaPelicula" class="btn btn-primary w-100">Guardar Película</button>
     </form>

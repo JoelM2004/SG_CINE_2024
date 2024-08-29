@@ -1,5 +1,6 @@
 <?php
 
+use app\core\model\dao\ImagenDAO;
 use app\core\model\dao\TipoDAO;
 use app\core\model\dao\CalificacionDAO;
 use app\core\model\dao\AudioDAO;
@@ -31,21 +32,41 @@ $datosIdioma = $daoIdioma->list();
 
 $daoPelicula = new PeliculaDAO($conn);
 $datosPelicula = $daoPelicula->load($_GET["id"]);
+
+$daoImagen = new ImagenDAO($conn);
+
 ?>
 
 
 <div class="container-fluid">
     <div class="row justify-content-center">
         <!-- Carta de Película -->
-        <div class="card col-lg-8 col-md-10 col-sm-12 p-4" id="borrarPelicula" data-id= <?= $_GET["id"] ?> >
-            <div class="row g-0">
+
+        <div class="card col-lg-8 col-md-10 col-sm-12 p-4" id="borrarPelicula" data-id=<?= $_GET["id"] ?>>
+            <div class="row g-1">
+                <!-- Imagen a la izquierda -->
                 <div class="col-md-4">
-                    <img id="imagenPreview" src="#" class="img-fluid rounded-start" alt="Imagen de la Película">
+                    <div class="text-center mb-3">
+                        <img src="<?php
+                                    // Obtén la imagen desde el DAO
+                                    $img = $daoImagen->loadImagen($_GET['id']);
+
+                                    // Verifica si la imagen no está disponible
+                                    if (!empty($img)) {
+                                        // Si hay imagen, muestra el src adecuado
+                                        echo htmlspecialchars($img, ENT_QUOTES, 'UTF-8');
+                                    }   
+                                    ?>" class="img-fluid" style="max-width: 100%; height: auto;">
+                    </div>
+
                 </div>
+
                 <div class="col-md-8">
                     <div class="card-body">
                         <form id="formPeliculaM" autocomplete="off">
                             <h4 class="card-title text-secondary">Edición de Películas</h4>
+
+
 
                             <div class="mb-3">
                                 <label for="nombre" class="form-label">Nombre</label>
@@ -75,8 +96,8 @@ $datosPelicula = $daoPelicula->load($_GET["id"]);
                             <div class="mb-3">
                                 <label for="disponibilidad" class="form-label">Disponibilidad</label>
                                 <select class="form-select" id="disponibilidad">
-                                <option <?php echo $datosPelicula->getDisponibilidad() == 1 ? "selected" : ""; ?> value="1">Habilitada</option>
-                                <option <?php echo $datosPelicula->getDisponibilidad() == 0 ? "selected" : ""; ?> value="0">Deshabilitada</option>
+                                    <option <?= $datosPelicula->getDisponibilidad() == 1 ? "selected" : ""; ?> value="1">Habilitada</option>
+                                    <option <?= $datosPelicula->getDisponibilidad() == 0 ? "selected" : ""; ?> value="0">Deshabilitada</option>
                                 </select>
                             </div>
 
@@ -105,8 +126,7 @@ $datosPelicula = $daoPelicula->load($_GET["id"]);
                                     <div class="mb-3">
                                         <label for="genero" class="form-label">Género</label>
                                         <select class="form-select" id="genero">
-                                        <?php
-                                            $txt = ''; // Inicializar $txt antes del bucle
+                                            <?php
                                             foreach ($datosGenero as $elemento) {
                                                 $selected = $datosPelicula->getGeneroId() == $elemento['id'] ? 'selected' : '';
                                                 echo '<option value="' . $elemento['id'] . '" ' . $selected . '>' . $elemento['nombre'] . '</option>';
@@ -120,7 +140,6 @@ $datosPelicula = $daoPelicula->load($_GET["id"]);
                                         <label for="pais" class="form-label">País</label>
                                         <select class="form-select" id="pais">
                                             <?php
-                                            $txt = ''; // Inicializar $txt antes del bucle
                                             foreach ($datosPais as $elemento) {
                                                 $selected = $datosPelicula->getPaisId() == $elemento['id'] ? 'selected' : '';
                                                 echo '<option value="' . $elemento['id'] . '" ' . $selected . '>' . $elemento['nombre'] . '</option>';
@@ -137,7 +156,6 @@ $datosPelicula = $daoPelicula->load($_GET["id"]);
                                         <label for="idioma" class="form-label">Idioma</label>
                                         <select class="form-select" id="idioma">
                                             <?php
-                                            $txt = ''; // Inicializar $txt antes del bucle
                                             foreach ($datosIdioma as $elemento) {
                                                 $selected = $datosPelicula->getIdiomaId() == $elemento['id'] ? 'selected' : '';
                                                 echo '<option value="' . $elemento['id'] . '" ' . $selected . '>' . $elemento['nombre'] . '</option>';
@@ -151,7 +169,6 @@ $datosPelicula = $daoPelicula->load($_GET["id"]);
                                         <label for="calificacion" class="form-label">Calificación</label>
                                         <select class="form-select" id="calificacion">
                                             <?php
-                                            $txt = ''; // Inicializar $txt antes del bucle
                                             foreach ($datosCalificacion as $elemento) {
                                                 $selected = $datosPelicula->getCalificacionId() == $elemento['id'] ? 'selected' : '';
                                                 echo '<option value="' . $elemento['id'] . '" ' . $selected . '>' . $elemento['nombre'] . '</option>';
@@ -168,7 +185,6 @@ $datosPelicula = $daoPelicula->load($_GET["id"]);
                                         <label for="tipo" class="form-label">Tipo</label>
                                         <select class="form-select" id="tipo">
                                             <?php
-                                            $txt = ''; // Inicializar $txt antes del bucle
                                             foreach ($datosTipo as $elemento) {
                                                 $selected = $datosPelicula->getTipoId() == $elemento['id'] ? 'selected' : '';
                                                 echo '<option value="' . $elemento['id'] . '" ' . $selected . '>' . $elemento['nombre'] . '</option>';
@@ -182,7 +198,6 @@ $datosPelicula = $daoPelicula->load($_GET["id"]);
                                         <label for="audio" class="form-label">Audio</label>
                                         <select class="form-select" id="audio">
                                             <?php
-                                            $txt = ''; // Inicializar $txt antes del bucle
                                             foreach ($datosAudio as $elemento) {
                                                 $selected = $datosPelicula->getAudioId() == $elemento['id'] ? 'selected' : '';
                                                 echo '<option value="' . $elemento['id'] . '" ' . $selected . '>' . $elemento['nombre'] . '</option>';
@@ -193,36 +208,62 @@ $datosPelicula = $daoPelicula->load($_GET["id"]);
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label for="imagen1" class="form-label">Portada </label>
-                                        <input type="file" class="form-control" id="imagen1" accept="image/*" onchange="previewImage(event, 'imagenPreview1')">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button type="button" id="btnModificarPelicula" class="btn btn-primary w-100 ">Modificar Película</button>
+                            <button type="button" id="btnModificarPelicula" class="btn btn-primary w-100">Modificar Película</button>
                             <a id="btnBorrarPelicula" href="<?= APP_FRONT . 'pelicula/create/0' ?>" class="btn btn-danger w-100 mt-3">Borrar Película</a>
-
-
-
                         </form>
                     </div>
+                </div>
+            </div>
+
+            <!-- Carrusel de Fotos -->
+            <div id="carruselFotos" class="carousel slide mt-4" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    
+                </div>
+
+                <button class="carousel-control-prev" type="button" data-bs-target="#carruselFotos" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Anterior</span>
+                </button>
+
+                <button class="carousel-control-next" type="button" data-bs-target="#carruselFotos" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Siguiente</span>
+                </button>
+            </div>
+                                    
+            
+
+            <!-- Sección para Agregar Nueva Imagen -->
+            <div class="row mt-4">
+                <!-- Botón para Agregar Imagen -->
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <button type="submit" class="btn btn-secondary w-100" id="btnAgregarImagen">Agregar Imagen</button>
+                </div>
+
+                <!-- Campo para seleccionar una nueva imagen -->
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <label for="inputImagen" class="form-label">Seleccionar Imagen</label>
+                    <input type="file" class="form-control" id="inputImagen" accept="image/*">
+                </div>
+
+                <!-- Previsualización de Imagen -->
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="border p-2">
+                        <label for="previsualizarImagen" class="form-label">Previsualización de Imagen</label>
+                        <img id="previsualizarImagen" src="#" alt="Previsualización" class="img-fluid" style="display: none;">
+                    </div>
+                </div>
+
+                <!-- Selector de Portada -->
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <label for="esPortada" class="form-label">Portada</label>
+                    <select class="form-select" id="esPortada">
+                        <option value="1">Sí</option>
+                        <option value="0">No</option>
+                    </select>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<!-- JavaScript para la vista previa de imágenes -->
-<script>
-    function previewImage(event, previewId) {
-        const reader = new FileReader();
-        reader.onload = function() {
-            const output = document.getElementById(previewId);
-            output.src = reader.result;
-        };
-        reader.readAsDataURL(event.target.files[0]);
-    }
-</script>

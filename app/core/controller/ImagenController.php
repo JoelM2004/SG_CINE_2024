@@ -47,7 +47,9 @@ final class ImagenController extends Controller implements InterfaceController
 
         $response->send();
     }
- 
+    
+
+
 
     /*
     *Invoca la vista correspondientem para el alta de una nueva entidad
@@ -68,27 +70,28 @@ final class ImagenController extends Controller implements InterfaceController
     *Gestiona los servicios correspondientes, para el alta de una nueva entidad en el sistema
     */
     public function save(Request $request, Response $response): void
-{
-    $peliculaId = $request->getParam('peliculaId');
-    $file = $_FILES['imagen'];
+    {
+        $peliculaId = isset($_POST['peliculaId']) ? intval($_POST['peliculaId']) : 0;
+        $estado = isset($_POST['estado']) ? intval($_POST['estado']) : 0;
+        $file = isset($_FILES['imagen']) ? $_FILES['imagen'] : null;
+        $tipo=isset($_POST['tipo']) ? $_POST['tipo'] : null;
 
-    if ($file && $file['error'] === UPLOAD_ERR_OK) {
         $imageData = file_get_contents($file['tmp_name']);
-        $imageBase64 = base64_encode($imageData);
 
         $service = new ImagenService();
-        $service->save([
-            'peliculaId' => $peliculaId,
-            'imagen' => $imageBase64
-        ]);
+            $service->save([
+                'id' => 0,
+                'peliculaId' => $peliculaId,
+                'imagen' => $imageData,
+                'estado' => $estado,
+                'tipo'=>$tipo
+            ]);
+            $response->setMessage("La imagen se registró correctamente");
+        
 
-        $response->setMessage("La imagen se registró correctamente");
-    } else {
-        $response->setError("Error al subir la imagen");
+        $response->send();
     }
-    
-    $response->send();
-}
+
 
     /*
     Invoca la vista corerspondiente para poder modificar los datos de una entidad existente
@@ -142,4 +145,27 @@ final class ImagenController extends Controller implements InterfaceController
         $response->setMessage("El perfil se listó correctamente");
         $response->send();
     }
+
+    public function loadImagen(Request $request, Response $response): void
+    { //listo
+        $service = new ImagenService();
+        $info = $service->loadImagen($request->getId());
+        // $info=$info->toArray();
+        $response->setResult($info);
+        $response->setMessage("La cuenta se cargó correctamente");
+
+        $response->send();
+    }
+
+    public function listImagenes(Request $request, Response $response): void
+    { //listo
+        $service = new ImagenService();
+        $info = $service->listImagenes($request->getId());
+        // $info=$info->toArray();
+        $response->setResult($info);
+        $response->setMessage("La cuenta se cargó correctamente");
+
+        $response->send();
+    }
+
 }
