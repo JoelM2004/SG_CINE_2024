@@ -157,7 +157,7 @@ final class SalaController extends Controller implements InterfaceController, In
         $service = new SalaService();
         $info=$request->getData();
         $service->delete($info["id"]);
-        $response->setMessage("La sala sala se eliminó con éxito");
+        $response->setMessage("La sala se eliminó con éxito");
         $response->send();
     }
 

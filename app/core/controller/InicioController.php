@@ -5,7 +5,7 @@ use app\core\controller\base\Controller;
 use app\libs\request\Request;
 use app\libs\response\Response;
 use app\core\service\InicioService;
-
+use app\core\service\ImagenService;
 final class InicioController extends Controller
 {
 
@@ -21,6 +21,8 @@ final class InicioController extends Controller
              
         ]);
     }
+
+
 
     public function index(): void
     { //listo
@@ -39,7 +41,15 @@ final class InicioController extends Controller
         $response->setResult($service->list());
         $response->setMessage("El Inicio se listó correctamente");
         $response->send();
+    }
 
+    public function loadImagen(Request $request, Response $response):void{
+        $service = new ImagenService();
+        $info = $service->loadImagen($request->getId());
+        // $info=$info->toArray();
+        $response->setResult($info);
+        $response->setMessage("La cuenta se cargó correctamente");
 
+        $response->send();
     }
 }

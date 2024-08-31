@@ -110,7 +110,7 @@ public function listImagenes($id): array
     $Imagenes = [];
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             if (!empty($row["imagen"]) && !empty($row["tipo"])) {
-                $Imagenes[]= "data:" . $row["tipo"] . ";base64," . base64_encode($row["imagen"]);
+                $Imagenes[]= ["imagen"=>("data:" . $row["tipo"] . ";base64," . base64_encode($row["imagen"])),"id"=>$row["id"],"peliculaId"=>$row["peliculaId"]];
             } 
         }
         return $Imagenes;
@@ -120,15 +120,26 @@ public function listImagenes($id): array
 
 
 
-    public function update(InterfaceDTO $object): void
-    {
-        $this->validate($object);
-        $this->validateEstado($object);
-        $sql = "UPDATE {$this->table} SET imagen = :imagen WHERE id = :id";
-        $stmt = $this->conn->prepare($sql);
-        $data = $object->toArray();
-        $stmt->execute($data);
-    }
+public function update(InterfaceDTO $object): void
+{
+    // $this->validate($object);
+    // $this->validateEstado($object);
+
+    // Primero, establece estado = 0 para todas las imágenes de la misma película
+    $sqlReset = "UPDATE {$this->table} SET estado = 0 WHERE peliculaId = :peliculaId";
+    $stmtReset = $this->conn->prepare($sqlReset);
+    $stmtReset->execute([
+        ':peliculaId' => $object->getPeliculaId()
+    ]);
+
+    // Luego, establece estado = 1 para la imagen seleccionada
+    $sqlUpdate = "UPDATE {$this->table} SET estado = 1 WHERE id = :id";
+    $stmtUpdate = $this->conn->prepare($sqlUpdate);
+    $stmtUpdate->execute([
+        ':id' => $object->getId()
+    ]);
+}
+
 
     public function delete($id): void
     {

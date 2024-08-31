@@ -42,8 +42,8 @@ final class PerfilMiddleware extends Middleware implements InterfaceMiddleware {
     private function tienePermisoController(string $tipoUsuario, string $ruta): bool {
         $permisos = [
             'Administrador' => ['*'], // El administrador tiene acceso a todas las rutas
-            'Operador' => ["inicio/", "autentication/","entrada/", "programacion/","funcion/","info/","comentario/"], 
-            'Externos' => ["inicio/", "autentication/","info/","comentario/"]
+            'Operador' => ["inicio/", "autentication/","entrada/","imagen/", "programacion/","funcion/","info/","comentario/"], 
+            'Externos' => ["inicio/", "autentication/","info/","imagen/","comentario/"]
         ];
 
         // Asegurarse de que el tipo de usuario se ajuste a uno de los permitidos

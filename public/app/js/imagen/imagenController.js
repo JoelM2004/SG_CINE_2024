@@ -12,9 +12,8 @@ let imagenController = {
             imagenController.data.peliculaId = parseInt(document.getElementById("borrarPelicula").dataset.id);
             imagenController.data.estado = parseInt(document.getElementById("esPortada").value);
             const inputFile = document.getElementById("inputImagen").files[0]; // Cambiado a .files[0]
-            const fileType = inputFile.type;
-
             if (inputFile) {
+                const fileType = inputFile.type;
                 const formData = new FormData();
                 formData.append("id", 0);
                 formData.append("peliculaId", imagenController.data.peliculaId);

@@ -794,13 +794,11 @@ let peliculaController = {
       });
   },
 
-  listImagenes:async()=>{
-
+  listImagenes: async () => {
     // Llama a la función del controlador para obtener las imágenes
     const peliculaId = parseInt(document.getElementById("borrarPelicula").dataset.id);
     const imagenes = await singletonController.listImagenes(peliculaId);
 
-    // console.log(imagenes)
     // Selecciona el contenedor del carrusel
     const carouselInner = document.querySelector("#carruselFotos .carousel-inner");
 
@@ -819,17 +817,98 @@ let peliculaController = {
             }
             // Crea la etiqueta de imagen
             const imgElement = document.createElement('img');
-            imgElement.src = imgSrc;
+
+            
+            imgElement.src = imgSrc.imagen;
             imgElement.className = 'd-block w-100';
             imgElement.alt = 'Imagen de la película';
 
-            // Agrega la imagen al div
+            // Crear botones para borrar y actualizar con dataset-id
+            const buttonContainer = document.createElement('div');
+            buttonContainer.style.position = 'absolute';
+            buttonContainer.style.top = '10px';
+            buttonContainer.style.right = '10px';
+            buttonContainer.style.zIndex = '10';
+
+            // Crear botón de borrar
+            const deleteButton = document.createElement('button');
+            deleteButton.innerText = 'Borrar';
+            deleteButton.className = 'btn btn-danger';
+            deleteButton.dataset.id = imgSrc.id; // Asignar el id de la imagen
+            deleteButton.onclick = () => {
+                peliculaController.deleteImagen(imgSrc.id); // Llamar a deleteImagen con el id de la imagen
+            };
+
+            // Crear botón de actualizar
+            const updateButton = document.createElement('button');
+            updateButton.innerText = 'Actualizar';
+            updateButton.className = 'btn btn-primary ml-2';
+            updateButton.dataset.id = imgSrc.id; // Asignar el id de la imagen
+            updateButton.dataset.peliculaId = imgSrc.peliculaId; // Asignar el id de la imagen
+            updateButton.onclick = () => {
+                peliculaController.updateImagen(imgSrc.id,imgSrc.peliculaId)
+            };
+
+            // Agregar botones al contenedor
+            buttonContainer.appendChild(deleteButton);
+            buttonContainer.appendChild(updateButton);
+
+            // Agregar el contenedor de botones y la imagen al div del carrusel
+            carouselItem.appendChild(buttonContainer);
             carouselItem.appendChild(imgElement);
-            // Agrega el div al carrusel
+
+            // Agregar el div al carrusel
             carouselInner.appendChild(carouselItem);
         });
     } 
+}
+,
+deleteImagen: (id) => {
+  if (confirm("¿Quiere eliminar la imagen?")) {
+      imagenController.data.id = id; // Asignar el id de la imagen al objeto data
+
+      imagenService
+          .delete(imagenController.data)
+          .then((data) => {
+              alert(data.mensaje); // Muestra el mensaje del servidor al usuario
+              setTimeout(() => {
+                location.reload();
+              }, 300);
+          })
+          .catch((error) => {
+              console.error("Error al eliminar la imagen:", error);
+              alert(
+                  "Hubo un problema al eliminar la imagen. Por favor, inténtelo de nuevo más tarde." +
+                  error
+              );
+          });
   }
+}
+
+,
+updateImagen: (id,peliculaId) => {
+  if (confirm("¿Quiere establecer esta imagen como portada?")) {
+      imagenController.data.id = id; // Asignar el id de la imagen al objeto data
+      imagenController.data.peliculaId = peliculaId; // Asignar el id de la imagen al objeto data
+
+      imagenService
+          .update(imagenController.data)
+          .then((data) => {
+              alert(data.mensaje); // Muestra el mensaje del servidor al usuario
+             setTimeout(() => {
+               location.reload();
+             }, 300); 
+          })
+          .catch((error) => {
+              console.error("Error al establecer esta imagen como portada:", error);
+              alert(
+                  "Hubo un problema al eliminar la imagen. Por favor, inténtelo de nuevo más tarde." +
+                  error
+              );
+          });
+  }
+}
+
 ,
   listImagenesUsuarios:async()=>{
     // Llama a la función del controlador para obtener las imágenes
@@ -855,7 +934,7 @@ let peliculaController = {
             }
             // Crea la etiqueta de imagen
             const imgElement = document.createElement('img');
-            imgElement.src = imgSrc;
+            imgElement.src = imgSrc.imagen;
             imgElement.className = 'd-block w-100';
             imgElement.alt = 'Imagen de la película';
 
@@ -917,9 +996,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   } else if (btnModificarPelicula != null) {
+    
     peliculaController.listImagenes()
     btnModificarPelicula.onclick = peliculaController.update;
     btnBorrarPelicula.onclick = peliculaController.delete;
+
   }else if(document.getElementById("divListarImagenes")!=null){
     peliculaController.listImagenesUsuarios()
   }

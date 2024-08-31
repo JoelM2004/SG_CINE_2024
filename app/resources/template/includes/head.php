@@ -9,8 +9,7 @@
     <link rel="stylesheet" href="assets/libs/css/viewIndex.css">
     <link rel="stylesheet" href="assets/libs/css/viewInfo.css">
     <link rel="stylesheet" href="assets/libs/css/viewInicio.css">
-    <!-- <link rel="stylesheet" href="assets/libs/css/viewPelicula.css"> -->
-
+    <script defer src= "assets/libs/js/back.js"  ></script>
     <link rel="icon" type="image/png" href="assets/img/logo.png">
 
 

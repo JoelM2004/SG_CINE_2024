@@ -117,9 +117,9 @@ final class ImagenController extends Controller implements InterfaceController
 
         $data= $request->getData();
         
-        $info = $service->load($data["id"]);
+        // $info = $service->load($data["id"]);
 
-        $info=$info->toArray();
+        // $info=$info->toArray();
         // var_dump($data);
         $service->update($data);
         $response->setMessage("El imagen se actualizó correctamente");

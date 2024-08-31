@@ -8,8 +8,7 @@ let inicioController = {
         data.result.forEach(async (pelicula) => {
             // Crear la tarjeta de película
 
-            let imagen = await singletonController.loadImagen(pelicula.id);
-
+            let imagen = await inicioController.loadImagen(pelicula.id);
             const formatDate = (dateString) => {
                 const [year, month, day] = dateString.split("-");
                 return `${day}/${month}/${year}`;
@@ -57,6 +56,20 @@ let inicioController = {
     
 },
 
-};
+loadImagen: async (id) => {
+    console.log("Cargando Usuario...");
+  
+      // Llamar al servicio para cargar el usuario
+      let data = await inicioService.loadImagen(id);
+  
+      // Verificar y retornar el resultado
+      if (data && data.result) {
+        console.log("Imagen cargado:", data);
+        return data.result; // Devolver el objeto de usuario
+      } else {
+        return ""
+      }
+    
+  }}
 
 document.addEventListener("DOMContentLoaded",inicioController.list)

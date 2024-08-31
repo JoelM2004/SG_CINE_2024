@@ -120,5 +120,4 @@ let singletonService = {
   },
 
 
-
 };
