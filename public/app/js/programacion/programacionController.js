@@ -119,11 +119,6 @@ let programacionController = {
             .then((data) => {
                 console.log("Programaciones listadas:", data);
     
-                // Función para formatear la fecha
-                const formatDate = (dateString) => {
-                    const [year, month, day] = dateString.split("-");
-                    return `${day}/${month}/${year}`;
-                };
     
                 let tabla = document.getElementById("tbodyProgramacion");
                 let txt = "";
@@ -164,15 +159,14 @@ let programacionController = {
             .then((data) => {
                 console.log("Programaciones listadas:", data);
     
-                // Función para formatear la fecha
-                const formatDate = (dateString) => {
-                    const [year, month, day] = dateString.split("-");
-                    return `${day}/${month}/${year}`;
-                };
+                
     
                 let tabla = document.getElementById("tbodyProgramacion");
                 let txt = "";
-    
+
+
+                if(data.result.length>0){
+
                 data.result.forEach((element) => {
                     txt += "<tr>";
                     txt += "<th>" + (index = index + 1) + "</th>";
@@ -190,7 +184,7 @@ let programacionController = {
                         element.id +
                         '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
                     txt += "</tr>";
-                });
+                });}else{ txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron programaciones.</td></tr>";}
     
                 tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
             })
@@ -198,50 +192,6 @@ let programacionController = {
                 console.error("Error al listar perfiles:", error);
             });
     },
-
-
-    // load: () => {
-  
-    //         const id= document.getElementById("filterNombrePerfil").value; // Suponiendo que tienes un input con este ID
-            
-    //         if(id<0||id==""){
-        
-    //           alert("Introduzca un valor válido")
-        
-    //         }else{
-            
-    //         perfilService
-    //           .load(id)
-    //           .then((data) => {
-    //             console.log("Perfil listado:", data);
-        
-    //             // perfilController.data.id=data.data.id;
-    //             // perfilController.data.nombre=data.data.nombre;
-        
-    //             if (data.error === "") {
-    //               let tabla = document.getElementById("tbodyPerfil");
-    //               let txt = "";
-        
-    //               txt += "<tr>";
-    //               txt += "<th>" + 1 + "</th>";
-    //               txt += "<td>" + data.result.nombre + "</td>"; //
-    //               txt +=
-    //                 '<td><a href="http://localhost/SG_CINE_2024/public/perfil/edit/' +
-    //                 data.result.id +
-    //                 '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
-    //               txt += "</tr>";
-        
-    //               tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
-    //             } else {
-    //               alert("Perfil no encontrado");
-    //             }
-    //           })
-    //           .catch((error) => {
-    //             console.error("Error al listar perfiles:", error);
-    //           });
-    //         }
-    //     },
-
 
     print:()=> {
       const $elementoParaConvertir = document.getElementById("tablaProgramacion"); // <-- Aquí puedes elegir cualquier elemento del DOM
@@ -328,7 +278,11 @@ let programacionController = {
   
   
   }
-  
+  // Función para formatear la fecha
+  const formatDate = (dateString) => {
+    const [year, month, day] = dateString.split("-");
+    return `${day}/${month}/${year}`;
+};
   document.addEventListener("DOMContentLoaded", () => {
     
     let btnAltaProgramacion= document.getElementById("btnAltaProgramacion");

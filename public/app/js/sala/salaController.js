@@ -256,14 +256,16 @@ loadByNumeroSala: () => {
 
     // Obtener el número de sala del filtro
     const numeroSala = parseInt(document.getElementById("filterNumeroSala").value);
-
+    if(numeroSala<=0){
+      alert("Inserte un valor mayor a 0")
+      return
+    }
+    let tabla = document.getElementById("tbodySala");
     // Llamar al servicio para cargar salas
     salaService.loadByNumeroSala(numeroSala)
       .then((data) => {
         if (data.error === "") {
           console.log("Sala encontrada:", data);
-
-          let tabla = document.getElementById("tbodySala");
           let txt = "";
 
           // Aquí se espera un solo objeto, no un array
@@ -284,60 +286,61 @@ loadByNumeroSala: () => {
               sala.id +
               '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
             txt += "</tr>";
-          } else {
-            // Manejo si no se encuentra la sala
-            txt += "<tr><td colspan='5'>No se encontró la sala.</td></tr>";
           }
 
           tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
         } else {
-          alert("No se encontró la sala para el número dado.");
+          let txt = "<tr><td colspan='8' style='text-align: center;'>No se encontró la sala.</td></tr>";
+          tabla.innerHTML = txt;
         }
       })
       .catch((error) => {
         console.error("Error al listar salas:", error);
         // Opcional: Mostrar un mensaje de error en la interfaz
         let tabla = document.getElementById("tbodySala");
-        tabla.innerHTML = "<tr><td colspan='5'>Ocurrió un error al listar la sala.</td></tr>";
+        tabla.innerHTML = "<tr colspan='5' class='text-align center'><td>No se encontró la sala.</td></tr>";
       });
 },
 
-loadByEstado:  () => {
+loadByEstado: () => {
   console.log("Listando salas...");
-  
-  index = 0;
-   salaService
-    .loadByEstado(document.getElementById("filterEstadoSelect").value)
-    .then((data) => {
-      console.log("salas listados:", data);
-      let tabla = document.getElementById("tbodySala");
-      let txt = "";
 
-      // Obtener la lista de perfiles
-      data.result.forEach((element) => {
-        txt += "<tr>";
-        txt += "<td>" + (index=index+1) + "</td>";
-        txt += "<td>" + element.numeroSala + "</td>";
-            txt += "<td>" + element.capacidad + "</td>";
-            if (element.estado === 1) {
-              txt += "<td> <i class='fas fa-circle text-success' title='Activo'></i> </td>";
-            } else {
-              txt += "<td> <i class='fas fa-circle text-danger' title='Desactivado'></i> </td>";
-            }
-            txt +=
-              '<td><a href="http://localhost/SG_CINE_2024/public/sala/edit/' +
-              element.id +
-              '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
-            txt += "</tr>";
+  let index = 0; // Declaración de index con let
+  let tabla = document.getElementById("tbodySala"); // Declaración de tabla fuera del then
+  let txt = ""; // Declaración de txt fuera del then
 
-  
+  salaService.loadByEstado(document.getElementById("filterEstadoSelect").value)
+      .then((data) => {
+          console.log("salas listadas:", data);
+
+          if (data.result.length>0) {
+              data.result.forEach((element) => {
+                  txt += "<tr>";
+                  txt += "<td>" + (++index) + "</td>"; // Incrementar index
+                  txt += "<td>" + element.numeroSala + "</td>";
+                  txt += "<td>" + element.capacidad + "</td>";
+
+                  if (element.estado === 1) {
+                      txt += "<td> <i class='fas fa-circle text-success' title='Activo'></i> </td>";
+                  } else {
+                      txt += "<td> <i class='fas fa-circle text-danger' title='Desactivado'></i> </td>";
+                  }
+
+                  txt += '<td><a href="http://localhost/SG_CINE_2024/public/sala/edit/' +
+                      element.id +
+                      '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
+                  txt += "</tr>";
+              });
+          } else {
+              txt = "<tr><td colspan='8' style='text-align: center;'>No se encontraron salas.</td></tr>";
+          }
+
+          tabla.innerHTML = txt; // Actualización de tabla fuera del bloque else
+
+      })
+      .catch((error) => {
+          console.error("Error al listar salas:", error);
       });
-
-      tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
-    })
-    .catch((error) => {
-      console.error("Error al listar salas:", error);
-    });
 },
 
 loadByCapacidad: () => {
@@ -352,12 +355,6 @@ loadByCapacidad: () => {
     alert("Por favor, ingrese valores válidos para la capacidad mínima y máxima.");
     return; // Detiene el proceso si la validación falla
   }
-
-  // Crear el objeto de filtro
-  let cantidades = {
-    minCapacidad: min,
-    maxCapacidad: max
-  };
 
   // Inicializar el índice
   let index = 0;
@@ -387,7 +384,7 @@ loadByCapacidad: () => {
         });
       } else {
         // Si no hay resultados, mostrar un mensaje en la tabla
-        txt = "<tr><td colspan='5'>No se encontraron salas.</td></tr>";
+        txt = "<tr><td colspan='8' style='text-align: center;'>No se encontraron salas.</td></tr>";
       }
 
       tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
@@ -396,10 +393,6 @@ loadByCapacidad: () => {
       console.error("Error al listar salas:", error);
     });
 }
-
-
-
-  ,
 
 }
 

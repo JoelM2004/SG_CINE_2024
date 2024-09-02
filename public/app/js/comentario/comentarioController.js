@@ -15,6 +15,10 @@ let comentarioController = {
       comentarioController.data.peliculaId = parseInt(
         comentarioForm.dataset.idpelicula
       );
+      if(comentarioForm.comment.value<=0|| comentarioForm.comment.value>255){
+        alert("Su comentario es muy largo, o está insertando texto vacío")
+        return
+      }
       comentarioController.data.comentario = comentarioForm.comment.value;
 
       // Guardar la función
@@ -54,37 +58,41 @@ let comentarioController = {
     let idUser = parseInt(comentarioForm.dataset.iduser);
     let perfil = comentarioForm.dataset.perfil;
 
-    // Procesar cada comentario
-    for (let element of data.result) {
-        // Obtener información del usuario que hizo el comentario
-        let usuarioData = await singletonController.loadUsuario(element.usuarioId);
+    // Verificar si hay comentarios
+    if (data.result.length === 0) {
+        txt = "<p class='text-center'>No hay comentarios</p>";
+    } else {
+        // Procesar cada comentario
+        for (let element of data.result) {
+            // Obtener información del usuario que hizo el comentario
+            let usuarioData = await singletonController.loadUsuario(element.usuarioId);
 
-        // Asegúrate de que `usuarioData` y `usuarioData.cuenta` existen antes de acceder a la propiedad `cuenta`
-        let nombreUsuario = usuarioData?.cuenta || 'Usuario Desconocido';
+            // Asegúrate de que `usuarioData` y `usuarioData.cuenta` existen antes de acceder a la propiedad `cuenta`
+            let nombreUsuario = usuarioData?.cuenta || 'Usuario Desconocido';
 
-        // Determinar si se debe mostrar el botón "Eliminar"
-        let mostrar = "";
-        if (usuarioData.id === idUser || perfil === "Administrador ") {
-            mostrar = ""; // Mostrar el botón
-        } else {
-            mostrar = "none"; // Ocultar el botón
-        }
+            // Determinar si se debe mostrar el botón "Eliminar"
+            let mostrar = "";
+            if (usuarioData.id === idUser || perfil === "Administrador") {
+                mostrar = ""; // Mostrar el botón
+            } else {
+                mostrar = "none"; // Ocultar el botón
+            }
 
-        // Construir el HTML para cada comentario
-        txt += `
-  <div class="comment mb-4 p-3 border rounded">
-    <div class="d-flex justify-content-between align-items-center">
-      <h5><i class="fas fa-user"></i> ${nombreUsuario}</h5>
-      <div>
-        <button class="btn btn-sm btn-danger eliminar" data-id="${element.id}" style="display: ${mostrar};">
-          <i class="fas fa-trash-alt"></i> Eliminar
-        </button>
+            // Construir el HTML para cada comentario
+            txt += `
+      <div class="comment mb-4 p-3 border rounded">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5><i class="fas fa-user"></i> ${nombreUsuario}</h5>
+          <div>
+            <button class="btn btn-sm btn-danger eliminar" data-id="${element.id}" style="display: ${mostrar};">
+              <i class="fas fa-trash-alt"></i> Eliminar
+            </button>
+          </div>
+        </div>
+        <p class="comment-text mt-2"><i class="fas fa-comment"></i> ${element.comentario}</p>
       </div>
-    </div>
-    <p class="comment-text mt-2"><i class="fas fa-comment"></i> ${element.comentario}</p>
-  </div>
-`;
-
+    `;
+        }
     }
 
     // Asignar el HTML construido a la lista de comentarios
@@ -98,6 +106,7 @@ let comentarioController = {
         });
     });
 },
+
 
   
   

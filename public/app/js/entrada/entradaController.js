@@ -247,34 +247,24 @@ loadByCuenta: async () => {
   console.log(cuenta);
   cuenta = parseInt(cuenta);
 
-  const formatDate = (dateString) => {
-    // Divide la fecha y la hora usando el espacio
-    const [datePart, timePart] = dateString.split(' ');
-    
-    // Divide la fecha en año, mes y día
-    const [year, month, day] = datePart.split("-");
-    
-    // Divide la hora en horas y minutos (después de eliminar los segundos)
-    const [hora, minutos] = timePart.split(":");
-  
-    // Retorna el formato deseado
-    return `${day}/${month}/${year} a las ${hora}:${minutos}`;
-  };
 
   let index = 0;
 
+  let tabla = document.getElementById("tbodyEntradas");
+  let txt = "";
       // Llamar al servicio para cargar las entradas por cuenta
       const data = await entradaService.loadByCuenta(cuenta);
 
       // Verificar si se encontraron resultados
       if (!data.result || data.result.length === 0) {
-          alert("Cuenta no encontrada");
+          
+          txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron entradas.</td></tr>"
+          tabla.innerHTML = txt;
           return;
       }
 
       console.log("Entradas listadas:", data);
-      let tabla = document.getElementById("tbodyEntradas");
-      let txt = "";
+      
 
       // Iterar sobre los resultados de las entradas y construir las filas de la tabla
       for (const element of data.result) {
@@ -340,15 +330,18 @@ loadByFuncion: async () => {
   let index = 0;
   const data = await entradaService.loadByFuncion(funcionId);
 
-  // Verificar si se encontraron resultados
-  if (!data.result || data.result.length === 0) {
-      alert("Función no encontrada");
-      return;
-  }
-
   console.log("Entrada listadas:", data);
   let tabla = document.getElementById("tbodyEntradas");
   let txt = "";
+
+  // Verificar si se encontraron resultados
+  if (!data.result || data.result.length === 0) {
+    txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron Entradas.</td></tr>"
+    tabla.innerHTML = txt;
+    return
+  }
+
+ 
 
   // Iterar sobre los resultados de las entradas y construir las filas de la tabla
   for (const element of data.result) {
@@ -400,7 +393,8 @@ loadByNumeroTicket: async () => {
 
   // Obtener el valor del número de ticket desde el input y convertirlo en un número entero
   let numeroTicket = parseInt(document.getElementById("filterNumeroTicketInput").value, 10);
-
+  let tabla = document.getElementById("tbodyEntradas");
+  let txt = "";
   // Validar el número de ticket
   if (isNaN(numeroTicket) || numeroTicket <= 0) {
       alert("Por favor, ingresa un número de ticket válido.");
@@ -412,13 +406,13 @@ loadByNumeroTicket: async () => {
 
   // Verificar si se encontraron resultados
   if (!element.result || element.result.length === 0) {
-      alert("Número de Ticket no encontrado");
-      return;
+    txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron Entradas.</td></tr>"
+    tabla.innerHTML = txt;
+    return
   }
 
   console.log("Entrada listadas:", element);
-  let tabla = document.getElementById("tbodyEntradas");
-  let txt = "";
+  
 
   // Iterar sobre los resultados de las entradas y construir las filas de la tabla
       txt += "<tr>";
@@ -480,16 +474,17 @@ loadByProgramacion: async () => {
 
   let index = 0;
   const data = await entradaService.loadByProgramacion(programacionId);
-
+  let tabla = document.getElementById("tbodyEntradas");
+  let txt = "";
   // Verificar si se encontraron resultados
   if (!data.result || data.result.length === 0) {
-      alert("Programación no encontrada");
-      return;
+    txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron Entradas.</td></tr>"
+    tabla.innerHTML = txt;
+    return
   }
 
   console.log("Entradas listadas:", data);
-  let tabla = document.getElementById("tbodyEntradas");
-  let txt = "";
+  
 
   // Iterar sobre los resultados de las entradas y construir las filas de la tabla
   for (const element of data.result) {
@@ -546,19 +541,20 @@ loadByPelicula: async () => {
       alert("Por favor, ingresa un número de película válido.");
       return;
   }
-
+  let tabla = document.getElementById("tbodyEntradas");
+  let txt = "";
   let index = 0;
   const data = await entradaService.loadByPelicula(peliculaId);
 
   // Verificar si se encontraron resultados
   if (!data.result || data.result.length === 0) {
-      alert("Película no encontrada");
-      return;
+    txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron Entradas.</td></tr>"
+    tabla.innerHTML = txt;
+    return
   }
 
   console.log("Entradas listadas:", data);
-  let tabla = document.getElementById("tbodyEntradas");
-  let txt = "";
+  
 
   // Iterar sobre los resultados de las entradas y construir las filas de la tabla
   for (const element of data.result) {

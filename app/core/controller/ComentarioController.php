@@ -40,7 +40,7 @@ final class ComentarioController extends Controller
         $info->toArray();
         $info=$info->toArray();
         $response->setResult($info);
-        $response->setMessage("La Comentario se cargó correctamente");
+        $response->setMessage("El Comentario se cargó correctamente");
 
         $response->send();
 
@@ -68,7 +68,7 @@ final class ComentarioController extends Controller
     public function save(Request $request, Response $response):void{
         $service = new ComentarioService();
         $service->save($request->getData());
-        $response->setMessage("La Comentario se registró correctamente");
+        $response->setMessage("El Comentario se registró correctamente");
         $response->send();
 
 
@@ -84,7 +84,7 @@ final class ComentarioController extends Controller
         $data= $request->getData();
 
         $service->update($data);
-        $response->setMessage("La Comentario se actualizó correctamente");
+        $response->setMessage("El Comentario se actualizó correctamente");
         $response->send();
 
     }
@@ -96,7 +96,7 @@ final class ComentarioController extends Controller
         $service = new ComentarioService();
         $info=$request->getData();
         $service->delete($info["id"]);
-        $response->setMessage("La Comentario se eliminó con éxito");
+        $response->setMessage("El Comentario se eliminó con éxito");
         $response->send();
 
     }

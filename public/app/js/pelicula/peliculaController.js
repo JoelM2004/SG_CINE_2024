@@ -22,43 +22,43 @@ let peliculaController = {
       let form = document.forms["formPelicula"];
 
       if (form.nombre.value.length > 255) {
-        alert("Superaste el límite de caracteres en el nombre.");
+        alert("Superaste el límite de caracteres en el nombre.");return
       } else {
         peliculaController.data.nombre = form.nombre.value;
       }
 
       if (form.tituloOriginal.value.length > 255) {
-        alert("Superaste el límite de caracteres en el título original.");
+        alert("Superaste el límite de caracteres en el título original.");return
       } else {
         peliculaController.data.tituloOriginal = form.tituloOriginal.value;
       }
 
       if (form.duracion.value <= 0) {
-        alert("La duración debe ser mayor a 0.");
+        alert("La duración debe ser mayor a 0.");return
       } else {
         peliculaController.data.duracion = parseInt(form.duracion.value);
       }
 
       if (form.sinopsis.value.length > 255) {
-        alert("Superaste el límite de caracteres para la sinopsis");
+        alert("Superaste el límite de caracteres para la sinopsis");return
       } else {
         peliculaController.data.sinopsis = form.sinopsis.value;
       }
 
       if (form.actores.value.length > 255) {
-        alert("Superaste el límite de caracteres para los actores.");
+        alert("Superaste el límite de caracteres para los actores.");return
       } else {
         peliculaController.data.actores = form.actores.value;
       }
 
       if (form.sitioWeb.value.length > 255) {
-        alert("Superaste el límite de caracteres para los actores.");
+        alert("Superaste el límite de caracteres para los actores.");return
       } else {
         peliculaController.data.sitioWebOficial = form.sitioWeb.value;
       }
 
       if (form.anioEstreno.value.length != 4) {
-        alert("El año de estreno debe tener 4 dígitos.");
+        alert("El año de estreno debe tener 4 dígitos.");return
       } else {
         peliculaController.data.anoEstreno = parseInt(form.anioEstreno.value);
       }
@@ -123,42 +123,49 @@ let peliculaController = {
 
       if (form.nombre.value.length > 255) {
         alert("Superaste el límite de caracteres en el nombre.");
+        return
       } else {
         peliculaController.data.nombre = form.nombre.value;
       }
 
       if (form.tituloOriginal.value.length > 255) {
         alert("Superaste el límite de caracteres en el título original.");
+        return
       } else {
         peliculaController.data.tituloOriginal = form.tituloOriginal.value;
       }
 
       if (form.duracion.value <= 0) {
         alert("La duración debe ser mayor a 0.");
+        return
       } else {
         peliculaController.data.duracion = parseInt(form.duracion.value);
       }
 
       if (form.sinopsis.value.length > 255) {
         alert("Superaste el límite de caracteres para la sinopsis");
+        return
       } else {
         peliculaController.data.sinopsis = form.sinopsis.value;
       }
 
       if (form.actores.value.length > 255) {
         alert("Superaste el límite de caracteres para los actores.");
+        return
       } else {
         peliculaController.data.actores = form.actores.value;
       }
 
       if (form.sitioWeb.value.length > 255) {
         alert("Superaste el límite de caracteres para los actores.");
+        return
       } else {
         peliculaController.data.sitioWebOficial = form.sitioWeb.value;
       }
 
       if (form.anioEstreno.value.length != 4) {
         alert("El año de estreno debe tener 4 dígitos.");
+        return
       } else {
         peliculaController.data.anoEstreno = parseInt(form.anioEstreno.value);
       }
@@ -276,11 +283,6 @@ let peliculaController = {
     idiomas = await singletonController.listIdioma();
     paises = await singletonController.listPais();
 
-    const formatDate = (dateString) => {
-      const [year, month, day] = dateString.split("-");
-      return `${day}/${month}/${year}`;
-    };
-
     index = 0;
     await peliculaService
       .list()
@@ -381,11 +383,6 @@ let peliculaController = {
     idiomas = await singletonController.listIdioma();
     paises = await singletonController.listPais();
 
-    const formatDate = (dateString) => {
-      const [year, month, day] = dateString.split("-");
-      return `${day}/${month}/${year}`;
-    };
-
     index = 0;
     await peliculaService
       .loadByGenero(document.getElementById("filterGeneroInput").value)
@@ -394,7 +391,7 @@ let peliculaController = {
         let tabla = document.getElementById("tbodyPelicula");
         let txt = "";
 
-        // Obtener la lista de perfiles
+        if(data.result.length>0){
         data.result.forEach((element) => {
           txt += "<tr>";
           txt += "<th>" + (index = index + 1) + "</th>";
@@ -447,8 +444,8 @@ let peliculaController = {
             element.id +
             '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
           txt += "</tr>";
-        });
-
+        })
+      } else{ txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron películas.</td></tr>";}
         tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
       })
       .catch((error) => {
@@ -466,11 +463,6 @@ let peliculaController = {
     idiomas = await singletonController.listIdioma();
     paises = await singletonController.listPais();
 
-    const formatDate = (dateString) => {
-      const [year, month, day] = dateString.split("-");
-      return `${day}/${month}/${year}`;
-    };
-
     index = 0;
     await peliculaService
       .loadByPais(document.getElementById("filterPaisInput").value)
@@ -479,6 +471,7 @@ let peliculaController = {
         let tabla = document.getElementById("tbodyPelicula");
         let txt = "";
 
+        if(data.result.length>0){
         // Obtener la lista de perfiles
         data.result.forEach((element) => {
           txt += "<tr>";
@@ -533,7 +526,7 @@ let peliculaController = {
             '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
           txt += "</tr>";
         });
-
+      }else{ txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron películas.</td></tr>";}
         tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
       })
       .catch((error) => {
@@ -551,11 +544,6 @@ let peliculaController = {
     idiomas = await singletonController.listIdioma();
     paises = await singletonController.listPais();
 
-    const formatDate = (dateString) => {
-      const [year, month, day] = dateString.split("-");
-      return `${day}/${month}/${year}`;
-    };
-
     index = 0;
     await peliculaService
       .loadByIdioma(document.getElementById("filterIdiomaInput").value)
@@ -564,7 +552,7 @@ let peliculaController = {
         let tabla = document.getElementById("tbodyPelicula");
         let txt = "";
 
-        // Obtener la lista de perfiles
+        if(data.result.length>0){// Obtener la lista de perfiles
         data.result.forEach((element) => {
           txt += "<tr>";
           txt += "<th>" + (index = index + 1) + "</th>";
@@ -617,8 +605,8 @@ let peliculaController = {
             element.id +
             '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
           txt += "</tr>";
-        });
-
+        })}
+        else{ txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron películas.</td></tr>";}
         tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
       })
       .catch((error) => {
@@ -636,11 +624,6 @@ let peliculaController = {
     idiomas = await singletonController.listIdioma();
     paises = await singletonController.listPais();
 
-    const formatDate = (dateString) => {
-      const [year, month, day] = dateString.split("-");
-      return `${day}/${month}/${year}`;
-    };
-
     index = 0;
     await peliculaService
       .loadByCalificacion(document.getElementById("filterCalificacionInput").value)
@@ -649,7 +632,7 @@ let peliculaController = {
         let tabla = document.getElementById("tbodyPelicula");
         let txt = "";
 
-        // Obtener la lista de perfiles
+        if(data.result.length>0){
         data.result.forEach((element) => {
           txt += "<tr>";
           txt += "<th>" + (index = index + 1) + "</th>";
@@ -702,7 +685,8 @@ let peliculaController = {
             element.id +
             '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
           txt += "</tr>";
-        });
+        })}
+        else{ txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron películas.</td></tr>"}
 
         tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
       })
@@ -721,10 +705,10 @@ let peliculaController = {
     idiomas = await singletonController.listIdioma();
     paises = await singletonController.listPais();
 
-    const formatDate = (dateString) => {
-      const [year, month, day] = dateString.split("-");
-      return `${day}/${month}/${year}`;
-    };
+    if(document.getElementById("filterTituloInput").value.length<=0){
+      alert("Inserte un título válido")
+      return
+    }
 
     index = 0;
     await peliculaService
@@ -735,6 +719,10 @@ let peliculaController = {
         let txt = "";
 
         element=data.result
+        
+        if(data.error===""){
+
+        
         // Obtener la lista de perfiles
           txt += "<tr>";
           txt += "<th>" + (index = index + 1) + "</th>";
@@ -787,6 +775,9 @@ let peliculaController = {
             element.id +
             '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
           txt += "</tr>";
+        }else{ txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron películas.</td></tr>";}
+
+
           tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
         })
       .catch((error) => {
@@ -948,6 +939,10 @@ updateImagen: (id,peliculaId) => {
 
   }
 
+  const formatDate = (dateString) => {
+    const [year, month, day] = dateString.split("-");
+    return `${day}/${month}/${year}`;
+  };
 
 
 

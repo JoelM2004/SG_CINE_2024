@@ -1,6 +1,6 @@
 let perfilController = {
     data: {
-      id: 59,
+      id: 0,
       nombre: "",
     },
   
@@ -10,6 +10,7 @@ let perfilController = {
   
         if (perfilForm.nombrePerfil.value.length > 45) {
           alert("Nombre demasiado largo");
+          return
         } else {
           perfilController.data.nombre = perfilForm.nombrePerfil.value;
         }
@@ -60,9 +61,13 @@ let perfilController = {
           "filaModificarPerfil"
         ).dataset.id;
         perfilController.data.id = parseInt(perfilController.data.id);
-        perfilController.data.nombre =
-          document.getElementById("nombrePerfil").value;
-  
+        perfilController.data.nombre = document.getElementById("nombrePerfil").value;
+        
+        if(perfilController.data.nombre.length>45){
+          alert("Nombre demasiado largo");
+          return
+        }
+
         perfilService
           .update(perfilController.data)
           .then((data) => {
@@ -72,6 +77,9 @@ let perfilController = {
               alert("Error al actualizar el perfil: " + data.error);
             } else {
               alert("Perfil actualizado con éxito");
+              setTimeout(() => {
+                location.reload();
+              }, 300);
             }
           })
           .catch((error) => {
@@ -157,16 +165,23 @@ let perfilController = {
 
     loadByName: () => {
         const nombre = document.getElementById("filterNombrePerfil").value; // Obtiene el nombre del campo input
+        if(nombre.length<=0){
+          alert("Inserte un perfil válido")
+          return
+        }
+
         console.log("Buscando perfiles...");
-    
+
+        let tabla = document.getElementById("tbodyPerfil");
+            let txt = "";
+
         perfilService.loadByName(nombre).then((data) => {
 
             if(data.error==""){
 
             console.log("Perfil encontrado:", data);
             
-            let tabla = document.getElementById("tbodyPerfil");
-            let txt = "";
+            
     
             // Aquí se espera un solo objeto, no un array
             const perfil = data.result;
@@ -185,10 +200,14 @@ let perfilController = {
                 txt += "<tr><td colspan='3'>No se encontró el perfil.</td></tr>";
             }
     
-            tabla.innerHTML = txt;
+            
         }
-        else{alert("El perfil no fue encontrado")}
+        else{txt = "<tr><td colspan='3' style='text-align: center;'>No se encontró el perfil.</td></tr>";}
+
+        tabla.innerHTML = txt;
     }
+    
+    
         )
         .catch((error) => {
             console.error("Error al buscar perfil:", error);

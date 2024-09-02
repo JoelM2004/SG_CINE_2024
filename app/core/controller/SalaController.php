@@ -13,8 +13,7 @@ final class SalaController extends Controller implements InterfaceController, In
     public function __construct()
     {
         parent::__construct([
-            // "app/js/sala/salaController.js",
-            //  "app/js/sala/salaService.js",
+            
               "app/js/sala/salaService.js",
               "app/js/sala/salaController.js",
             "assets/libs/js/viewSala.js"

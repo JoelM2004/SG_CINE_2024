@@ -22,7 +22,7 @@ $datosFuncion=array_reverse($datosFuncion);
 $daoEntrada = new EntradaDAO($conn);
 
 $daoProgramacion = new ProgramacionDAO($conn);
-$datosProgramacion =$daoProgramacion->listVigente();
+$datosProgramacion =$daoProgramacion->list();
 
 function formatDate($date) {
     $parts = explode('-', $date);
@@ -123,10 +123,10 @@ function formatDate($date) {
             <option value="">Seleccione una función</option>
             <?php
                 // Obtener funciones y llenar el select
-                $funcionesActivar=$daoFuncion->listActivas();
+                $funcionesActivar=$daoFuncion->list();
                 foreach (($funcionesActivar) as $elemento) {
 
-                    echo '<option value="' . $elemento->getId() . '">' . $elemento->getNumeroFuncion() . '</option>';
+                    echo '<option value="' . $elemento["id"] . '">' . $elemento["numeroFuncion"] . '</option>';
                 }
                 ?>
         </select>
@@ -153,9 +153,9 @@ function formatDate($date) {
             <option value="">Seleccione una película</option>
             <?php
 
-            $datosPeliculasFunciones=$daoPelicula->listPeliculasActivas();
+            $datosPeliculasFunciones=$daoPelicula->list();
             foreach ($datosPeliculasFunciones as $elemento) {
-                    echo '<option value="' . $elemento->getId() . '">' . $elemento->getNombre()."-".$elemento->getAudioId()."-".$elemento->getTipoId(). '</option>';
+                    echo '<option value="' . $elemento["id"] . '">' . $elemento["nombre"]."-".$elemento["audioId"]."-".$elemento["tipoId"]. '</option>';
                 }
 
                 ?>
@@ -167,9 +167,9 @@ function formatDate($date) {
         <select class="form-select" id="filterProgramacionInput">
             <option value="">Seleccione una programación</option>
             <?php
-                // Obtener funciones y llenar el select
-                    echo '<option value="' . $datosProgramacion->getId() . '">' . formatDate($datosProgramacion->getFechaInicio())." a " . formatDate($datosProgramacion->getFechaFin()). '</option>';
-                
+                foreach($datosProgramacion as $data){
+                    echo '<option value="' . $data["id"] . '">' . formatDate($data["fechaInicio"])." a " . formatDate($data["fechaFin"]). '</option>';
+                }
             ?>
         </select>
     </div>

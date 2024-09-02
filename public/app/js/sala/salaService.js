@@ -57,7 +57,7 @@ let salaService = {
       })
       .catch((error) => {
           console.error("Error en la Petición:", error);
-          throw new Error("Existe una función que utiliza esta sala",error); // Lanzar error general
+          throw new Error(error); // Lanzar error general
       });
   },
   

@@ -362,5 +362,41 @@ public function listActivas(): array
     }
 }
 
+public function existe($id): bool{
+    $sql = "SELECT count(id) AS cantidad FROM {$this->table} WHERE id = :id";
+    $stmt = $this->conn->prepare($sql);
+
+    // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
+    $params = [
+        ':id' => $id
+    ];
+
+    $stmt->execute($params);
+    $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
+
+    if ($result->cantidad > 0) {
+        return true;
+   } else return false;
+} 
+
+public function existeCartelera($id): bool{
+    $sql = "SELECT count(f.id) AS cantidad FROM {$this->table} f
+    inner join programaciones p on p.id=f.programacionId
+    WHERE f.id = :id AND p.vigente=1 AND f.fecha >= CURDATE() ";
+    $stmt = $this->conn->prepare($sql);
+
+    // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
+    $params = [
+        ':id' => $id
+    ];
+
+    $stmt->execute($params);
+    $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
+
+    if ($result->cantidad > 0) {
+        return true;
+   } else return false;
+} 
+
 
 }

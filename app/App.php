@@ -4,6 +4,7 @@ namespace app;
 
 use app\core\middleware\AuthenticationMiddleware;
 use app\core\middleware\ExceptionHandlerMiddleware;
+use app\core\middleware\IdMiddleware;
 use app\core\middleware\PerfilMiddleware;
 use app\core\middleware\Pipeline;
 use app\core\middleware\RoutingMiddleware;
@@ -19,7 +20,8 @@ final class App{
 
         $pipeline->pipe(new ExceptionHandlerMiddleware());
         $pipeline->pipe(new AuthenticationMiddleware());
-         $pipeline->pipe(new PerfilMiddleware());
+        $pipeline->pipe(new PerfilMiddleware());
+        $pipeline->pipe(new IdMiddleware());
         $pipeline->pipe(new RoutingMiddleware());
         $pipeline->process(new Request(), new Response());
 

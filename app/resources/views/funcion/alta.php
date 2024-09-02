@@ -57,12 +57,11 @@ $datosTipo = $daoTipo->list();
             <select class="form-select" id="nombrePelicula">
                 <?php
                 $txt = ''; // Inicializar $txt antes del bucle
-
                 // Invertir el array para que las últimas películas aparezcan primero
                 $datosPeliculaInvertido = array_reverse($datosPelicula);
-                $select="";
+
                 foreach ($datosPeliculaInvertido as $elemento) {
-                    echo '<option value="' . $elemento['id'] . '" ' . $selected . '>' . $elemento['nombre']."-". $daoAudio->load($elemento["audioId"])->getNombre()."-".$daoTipo->load($elemento["tipoId"])->getNombre().'</option>';
+                    echo '<option value="' . $elemento['id'] . '"  >' . $elemento['nombre']."-". $daoAudio->load($elemento["audioId"])->getNombre()."-".$daoTipo->load($elemento["tipoId"])->getNombre().'</option>';
                 }
 
                 echo $txt;
@@ -165,7 +164,7 @@ $datosTipo = $daoTipo->list();
                     $datosPeliculaInvertido = array_reverse($datosPelicula);
 
                     foreach ($datosPeliculaInvertido as $elemento) {
-                        echo '<option value="' . $elemento['id'] . '" ' . $selected . '>' . $elemento['nombre']."-". $daoAudio->load($elemento["audioId"])->getNombre()."-".$daoTipo->load($elemento["tipoId"])->getNombre().'</option>';
+                        echo '<option value="' . $elemento['id'] . '" >' . $elemento['nombre']."-". $daoAudio->load($elemento["audioId"])->getNombre()."-".$daoTipo->load($elemento["tipoId"])->getNombre().'</option>';
                     }
 
                     echo $txt;

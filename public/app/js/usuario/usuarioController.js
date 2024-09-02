@@ -13,20 +13,22 @@ let userController = {
     if (confirm("¿Seguro que lo quieres guardar?")) {
       let form = document.forms["formUsuario"];
 
-      if (form.apellidoUsuario.value.length > 45) {
-        alert("Supero el limite de caracteres con su apellido");
+      if (form.apellidoUsuario.value.length > 45 ||form.apellidoUsuario.value.length <=0) {
+        alert("Supero el limite de caracteres con su apellido o el campo se encuentra vacío");
+        return
       } else {
         userController.data.apellido = form.apellidoUsuario.value;
       }
 
-      if (form.nombreUsuario.value.length > 45) {
-        alert("Supero el limite de caracteres con su nombre");
+      if (form.nombreUsuario.value.length > 45||form.nombreUsuario.value.length <=0) {
+        alert("Supero el limite de caracteres con su nombre o el campo se encuentra vacío")
+        return
       } else {
         userController.data.nombres = form.nombreUsuario.value;
       }
 
-      if (form.cuentaUsuario.value.length > 45) {
-        alert("Supero el limite de caracteres con su cuenta");
+      if (form.cuentaUsuario.value.length > 45 ||form.cuentaUsuario.value.length <=0) {
+        alert("Supero el limite de caracteres con su cuenta o el campo se encuentra vacío");return
       } else {
         userController.data.cuenta = form.cuentaUsuario.value;
       }
@@ -37,11 +39,11 @@ let userController = {
       ) {
         userController.data.clave = form.claveUsuario.value;
       } else {
-        alert("Su clave es demasiado corta o muy largo (7 a 44 caracteres)");
+        alert("Su clave es demasiado corta o muy largo (7 a 44 caracteres)");return
       }
 
-      if (form.correoUsuario.value.length > 255) {
-        alert("El correo es muy largo");
+      if (form.correoUsuario.value.length > 255 ||form.correoUsuario.value.length <=0) {
+        alert("El correo es muy largo o el campo se encuentra vacío");return
       } else {
         userController.data.correo = form.correoUsuario.value;
       }
@@ -94,16 +96,17 @@ let userController = {
   loadByNameAccount: async () => {
     const nombre = document.getElementById("filterNombreCuenta").value;
     aux = await singletonController.listPerfil();
+    let txt = "";
     console.log("Buscando Usuarios...");
-
+    let tabla = document.getElementById("tbodyUsuario");
     await userService
       .loadByNameAccount(nombre)
       .then((data) => {
         if (data.error == "") {
           console.log("Usuario encontrado:", data);
 
-          let tabla = document.getElementById("tbodyUsuario");
-          let txt = "";
+          let txts;
+          
 
           // Aquí se espera un solo objeto, no un array
           const usuario = data.result;
@@ -116,7 +119,7 @@ let userController = {
             txt += "<td>" + usuario.apellido + "</td>";
             txt += "<td>" + usuario.correo + "</td>";
 
-            let txts;
+            
             aux.forEach((elemento) => {
               if (elemento.id == usuario.perfilId) txts = elemento.nombre;
             });
@@ -131,18 +134,14 @@ let userController = {
               usuario.id +
               '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
             txt += "</tr>";
-          } else {
-            // Manejo si no se encuentra el perfil, puede ser opcional
-            txt += "<tr><td colspan='3'>No se encontró el perfil.</td></tr>";
-          }
-
-          tabla.innerHTML = txt;
+          } 
         } else {
-          alert("El Usuario "+ nombre +" no fue encontrado");
+          txt = "<tr><td colspan='15' style='text-align: center;'>No se encontró al Usuario.</td></tr>";
         }
+        tabla.innerHTML = txt;
       })
       .catch((error) => {
-        console.error("Error al buscar perfil:", error);
+        console.error("Error al buscar Usuario:", error);
       });
   },
 
@@ -159,26 +158,27 @@ let userController = {
       userController.data.cuenta = form.cuentaUsuarioM.value;
       userController.data.correo = form.correoUsuarioM.value;
 
-      if (form.apellidoUsuarioM.value.length > 45) {
-        alert("Supero el limite de caracteres con su apellido");
+      if (form.apellidoUsuarioM.value.length > 45||form.apellidoUsuarioM.value.length <=0 ) {
+        alert("Supero el limite de caracteres con su apellido o el campo se encuentra vacío");
+        return
       } else {
         userController.data.apellido = form.apellidoUsuarioM.value;
       }
 
-      if (form.nombreUsuarioM.value.length > 45) {
-        alert("Supero el limite de caracteres con su nombre");
+      if (form.nombreUsuarioM.value.length > 45 ||form.nombreUsuarioM.value.length <=0 ) {
+        alert("Supero el limite de caracteres con su nombre o el campo se encuentra vacío");return
       } else {
         userController.data.nombres = form.nombreUsuarioM.value;
       }
 
-      if (form.cuentaUsuarioM.value.length > 45) {
-        alert("Supero el limite de caracteres con su cuenta");
+      if (form.cuentaUsuarioM.value.length > 45 || form.cuentaUsuarioM.value.length <=0) {
+        alert("Supero el limite de caracteres con su cuenta o el campo se encuentra vacío");return
       } else {
         userController.data.cuenta = form.cuentaUsuarioM.value;
       }
 
-      if (form.correoUsuarioM.value.length > 255) {
-        alert("El correo es muy largo");
+      if (form.correoUsuarioM.value.length > 255 || form.correoUsuarioM.value.length <=0) {
+        alert("El correo es muy largo o el campo se encuentra vacío");return
       } else {
         userController.data.correo = form.correoUsuarioM.value;
       }
@@ -399,6 +399,8 @@ let userController = {
         let tabla = document.getElementById("tbodyUsuario");
         let txt = "";
 
+        if(data.result.length>0){
+
         // Obtener la lista de perfiles
         data.result.forEach((element) => {
           txt += "<tr>";
@@ -422,7 +424,7 @@ let userController = {
             element.id +
             '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
           txt += "</tr>";
-        });
+        })}else{ txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron Usuarios.</td></tr>";}
 
         tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
       })

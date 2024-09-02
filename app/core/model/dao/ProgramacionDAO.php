@@ -198,5 +198,20 @@ final class ProgramacionDAO extends DAO implements InterfaceDAO
         throw new \Exception("La combinación de fecha inicio ({$object->getFechaInicio()}) y fecha fin ({$object->getFechaFin()}) ya existe en la base de datos");
     }
 }
+public function existe($id): bool{
+    $sql = "SELECT count(id) AS cantidad FROM {$this->table} WHERE id = :id";
+    $stmt = $this->conn->prepare($sql);
 
+    // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
+    $params = [
+        ':id' => $id
+    ];
+
+    $stmt->execute($params);
+    $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
+
+    if ($result->cantidad > 0) {
+        return true;
+   } else return false;
+} 
 }

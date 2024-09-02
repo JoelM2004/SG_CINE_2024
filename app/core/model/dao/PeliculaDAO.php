@@ -101,6 +101,28 @@ final class PeliculaDAO extends DAO implements InterfaceDAO
         return $Peliculas;
     }
 
+    public function listPeliculas(): array
+    {
+        $sql = "SELECT DISTINCT
+                p.*
+            FROM {$this->table} p
+            
+            INNER JOIN funciones f ON f.peliculaId = p.id
+            
+            INNER JOIN programaciones pro ON f.programacionId = pro.id
+            
+            WHERE pro.vigente = 1";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+
+        // Recuperar todos los resultados y convertirlos a objetos PeliculaDTO
+        $Peliculas = [];
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $Peliculas[] = new PeliculaDTO($row);
+        }
+        return $Peliculas;
+    }
 
     public function update(InterfaceDTO $object): void
     {
@@ -284,4 +306,42 @@ final class PeliculaDAO extends DAO implements InterfaceDAO
             throw new \Exception("El campo 'Audio ID' debe ser un número mayor que cero.");
         }
     }
+
+    public function existe($id): bool{
+        $sql = "SELECT count(id) AS cantidad FROM {$this->table} WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+    
+        // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
+        $params = [
+            ':id' => $id
+        ];
+    
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
+    
+        if ($result->cantidad > 0) {
+            return true;
+       } else return false;
+    } 
+
+
+    public function existeCartelera($id): bool{
+        $sql = "SELECT count(p.id) AS cantidad FROM {$this->table} p
+        inner join funciones f on f.peliculaId = p.id
+        inner join programaciones pf on f.programacionId=pf.id
+        WHERE p.id = :id AND pf.vigente=1";
+        $stmt = $this->conn->prepare($sql);
+    
+        // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
+        $params = [
+            ':id' => $id
+        ];
+    
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
+    
+        if ($result->cantidad > 0) {
+            return true;
+       } else return false;
+    } 
 }
