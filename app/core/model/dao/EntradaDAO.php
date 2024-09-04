@@ -170,7 +170,7 @@ final class EntradaDAO extends DAO implements InterfaceDAO
 
     public function loadByProgramacion($programacionId): array
     {
-        $sql = "SELECT * FROM {$this->table} e
+        $sql = "SELECT e.id, e.horarioFuncion, e.horarioVenta, e.precio, e.numeroTicket, e.estado, e.funcionId, e.usuarioId FROM {$this->table} e
         Inner join funciones f on f.id= e.funcionId
         inner join programaciones p on f.programacionId=p.id
         WHERE programacionId = :programacionId";
@@ -187,11 +187,11 @@ final class EntradaDAO extends DAO implements InterfaceDAO
 
     public function loadByPelicula($peliculaId): array
     {
-        $sql = "SELECT * FROM {$this->table} e
+        $sql = "SELECT e.id, e.horarioFuncion, e.horarioVenta, e.precio, e.numeroTicket, e.estado, e.funcionId, e.usuarioId FROM {$this->table} e
         Inner join funciones f on f.id= e.funcionId
         inner join peliculas p on f.peliculaId=p.id
 
-        WHERE peliculaId = :peliculaId";
+        WHERE f.peliculaId = :peliculaId";
         
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(["peliculaId" => $peliculaId]);

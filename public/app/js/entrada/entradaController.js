@@ -42,6 +42,11 @@ save: () => {
     alert("Quiere comprar una cantidad de entradas que excede a la disponible")
     return
   }
+
+  if(cantidad>=0){
+    alert("Seleccione una cantidad de entradas a comprar")
+    return
+  }
   
   // Obtener la fecha y hora actual en formato 'YYYY-MM-DDTHH:MM'
   const now = new Date();
@@ -149,7 +154,7 @@ saveCompra:()=>{
 
 }
 ,
-  update: () => {
+update: () => {
     if(confirm("¿Quieres actualizar el estado de la entrada?")){
 
       entradaController.data.estado = parseInt(document.getElementById("btnToggleEntrada").value);
@@ -179,31 +184,15 @@ saveCompra:()=>{
 
   },
 
-  list: async () => {
+list: async () => {
     //listo
     console.log("Listando entrada...");
-
-    const formatDate = (dateString) => {
-      // Divide la fecha y la hora usando el espacio
-      const [datePart, timePart] = dateString.split(' ');
-      
-      // Divide la fecha en año, mes y día
-      const [year, month, day] = datePart.split("-");
-      
-      // Divide la hora en horas y minutos (después de eliminar los segundos)
-      const [hora, minutos] = timePart.split(":");
-    
-      // Retorna el formato deseado
-      return `${day}/${month}/${year} a las ${hora}:${minutos}`;
-    };
-    
 
     index = 0;
     let data=await entradaService.list()
     console.log("entrada listados:", data);
         let tabla = document.getElementById("tbodyEntradas");
         let txt = "";
-
 
     for(const element of data.result){
 

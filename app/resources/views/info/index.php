@@ -28,7 +28,7 @@
                 <p class="contact-info">
                     <strong>Dirección:</strong> 9809 Margo Street<br>
                     <strong>Teléfono:</strong> +123 456 7890<br>
-                    <strong>Email:</strong> contacto@cinepolloshermanos.com<br>
+                    <strong>Email:</strong> lospolloshermanossoporte@hotmail.com<br>
                     <strong>Horario:</strong> Lunes a Domingo, 10:00 - 22:00
                 </p>
                 <h4>Síguenos en nuestras Redes Sociales</h4>

@@ -106,19 +106,19 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([
             ':clave' => $claveHash,
-            ':correo' => $object["correo"]
+            ':correo' => $object["correo"],
         ]);
     
         // Enviar el correo con la nueva contraseña
         $this->sendPasswordByEmail($object["correo"], $clave);
 
     }
+
     function sendPasswordByEmail(string $email, string $password): void {
         // Configuración del transporte SMTP para Hotmail/Outlook
         $transport = (new Swift_SmtpTransport('smtp.office365.com', 587, 'tls'))
             ->setUsername(CORREO) // Tu correo de Hotmail/Outlook
             ->setPassword(CLAVECORREO); // Tu contraseña de Hotmail/Outlook
-    
         // Crear el mailer usando el transporte SMTP
         $mailer = new Swift_Mailer($transport);
     
@@ -299,7 +299,9 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
 
     private function validateCorreoExiste(array $object): void
 {
-    $sql = "SELECT count(id) AS cantidad FROM {$this->table} WHERE correo = :correo";
+    $sql = "SELECT count(u.id) AS cantidad FROM {$this->table} u
+    inner join perfiles p on u.perfilId=p.id
+    WHERE u.correo = :correo AND p.nombre='Externos'";
     $stmt = $this->conn->prepare($sql);
 
     $params = [
@@ -310,7 +312,7 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
     $result = $stmt->fetch(\PDO::FETCH_OBJ);
 
     if ($result->cantidad == 0) {
-        throw new \Exception("El dato correo ({$object["correo"]}) no existe en la base de datos");
+        throw new \Exception("El dato correo ({$object["correo"]}) no existe en la base de datos o usted está deseando cambiar la contraseña de un tipo de cuenta que no está permitido, en este caso, comuníquese con un Administrador");
     }
 }
 

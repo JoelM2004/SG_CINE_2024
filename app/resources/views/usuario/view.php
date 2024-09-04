@@ -95,12 +95,14 @@ function formatDate($date) {
                         $horaFuncion = $elemento->getHoraFuncion();
                         $horaVenta = $elemento->getHoraVenta();
                         $numeroTicket = $elemento->getNumeroTicket();
+                        $precio=$elemento->getPrecio();
                         ?>
                         <li class="list-group-item d-flex justify-content-between align-items-start">
                             <div>
                                 <h5 class="mb-1">Nro de Ticket: <strong><?= $numeroTicket ?></strong></h5>
                                 <p class="mb-1">Función: <strong><?= $funcion ?></strong></p>
                                 <p class="mb-1">Película: <strong><?= $pelicula ?></strong></p>
+                                <p class="mb-1">Precio: <strong><?= "$".$precio ?></strong></p>
                                 <p class="mb-1">Hora de Función: <span class="badge bg-info text-dark"><?= formatDate($horaFuncion) ?></span></p>
                                 <p class="mb-1">Hora de Venta: <span class="badge bg-success text-light"><?= formatDate($horaVenta) ?></span></p>
                             </div>
