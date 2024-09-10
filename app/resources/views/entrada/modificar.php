@@ -1,10 +1,11 @@
 <?php
 
+use app\core\model\dao\AudioDAO;
 use app\core\model\dao\PeliculaDAO;
 use app\core\model\dao\UsuarioDAO;
 use app\core\model\dao\FuncionDAO;
 use app\core\model\dao\EntradaDAO;
-
+use app\core\model\dao\TipoDAO;
 use app\libs\connection\Connection;
 
 $conn = Connection::get();
@@ -20,6 +21,9 @@ $datosFuncion = array_reverse($datosFuncion);
 
 $daoEntrada = new EntradaDAO($conn);
 $datoEntrada = $daoEntrada->load($_GET["id"]);
+
+$daoAudio= new AudioDAO($conn);
+$daoTipo= new TipoDAO($conn);
 
 function formatDate($date) {
     // Verificar si el formato contiene una hora

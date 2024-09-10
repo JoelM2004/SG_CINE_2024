@@ -45,6 +45,9 @@ let perfilController = {
           .delete(perfilController.data)
           .then((data) => {
             alert(data.mensaje); // Muestra el mensaje del servidor al usuario
+            setTimeout(() => {
+              location.reload();
+          }, 300);
           })
           .catch((error) => {
             console.error("Error al eliminar el Perfil:", error);

@@ -50,3 +50,9 @@
 .card-link:hover {
     text-decoration: underline; /* Subrayado del enlace al pasar el ratón */
 }
+
+.carousel-inner img {
+    object-fit: cover; /* Cubre el contenedor sin distorsionar la imagen */
+    height: 500px;     /* Ajusta la altura del carrusel (puedes modificarlo según lo necesites) */
+    width: 100%;       /* Asegura que ocupe el ancho completo */
+}

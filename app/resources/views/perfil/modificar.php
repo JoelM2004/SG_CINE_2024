@@ -38,7 +38,7 @@ $datos=$dao->load($id)?>
                     <th>1</th>
                     <td><?= $datos->getNombre() ?></td>
                     <td>
-                        <a id="btnEliminarPerfiles" href=<?= APP_FRONT . 'perfil/create/0' ?> class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
+                        <button id="btnEliminarPerfiles" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
                     </td>
                 </tr>
             </tbody>

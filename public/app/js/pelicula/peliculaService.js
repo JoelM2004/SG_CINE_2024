@@ -31,35 +31,33 @@ let peliculaService = {
   },
   delete: (data) => {
     return fetch("pelicula/delete", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-
-      body: JSON.stringify(data),
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(data),
     })
-      .then((response) => {
+    .then((response) => {
         if (!response.ok) {
-          throw new Error(response.status);
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
-
         return response.json();
-      })
-      .then((data) => {
-        if (data.error != "") {
-          console.log("Error Interno");
+    })
+    .then((data) => {
+        if (data.error) {
+            console.error("Error Interno:", data.error);
+            throw new Error(data.error); 
         } else {
-          console.info("todo bien");
+            console.info("Operación exitosa");
+            return data; // Devolver datos en caso de éxito
         }
-
-        return data;
-      })
-      .catch((error) => {
-        console.error("Error en la Petición ", error);
-        return error;
-      });
-  },
+    })
+    .catch((error) => {
+        console.error("Error en la Petición:", error);
+        throw new Error(error); // Lanzar error general
+    });
+},
   update: (data) => {
     return fetch("pelicula/update", {
       method: "POST",

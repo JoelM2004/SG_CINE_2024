@@ -49,7 +49,7 @@ let salaService = {
       .then((data) => {
           if (data.error) {
               console.error("Error Interno:", data.error);
-              throw new Error(data.error); // Lanzar error para ser capturado en el catch
+              throw new Error(data.error); 
           } else {
               console.info("Operación exitosa");
               return data; // Devolver datos en caso de éxito

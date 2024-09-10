@@ -2,6 +2,7 @@
 
 
 namespace app\core\model\dao;
+
 use Exception;
 use Swift_SmtpTransport;
 use Swift_Mailer;
@@ -75,11 +76,10 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
         $stmt = $this->conn->prepare($sql);
 
         $data = $object->toArray();
-    
-        unset($data["clave"]);
-    // Ejecutar la consulta con los datos del objeto
-        $stmt->execute($data);
 
+        unset($data["clave"]);
+        // Ejecutar la consulta con los datos del objeto
+        $stmt->execute($data);
     }
 
     public function changePassword(array $object): void
@@ -96,11 +96,12 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
         ]);
     }
 
-    public function forgetPassword(array $object): void {
+    public function forgetPassword(array $object): void
+    {
         $this->validateCorreoExiste($object);
         $clave = $this->generateRandomPassword(8, 44);
         $claveHash = password_hash($clave, PASSWORD_DEFAULT);
-    
+
         // Actualizar la contraseña en la base de datos
         $sql = "UPDATE {$this->table} SET clave = :clave WHERE correo = :correo";
         $stmt = $this->conn->prepare($sql);
@@ -108,20 +109,20 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
             ':clave' => $claveHash,
             ':correo' => $object["correo"],
         ]);
-    
+
         // Enviar el correo con la nueva contraseña
         $this->sendPasswordByEmail($object["correo"], $clave);
-
     }
 
-    function sendPasswordByEmail(string $email, string $password): void {
+    function sendPasswordByEmail(string $email, string $password): void
+    {
         // Configuración del transporte SMTP para Hotmail/Outlook
         $transport = (new Swift_SmtpTransport('smtp.office365.com', 587, 'tls'))
             ->setUsername(CORREO) // Tu correo de Hotmail/Outlook
             ->setPassword(CLAVECORREO); // Tu contraseña de Hotmail/Outlook
         // Crear el mailer usando el transporte SMTP
         $mailer = new Swift_Mailer($transport);
-    
+
         // Crear un mensaje
         $message = (new Swift_Message('Recuperación de Contraseña'))
             ->setFrom([CORREO => 'Soporte'])
@@ -148,7 +149,7 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
                         <p>Has solicitado recuperar tu contraseña. Aquí está tu nueva contraseña:</p>
                         <p class="password"><strong>' . htmlspecialchars($password) . '</strong></p>
                         <p>Por favor, cámbiala después de iniciar sesión.</p>
-                        <a href="'. APP_FRONT .'autentication/index" class="button">Iniciar Sesión</a>
+                        <a href="' . APP_FRONT . 'autentication/index" class="button">Iniciar Sesión</a>
                         <div class="footer">
                             <p>Saludos,</p>
                             <p>El equipo de soporte de <strong>Los Pollos Hermanos</strong></p>
@@ -156,61 +157,60 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
                     </div>
                 </body>
             </html>',
-            'text/html'
+                'text/html'
             );
 
-            try {
-                $result = $mailer->send($message);
-                
-            } catch (Exception $e) {
-                error_log("Error al enviar el correo: " . $e->getMessage());
-                
-            }
+        try {
+            $result = $mailer->send($message);
+        } catch (Exception $e) {
+            error_log("Error al enviar el correo: " . $e->getMessage());
         }
-
-    
-
-    
-    
-    
-    
-        private function generateRandomPassword(int $minLength, int $maxLength): string
-{
-    $length = rand($minLength, $maxLength);
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()-_+=<>?';
-    $charactersLength = strlen($characters);
-    $randomPassword = '';
-    for ($i = 0; $i < $length; $i++) {
-        $randomPassword .= $characters[rand(0, $charactersLength - 1)];
     }
-    return $randomPassword;
-}
+
+
+
+
+
+
+
+    private function generateRandomPassword(int $minLength, int $maxLength): string
+    {
+        $length = rand($minLength, $maxLength);
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()-_+=<>?';
+        $charactersLength = strlen($characters);
+        $randomPassword = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomPassword .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomPassword;
+    }
 
 
     private function verificarPassword(array $object): void
-{
-    // Consultar el hash de la contraseña actual desde la base de datos
-    $sql = "SELECT clave FROM {$this->table} WHERE id = :id";
-    $stmt = $this->conn->prepare($sql);
-    $stmt->execute([':id' => $object["id"]]);
+    {
+        // Consultar el hash de la contraseña actual desde la base de datos
+        $sql = "SELECT clave FROM {$this->table} WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':id' => $object["id"]]);
 
-    $result = $stmt->fetch(\PDO::FETCH_OBJ);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ);
 
-    if (!$result) {
-        throw new \Exception("El usuario no existe.");
+        if (!$result) {
+            throw new \Exception("El usuario no existe.");
+        }
+
+        $claveAlmacenada = $result->clave;
+
+        // Verificar la contraseña ingresada con el hash almacenado
+        if (!password_verify($object["actual"], $claveAlmacenada)) {
+            throw new \Exception("La contraseña actual es incorrecta, asegúrate de introducir la contraseña correcta para continuar.");
+        }
     }
 
-    $claveAlmacenada = $result->clave;
 
-    // Verificar la contraseña ingresada con el hash almacenado
-    if (!password_verify($object["actual"], $claveAlmacenada)) {
-        throw new \Exception("La contraseña actual es incorrecta, asegúrate de introducir la contraseña correcta para continuar.");
-    }
-}
-
-
-    public function loadByNameAccount($cuenta):UsuarioDTO{
-         $sql = "SELECT id,cuenta,nombres,clave,correo,perfilId,apellido  FROM {$this->table} WHERE cuenta = :cuenta";
+    public function loadByNameAccount($cuenta): UsuarioDTO
+    {
+        $sql = "SELECT id,cuenta,nombres,clave,correo,perfilId,apellido  FROM {$this->table} WHERE cuenta = :cuenta";
         $stmt = $this->conn->prepare($sql);
 
         $stmt->execute(["cuenta" => $cuenta]);
@@ -221,26 +221,27 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
         }
 
         return new UsuarioDTO($stmt->fetch(\PDO::FETCH_ASSOC));
-
     }
 
-    public function loadByPerfil($perfil): array {
+    public function loadByPerfil($perfil): array
+    {
         $sql = "SELECT id, cuenta, nombres, clave, correo, perfilId, apellido FROM {$this->table} WHERE perfilId = :perfilId";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(["perfilId" => $perfil]);
-    
+
         // Recuperar todos los resultados y convertirlos a objetos UsuarioDTO
         $usuarios = [];
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             $usuarios[] = new UsuarioDTO($row);
         }
-    
+
         return $usuarios;
     }
 
     public function delete($id): void
     {
-
+        $this->validateComentarios($id);
+        $this->validateEntradas($id);
         $sql = "DELETE FROM {$this->table} WHERE id= :id";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([
@@ -261,22 +262,31 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
 
     private function validate(UsuarioDTO $object): void
     {
-        // Lista de métodos a verificar
-        $atributos = [
-            'getNombres',
-            'getApellido',
-            'getCuenta',
-            'getClave',
-            'getCorreo',
-            'getPerfilId',
-        ];
+        if ($object->getNombres() == "") {
+            throw new \Exception("El campo 'Nombres' está vacío o contiene caracteres no permitidos.");
+        }
 
-        foreach ($atributos as $atributo) {
-            if (method_exists($object, $atributo) && $object->{$atributo}() === "") {
-                throw new \Exception("El dato del usuario es obligatorio: " . $atributo);
-            }
+        if ($object->getApellido() == "") {
+            throw new \Exception("El campo 'Apellido' está vacío o contiene caracteres no permitidos.");
+        }
+
+        if ($object->getCuenta() == "") {
+            throw new \Exception("El campo 'Cuenta' está vacío o contiene caracteres no permitidos.");
+        }
+
+        if ($object->getClave() == "") {
+            throw new \Exception("El campo 'Clave' está vacío o contiene caracteres no permitidos.");
+        }
+
+        if ($object->getCorreo()=="") {
+            throw new \Exception("El campo 'Correo' no es válido.");
+        }
+
+        if ($object->getPerfilId() <= 0) {
+            throw new \Exception("El campo 'Perfil ID' debe ser un número mayor que cero.");
         }
     }
+
 
     private function validateCorreo(UsuarioDTO $object): void
     {
@@ -298,23 +308,23 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
     }
 
     private function validateCorreoExiste(array $object): void
-{
-    $sql = "SELECT count(u.id) AS cantidad FROM {$this->table} u
+    {
+        $sql = "SELECT count(u.id) AS cantidad FROM {$this->table} u
     inner join perfiles p on u.perfilId=p.id
     WHERE u.correo = :correo AND p.nombre='Externos'";
-    $stmt = $this->conn->prepare($sql);
+        $stmt = $this->conn->prepare($sql);
 
-    $params = [
-        ':correo' => $object["correo"]
-    ];
+        $params = [
+            ':correo' => $object["correo"]
+        ];
 
-    $stmt->execute($params);
-    $result = $stmt->fetch(\PDO::FETCH_OBJ);
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ);
 
-    if ($result->cantidad == 0) {
-        throw new \Exception("El dato correo ({$object["correo"]}) no existe en la base de datos o usted está deseando cambiar la contraseña de un tipo de cuenta que no está permitido, en este caso, comuníquese con un Administrador");
+        if ($result->cantidad == 0) {
+            throw new \Exception("El dato correo ({$object["correo"]}) no existe en la base de datos o usted está deseando cambiar la contraseña de un tipo de cuenta que no está permitido, en este caso, comuníquese con un Administrador");
+        }
     }
-}
 
 
     private function validateCuenta(UsuarioDTO $object): void
@@ -336,20 +346,57 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
         }
     }
 
-    public function existe($id): bool{
+    public function existe($id): bool
+    {
         $sql = "SELECT count(id) AS cantidad FROM {$this->table} WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
-    
+
         // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
         $params = [
             ':id' => $id
         ];
-    
+
         $stmt->execute($params);
         $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
-    
+
         if ($result->cantidad > 0) {
             return true;
-       } else return false;
-    } 
+        } else return false;
+    }
+
+    private function validateComentarios($id): void
+    {
+        $sql = "SELECT count(f.id) AS cantidad FROM comentarios f WHERE f.usuarioId =:id";
+        $stmt = $this->conn->prepare($sql);
+
+        // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
+        $params = [
+            ':id' => $id
+        ];
+
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
+
+        if ($result->cantidad > 0) {
+            throw new \Exception("El usuario tiene un comentario en una o más películas, deberá eliminarlos para poder seguir");
+        }
+    }
+
+    private function validateEntradas($id): void
+    {
+        $sql = "SELECT count(f.id) AS cantidad FROM entradas f WHERE f.usuarioId = :id";
+        $stmt = $this->conn->prepare($sql);
+
+        // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
+        $params = [
+            ':id' => $id
+        ];
+
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
+
+        if ($result->cantidad > 0) {
+            throw new \Exception("El usuario tiene comprada una o más entradas, no lo podrá eliminar");
+        }
+    }
 }

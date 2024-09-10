@@ -1,11 +1,11 @@
 <?php
-
+use app\core\model\dao\AudioDAO;
 use app\core\model\dao\PeliculaDAO;
 use app\core\model\dao\UsuarioDAO;
 use app\core\model\dao\FuncionDAO;
 use app\core\model\dao\EntradaDAO;
 use app\core\model\dao\ProgramacionDAO;
-
+use app\core\model\dao\TipoDAO;
 use app\libs\connection\Connection;
 
 $conn = Connection::get();
@@ -23,6 +23,9 @@ $daoEntrada = new EntradaDAO($conn);
 
 $daoProgramacion = new ProgramacionDAO($conn);
 $datosProgramacion =$daoProgramacion->list();
+
+$daoAudio= new AudioDAO($conn);
+$daoTipo= new TipoDAO($conn);
 
 function formatDate($date) {
     $parts = explode('-', $date);
@@ -46,7 +49,7 @@ function formatDate($date) {
                 foreach ($datosFuncion as $elemento) {
 
                     $datosPelicula=$daoPelicula->load($elemento->getPeliculaId());
-                    echo '<option value="' . $elemento->getId() . '">' . $elemento->getNumeroFuncion() ."-". $datosPelicula->getNombre(). "-".$datosPelicula->getAudioId()."-".$datosPelicula->getTipoId().'</option>';
+                    echo '<option value="' . $elemento->getId() . '">' . $elemento->getNumeroFuncion() ."-". $datosPelicula->getNombre(). "-".($daoAudio->load($datosPelicula->getAudioId()))->getNombre()."-". ($daoTipo->load($datosPelicula->getTipoId()))->getNombre().'</option>';
                 }
                 ?>
             </select>
@@ -155,7 +158,7 @@ function formatDate($date) {
 
             $datosPeliculasFunciones=$daoPelicula->list();
             foreach ($datosPeliculasFunciones as $elemento) {
-                    echo '<option value="' . $elemento["id"] . '">' . $elemento["nombre"]."-".$elemento["audioId"]."-".$elemento["tipoId"]. '</option>';
+                    echo '<option value="' . $elemento["id"] . '">' . $elemento["nombre"]."-".($daoAudio->load($elemento["audioId"]))->getNombre()."-".($daoTipo->load($elemento["tipoId"]))->getNombre(). '</option>';
                 }
 
                 ?>

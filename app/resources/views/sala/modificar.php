@@ -67,9 +67,9 @@ $datos = $dao->load($id);
                     ?>
                 </td>
                 <td>
-                    <a id="btnEliminarSala" href="<?= APP_FRONT . "sala/create/0" ?>" class="btn btn-sm btn-danger">
+                    <button id="btnEliminarSala" class="btn btn-sm btn-danger">
                         <i class="fas fa-trash"></i>
-                    </a>
+                    </button>
                     </td>
                 </tr>
             </tbody>

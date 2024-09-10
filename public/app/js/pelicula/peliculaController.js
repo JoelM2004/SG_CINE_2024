@@ -39,7 +39,7 @@ let peliculaController = {
         peliculaController.data.duracion = parseInt(form.duracion.value);
       }
 
-      if (form.sinopsis.value.length > 255) {
+      if (form.sinopsis.value.length > 1000) {
         alert("Superaste el límite de caracteres para la sinopsis");return
       } else {
         peliculaController.data.sinopsis = form.sinopsis.value;
@@ -142,7 +142,7 @@ let peliculaController = {
         peliculaController.data.duracion = parseInt(form.duracion.value);
       }
 
-      if (form.sinopsis.value.length > 255) {
+      if (form.sinopsis.value.length > 1000) {
         alert("Superaste el límite de caracteres para la sinopsis");
         return
       } else {
@@ -362,6 +362,9 @@ let peliculaController = {
         .delete(peliculaController.data)
         .then((data) => {
           alert(data.mensaje); // Muestra el mensaje del servidor al usuario
+          setTimeout(() => {
+            location.reload();
+        }, 300);
         })
         .catch((error) => {
           console.error("Error al eliminar la película:", error);
@@ -832,7 +835,7 @@ let peliculaController = {
 
             // Crear botón de actualizar
             const updateButton = document.createElement('button');
-            updateButton.innerText = 'Actualizar';
+            updateButton.innerText = 'Seleccionar como Portada';
             updateButton.className = 'btn btn-primary ml-2';
             updateButton.dataset.id = imgSrc.id; // Asignar el id de la imagen
             updateButton.dataset.peliculaId = imgSrc.peliculaId; // Asignar el id de la imagen

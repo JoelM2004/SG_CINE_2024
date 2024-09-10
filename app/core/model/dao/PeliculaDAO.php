@@ -152,7 +152,9 @@ final class PeliculaDAO extends DAO implements InterfaceDAO
     }
     public function delete($id): void
     {
-
+        $this->validatefunciones($id);
+        $this->validatecomentarios($id);
+        $this->validateimagenes($id);
         $sql = "DELETE FROM {$this->table} WHERE id= :id";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([
@@ -344,4 +346,58 @@ final class PeliculaDAO extends DAO implements InterfaceDAO
             return true;
        } else return false;
     } 
+
+    private function validatefunciones($id): void
+    {
+        $sql = "SELECT count(f.id) AS cantidad FROM funciones f WHERE f.peliculaId =:id";
+        $stmt = $this->conn->prepare($sql);
+
+        // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
+        $params = [
+            ':id' => $id
+        ];
+
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
+
+        if ($result->cantidad > 0) {
+            throw new \Exception("Existe una función que está utilizando está película, elimine la función/funciones para poder eliminar ésta película");
+        }
+    }
+
+    private function validatecomentarios($id): void
+    {
+        $sql = "SELECT count(f.id) AS cantidad FROM comentarios f WHERE f.peliculaId =:id";
+        $stmt = $this->conn->prepare($sql);
+
+        // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
+        $params = [
+            ':id' => $id
+        ];
+
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
+
+        if ($result->cantidad > 0) {
+            throw new \Exception("Existe un comentario que está utilizando está película, elimine el comentario/comentarios para poder eliminar ésta película");
+        }
+    }
+
+    private function validateimagenes($id): void
+    {
+        $sql = "SELECT count(f.id) AS cantidad FROM imagenes f WHERE f.peliculaId =:id";
+        $stmt = $this->conn->prepare($sql);
+
+        // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
+        $params = [
+            ':id' => $id
+        ];
+
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
+
+        if ($result->cantidad > 0) {
+            throw new \Exception("Existe una imagen que está utilizando está película, elimine la/las imágenes para poder eliminar ésta película");
+        }
+    }
 }

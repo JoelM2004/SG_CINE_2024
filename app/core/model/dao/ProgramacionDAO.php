@@ -25,7 +25,7 @@ final class ProgramacionDAO extends DAO implements InterfaceDAO
         $this->validateFechasUnicas($object);
 
         $this->validateVigencia($object);
-        
+
         $this->validateFechas($object);
 
         $sql = "INSERT INTO {$this->table} VALUES(DEFAULT, :fechaInicio, :fechaFin, :vigente)";
@@ -62,12 +62,12 @@ final class ProgramacionDAO extends DAO implements InterfaceDAO
 
     public function update(InterfaceDTO $object): void
     {
-        
+
         $this->validateVigencia($object);
         $this->validate($object);
-        
+
         $this->validateFechasUnicas($object);
-        
+
         $this->validateFechas($object);
 
         $sql = "UPDATE {$this->table} 
@@ -82,21 +82,23 @@ final class ProgramacionDAO extends DAO implements InterfaceDAO
         $stmt->execute($data);
     } //revisar
 
-    public function loadByVigencia($Vigencia): array {
+    public function loadByVigencia($Vigencia): array
+    {
         $sql = "SELECT id, fechaInicio, fechaFin, vigente FROM {$this->table} WHERE vigente = :vigente";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(["vigente" => $Vigencia]);
-    
+
         // Recuperar todos los resultados y convertirlos a objetos UsuarioDTO
         $Programaciones = [];
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             $Programaciones[] = new ProgramacionDTO($row);
         }
-    
+
         return $Programaciones;
     }
 
-    public function listVigente():ProgramacionDTO{
+    public function listVigente(): ProgramacionDTO
+    {
 
         $sql = "SELECT * FROM {$this->table} WHERE vigente = 1";
         $stmt = $this->conn->prepare($sql);
@@ -114,7 +116,7 @@ final class ProgramacionDAO extends DAO implements InterfaceDAO
 
     public function delete($id): void
     {
-
+        $this->validatefunciones($id);
         $sql = "DELETE FROM {$this->table} WHERE id= :id";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([
@@ -163,7 +165,7 @@ final class ProgramacionDAO extends DAO implements InterfaceDAO
         $stmt->execute($params);
         $result = $stmt->fetch(\PDO::FETCH_OBJ);
 
-        if (($object->getVigente()==1) && ($result->cantidad > 0)) {
+        if (($object->getVigente() == 1) && ($result->cantidad > 0)) {
             throw new \Exception("Ya hay una cartelera/programación vigente, asegúrate de desactivarla para activar ésta.");
         }
     } //revisar
@@ -177,41 +179,61 @@ final class ProgramacionDAO extends DAO implements InterfaceDAO
     }
 
     private function validateFechasUnicas(ProgramacionDTO $object): void
-{
-    // Valida que ni la fecha de inicio ni la fecha de fin sean duplicadas en otro registro
-    $sql = "SELECT count(id) AS cantidad 
+    {
+        // Valida que ni la fecha de inicio ni la fecha de fin sean duplicadas en otro registro
+        $sql = "SELECT count(id) AS cantidad 
             FROM {$this->table} 
             WHERE (fechaInicio = :fechaInicio OR fechaFin = :fechaFin) 
             AND id != :id";
-    $stmt = $this->conn->prepare($sql);
+        $stmt = $this->conn->prepare($sql);
 
-    $params = [
-        ':id' => $object->getId(),
-        ':fechaInicio' => $object->getFechaInicio(),
-        ':fechaFin' => $object->getFechaFin(),
-    ];
+        $params = [
+            ':id' => $object->getId(),
+            ':fechaInicio' => $object->getFechaInicio(),
+            ':fechaFin' => $object->getFechaFin(),
+        ];
 
-    $stmt->execute($params);
-    $result = $stmt->fetch(\PDO::FETCH_OBJ);
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ);
 
-    if ($result->cantidad > 0) {
-        throw new \Exception("La combinación de fecha inicio ({$object->getFechaInicio()}) y fecha fin ({$object->getFechaFin()}) ya existe en la base de datos");
+        if ($result->cantidad > 0) {
+            throw new \Exception("La combinación de fecha inicio ({$object->getFechaInicio()}) y fecha fin ({$object->getFechaFin()}) ya existe en la base de datos");
+        }
     }
-}
-public function existe($id): bool{
-    $sql = "SELECT count(id) AS cantidad FROM {$this->table} WHERE id = :id";
-    $stmt = $this->conn->prepare($sql);
+    public function existe($id): bool
+    {
+        $sql = "SELECT count(id) AS cantidad FROM {$this->table} WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
 
-    // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
-    $params = [
-        ':id' => $id
-    ];
+        // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
+        $params = [
+            ':id' => $id
+        ];
 
-    $stmt->execute($params);
-    $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
 
-    if ($result->cantidad > 0) {
-        return true;
-   } else return false;
-} 
+        if ($result->cantidad > 0) {
+            return true;
+        } else return false;
+    }
+
+    private function validatefunciones($id): void
+    {
+        $sql = "SELECT count(f.id) AS cantidad FROM funciones f WHERE f.programacionId =:id";
+        $stmt = $this->conn->prepare($sql);
+
+        // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
+        $params = [
+            ':id' => $id
+        ];
+
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
+
+        if ($result->cantidad > 0) {
+            throw new \Exception("Existe una función que está utilizando está programación, elimine la función/funciones para poder eliminar ésta programación");
+        }
+    }
+
 }

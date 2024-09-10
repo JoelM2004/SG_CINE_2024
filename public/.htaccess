@@ -1,5 +1,5 @@
 # Negamos la indexación del directorio y los subdirectorios
-Options -Indexes
+Options All -Indexes
 
 RewriteEngine On
 RewriteRule ^([a-zA-Z]+)$ index.php?controller=$1

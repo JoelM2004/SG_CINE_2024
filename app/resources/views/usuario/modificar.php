@@ -84,9 +84,9 @@ $datosPerfiles = $daoPerfil->list();
                         ?>
                     </td>
                     <td>
-                    <a id="btnEliminarUsuarios" href="<?= APP_FRONT . "usuario/create/0" ?>" class="btn btn-sm btn-danger">
+                    <button id="btnEliminarUsuarios" class="btn btn-sm btn-danger">
                         <i class="fas fa-trash"></i>
-                    </a>
+                    </button>
                     </td>
                 </tr>
             </tbody>

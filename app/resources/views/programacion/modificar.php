@@ -71,9 +71,9 @@ function formatDate($date) {
                         ?>
                     </td>
                     <td>
-                        <a id="btnEliminarProgramacion" href="<?= APP_FRONT . 'programacion/create/0' ?>" class="btn btn-sm btn-danger">
+                        <button id="btnEliminarProgramacion" class="btn btn-sm btn-danger">
                             <i class="fas fa-trash"></i>
-                        </a>
+                        </button>
                     </td>
                 </tr>
             </tbody>

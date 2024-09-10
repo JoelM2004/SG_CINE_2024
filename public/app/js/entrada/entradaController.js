@@ -43,7 +43,7 @@ save: () => {
     return
   }
 
-  if(cantidad>=0){
+  if(cantidad<=0){
     alert("Seleccione una cantidad de entradas a comprar")
     return
   }
@@ -66,6 +66,8 @@ save: () => {
   entradaController.data.estado = entradaController.data.estado; // Asegúrate de que el estado se establece correctamente
   entradaController.cantidad.numero = parseInt(cantidad);
 
+  let a=false;
+
   // Llamada al servicio para guardar los datos
   for (let index = 0; index < entradaController.cantidad.numero; index++) {
       entradaService
@@ -76,7 +78,11 @@ save: () => {
                   alert("Error al guardar la entrada: " + data.error);
               } else {
 
-                  alert("Entrada n°:"+ index+ "guardada con éxito");
+                  if(!a){
+                    alert("Entrada/s guardada con éxito");
+                    a=true;
+                  }
+
                   // Puedes recargar la página o realizar otras acciones aquí
               }
           })
@@ -199,7 +205,7 @@ list: async () => {
       txt += "<tr>";
           txt += "<th>" + (index = index + 1) + "</th>";
           
-           let txts2 = await singletonController.loadFuncion(element.funcionId);
+          let txts2 = await singletonController.loadFuncion(element.funcionId);
           
           txt += "<td>" + txts2.numeroFuncion + "</td>";
           txt += "<td>" + formatDate(element.horarioFuncion) + "</td>";
@@ -721,12 +727,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if(confirm("¿Quieres guardar las entradas?")){
 
           entradaController.save();
-          entradaController.list()
-          /* alert("Entrada guardada con éxito");
-           setTimeout(() => {
-                location.reload();
-           }, 300);
-        */
+          setTimeout(() => {
+            location.reload();
+        }, 300);
+        
         }
 
         

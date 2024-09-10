@@ -7,7 +7,7 @@ let singletonController = {
   
       // Verificar y retornar el resultado
       if (data && data.result) {
-        console.log("Audio cargado:", data);
+        
         return data.result; // Devolver el objeto de usuario
       } else {
         throw new Error("No se encontró el Audio.");
@@ -22,7 +22,7 @@ let singletonController = {
     await singletonService
       .listAudio()
       .then((data) => {
-        console.log("Audios listados:", data);
+        
         data.result.forEach((element) => {
           array.push(element);
         });
@@ -112,7 +112,7 @@ let singletonController = {
   
       // Verificar y retornar el resultado
       if (data && data.result) {
-        console.log("Tipo cargado:", data);
+        
         return data.result; // Devolver el objeto de usuario
       } else {
         throw new Error("No se encontró el Tipo.");
@@ -127,7 +127,7 @@ let singletonController = {
     await singletonService
       .listTipo()
       .then((data) => {
-        console.log("Tipos listados:", data);
+        
         data.result.forEach((element) => {
           array.push(element);
         });
@@ -273,7 +273,7 @@ let singletonController = {
     await singletonService
       .listUsuario()
       .then((data) => {
-        console.log("Usuarios listadas:", data);
+        
         data.result.forEach((element) => {
           array.push(element);
         });
@@ -380,14 +380,14 @@ let singletonController = {
   },
 
   loadUsuario: async (id) => {
-    console.log("Cargando Usuario...");
+    
   
       // Llamar al servicio para cargar el usuario
       let data = await singletonService.loadUsuario(id);
   
       // Verificar y retornar el resultado
       if (data && data.result) {
-        console.log("Usuario cargado:", data);
+        
         return data.result; // Devolver el objeto de usuario
       } else {
         throw new Error("No se encontró el usuario.");
@@ -396,14 +396,14 @@ let singletonController = {
   },
 
   loadFuncion: async (id) => {
-    console.log("Cargando Funcion...");
+    
   
       // Llamar al servicio para cargar el usuario
       let data = await singletonService.loadFuncion(id);
   
       // Verificar y retornar el resultado
       if (data && data.result) {
-        console.log("Funcion cargado:", data);
+        
         return data.result; // Devolver el objeto de usuario
       } else {
         throw new Error("No se encontró el Funcion.");

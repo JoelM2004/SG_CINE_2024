@@ -49,10 +49,13 @@ let programacionController = {
   
         programacionService.delete(programacionController.data).then((data)=>{
           alert(data.mensaje)
+          setTimeout(() => {
+            location.reload();
+        }, 300);
         }).catch((error) => {
           // Maneja cualquier error que ocurra durante el cambio de contraseña
           console.error('Error al eliminar la programación:', error);
-          alert('Hubo un problema al eliminar la programación. Por favor, inténtelo de nuevo más tarde.');
+          alert('Hubo un problema al eliminar la programación. Por favor, inténtelo de nuevo más tarde.'+error);
         });
         
   

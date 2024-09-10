@@ -74,20 +74,23 @@ let userController = {
 
   delete: () => {
     if (confirm("¿Seguro que quieres eliminar al Usuario?")) {
-      userController.data.id = document.getElementById(
+      userController.data.id = parseInt(document.getElementById(
         "filaModificarUsuario"
-      ).dataset.id;
+      ).dataset.id);
 
       userService
         .delete(userController.data)
         .then((data) => {
           alert(data.mensaje);
+          setTimeout(() => {
+            location.reload();
+        }, 300);
         })
         .catch((error) => {
           // Maneja cualquier error que ocurra durante el cambio de contraseña
-          console.error("Error al eliminar el Usuario:", error);
+          console.error("Error al eliminar el Usuario:",error);
           alert(
-            "Hubo un problema al eliminar el Usuario. Por favor, inténtelo de nuevo más tarde."
+            "Hubo un problema al eliminar el Usuario. Por favor, inténtelo de nuevo más tarde."+ error
           );
         });
     }

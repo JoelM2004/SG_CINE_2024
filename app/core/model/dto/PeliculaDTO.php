@@ -122,9 +122,10 @@ final class PeliculaDTO implements InterfaceDTO
     }
     
     public function setTituloOriginal($tituloOriginal): void
-    {
-        $this->tituloOriginal = (preg_match('/^[\p{L}\p{N}\s]{1,255}$/u', $tituloOriginal)) ? $tituloOriginal : "";
-    }
+{
+    $this->tituloOriginal = (preg_match('/^[\p{L}\p{N}\s\p{P}\p{S}]{1,255}$/u', $tituloOriginal)) ? $tituloOriginal : "";
+}
+
 
     public function setDuracion($duracion): void
     {
@@ -152,16 +153,18 @@ final class PeliculaDTO implements InterfaceDTO
     }
 
     public function setSinopsis($sinopsis): void
-    {
-        // Expresión regular para permitir letras con acentos y espacios
-        $this->sinopsis = (preg_match('/^[\p{L}\s]{1,255}$/u', $sinopsis)) ? $sinopsis : "";
-    }
+{
+    // Expresión regular para permitir letras, números, espacios, puntuación y otros símbolos
+    $this->sinopsis = (preg_match('/^[\p{L}\p{N}\s\p{P}\p{S}]{1,1000}$/u', $sinopsis)) ? $sinopsis : "";
+}
 
-    public function setActores($actores): void
-    {
-        // Expresión regular para permitir letras con acentos, espacios y hasta 255 caracteres
-        $this->actores = (preg_match('/^[\p{L}\s]{1,255}$/u', $actores)) ? trim($actores) : "";
-    }
+
+public function setActores($actores): void
+{
+    // Expresión regular para permitir letras, números, espacios, puntuación y símbolos, hasta 255 caracteres
+    $this->actores = (preg_match('/^[\p{L}\p{N}\s\p{P}\p{S}]{1,255}$/u', $actores)) ? trim($actores) : "";
+}
+
 
 
     public function setGeneroId($generoId): void

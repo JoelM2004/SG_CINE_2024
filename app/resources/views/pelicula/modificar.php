@@ -209,7 +209,7 @@ $daoImagen = new ImagenDAO($conn);
                             </div>
 
                             <button type="button" id="btnModificarPelicula" class="btn btn-primary w-100">Modificar Película</button>
-                            <a id="btnBorrarPelicula" href="<?= APP_FRONT . 'pelicula/create/0' ?>" class="btn btn-danger w-100 mt-3">Borrar Película</a>
+                            <button id="btnBorrarPelicula" class="btn btn-danger w-100 mt-3">Borrar Película</button>
                         </form>
                     </div>
                 </div>

@@ -74,7 +74,7 @@ final class FuncionDAO extends DAO implements InterfaceDAO
     }
 
     public function delete($id):void{
-
+        $this->validateentradas($id);
         $sql="DELETE FROM {$this->table} WHERE id= :id";
         $stmt=$this ->conn->prepare($sql);
         $stmt->execute([
@@ -397,6 +397,24 @@ public function existeCartelera($id): bool{
         return true;
    } else return false;
 } 
+
+private function validateentradas($id): void
+    {
+        $sql = "SELECT count(f.id) AS cantidad FROM entradas f WHERE f.funcionId =:id";
+        $stmt = $this->conn->prepare($sql);
+
+        // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
+        $params = [
+            ':id' => $id
+        ];
+
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
+
+        if ($result->cantidad > 0) {
+            throw new \Exception("Debido a que ya se vendieron entradas, usted no puede borrar la función");
+        }
+    }
 
 
 }

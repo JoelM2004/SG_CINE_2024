@@ -56,14 +56,17 @@ let salaController={
 
 delete: () => {
   if (confirm("¿Quiere eliminar el sala?")) {
-    salaController.data.id = document.getElementById(
+    salaController.data.id = parseInt(document.getElementById(
       "filaModificarsala"
-    ).dataset.id;
+    ).dataset.id);
 
     salaService
       .delete(salaController.data)
       .then((data) => {
         alert(data.mensaje); // Muestra el mensaje del servidor al usuario
+        setTimeout(() => {
+          location.reload();
+      }, 300);
       })
       .catch((error) => {
         console.error("Error al eliminar el sala:", error);

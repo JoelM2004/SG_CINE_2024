@@ -183,9 +183,9 @@ echo $datosPelicula->getNombre()."-".$daoAudio->load($datosPelicula->getAudioId(
                     <td><?= $datosFuncion->getPrecio() ?></td>
 
                     <td>
-                    <a id="btnBorrarFuncion" href="<?= APP_FRONT . "funcion/create/0" ?>" class="btn btn-sm btn-danger" data-id="<?= $_GET["id"] ?>">
+                    <button id="btnBorrarFuncion" class="btn btn-sm btn-danger" data-id="<?= $_GET["id"] ?>">
                         <i class="fas fa-trash"></i>
-                    </a>
+                    </button>
                     </td>
                 </tr>
             </tbody>

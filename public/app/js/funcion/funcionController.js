@@ -265,6 +265,9 @@ let funcionController = {
         .delete(funcionController.data)
         .then((data) => {
           alert(data.mensaje); // Muestra el mensaje del servidor al usuario
+          setTimeout(() => {
+            location.reload();
+        }, 300);
         })
         .catch((error) => {
           console.error("Error al eliminar la función:", error);
@@ -432,7 +435,7 @@ let funcionController = {
               txt +=
                 "<td>" +
                 formatDate(elemento.fechaInicio) +
-                "---" +
+                " a " +
                 formatDate(elemento.fechaFin) +
                 "</td>";
           });
@@ -498,7 +501,7 @@ let funcionController = {
               txt +=
                 "<td>" +
                 formatDate(elemento.fechaInicio) +
-                "---" +
+                " a " +
                 formatDate(elemento.fechaFin) +
                 "</td>";
           });
@@ -560,7 +563,7 @@ let funcionController = {
               txt +=
                 "<td>" +
                 formatDate(elemento.fechaInicio) +
-                "---" +
+                " a " +
                 formatDate(elemento.fechaFin) +
                 "</td>";
           });
@@ -625,7 +628,7 @@ let funcionController = {
             txt +=
               "<td>" +
               formatDate(elemento.fechaInicio) +
-              "---" +
+              " a " +
               formatDate(elemento.fechaFin) +
               "</td>";
         });

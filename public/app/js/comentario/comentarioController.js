@@ -58,6 +58,8 @@ let comentarioController = {
     let idUser = parseInt(comentarioForm.dataset.iduser);
     let perfil = comentarioForm.dataset.perfil;
 
+    console.log(perfil)
+
     // Verificar si hay comentarios
     if (data.result.length === 0) {
         txt = "<p class='text-center'>No hay comentarios</p>";
@@ -69,11 +71,11 @@ let comentarioController = {
 
             // Asegúrate de que `usuarioData` y `usuarioData.cuenta` existen antes de acceder a la propiedad `cuenta`
             let nombreUsuario = usuarioData?.cuenta || 'Usuario Desconocido';
-
+          
             // Determinar si se debe mostrar el botón "Eliminar"
-            let mostrar = "";
-            if (usuarioData.id === idUser || perfil === "Administrador") {
-                mostrar = ""; // Mostrar el botón
+            let mostrar = ""
+            if (usuarioData.id === idUser || perfil === "Administrador ") {
+                mostrar = "visibility"; // Mostrar el botón
             } else {
                 mostrar = "none"; // Ocultar el botón
             }

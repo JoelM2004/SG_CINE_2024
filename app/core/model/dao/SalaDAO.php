@@ -118,6 +118,7 @@ final class SalaDAO extends DAO implements InterfaceDAO
 
     public function delete($id): void
     {
+        $this->validatefunciones($id);
         $sql = "DELETE FROM {$this->table} WHERE id= :id";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([
@@ -195,6 +196,22 @@ final class SalaDAO extends DAO implements InterfaceDAO
        } else return false;
     } 
 
-    
+    private function validatefunciones($id): void
+    {
+        $sql = "SELECT count(f.id) AS cantidad FROM funciones f WHERE f.salaId =:id";
+        $stmt = $this->conn->prepare($sql);
+
+        // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
+        $params = [
+            ':id' => $id
+        ];
+
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
+
+        if ($result->cantidad > 0) {
+            throw new \Exception("Existe una función que está utilizando está sala, elimine la función/funciones para poder eliminar ésta sala");
+        }
+    }
 
 }
