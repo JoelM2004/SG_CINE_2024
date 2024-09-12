@@ -146,8 +146,8 @@ final class EntradaController extends Controller implements InterfaceController,
         $numeroTicket = $request->getParam('numeroTicket'); 
         $entrada = $service->loadByNumeroTicket($numeroTicket);
 
-        $response->setResult($entrada->toArray()); // Convierte el objeto PerfilDTO a un array
-        $response->setMessage("Entrada cargada correctamente");
+        $response->setResult($entrada);
+        $response->setMessage("El/los entradas se listaron correctamente");
         $response->send();
     }
 
@@ -158,11 +158,7 @@ final class EntradaController extends Controller implements InterfaceController,
 
         $entradas = $service->loadByCuenta($cuenta);
 
-        $entradasArray = array_map(function($entrada) {
-        return $entrada->toArray(); // Convierte el objeto UsuarioDTO a un array
-        }, $entradas);
-
-        $response->setResult($entradasArray);
+        $response->setResult($entradas);
         $response->setMessage("El/los entradas se listaron correctamente");
         $response->send();
 
@@ -175,11 +171,7 @@ final class EntradaController extends Controller implements InterfaceController,
 
         $entradas = $service->loadByFuncion($funcion);
 
-        $entradasArray = array_map(function($entrada) {
-        return $entrada->toArray(); // Convierte el objeto UsuarioDTO a un array
-        }, $entradas);
-
-        $response->setResult($entradasArray);
+        $response->setResult($entradas);
         $response->setMessage("El/los entradas se listaron correctamente");
         $response->send();
 
@@ -192,11 +184,7 @@ final class EntradaController extends Controller implements InterfaceController,
 
         $entradas = $service->loadByProgramacion($programacion);
 
-        $entradasArray = array_map(function($entrada) {
-        return $entrada->toArray(); // Convierte el objeto UsuarioDTO a un array
-        }, $entradas);
-
-        $response->setResult($entradasArray);
+        $response->setResult($entradas);
         $response->setMessage("El/los entradas se listaron correctamente");
         $response->send();
 
@@ -209,11 +197,7 @@ final class EntradaController extends Controller implements InterfaceController,
 
         $entradas = $service->loadByPelicula($pelicula);
 
-        $entradasArray = array_map(function($entrada) {
-        return $entrada->toArray(); // Convierte el objeto UsuarioDTO a un array
-        }, $entradas);
-
-        $response->setResult($entradasArray);
+        $response->setResult($entradas);
         $response->setMessage("El/los entradas se listaron correctamente");
         $response->send();
 
@@ -224,6 +208,13 @@ final class EntradaController extends Controller implements InterfaceController,
     public function list(Request $request, Response $response):void{
         $service = new EntradaService();
         $response->setResult($service->list());
+        $response->setMessage("La entrada se listó correctamente");
+        $response->send();
+    }
+
+    public function listEntradas(Request $request, Response $response):void{
+        $service = new EntradaService();
+        $response->setResult($service->listEntradas());
         $response->setMessage("La entrada se listó correctamente");
         $response->send();
     }

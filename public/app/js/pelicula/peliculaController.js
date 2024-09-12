@@ -273,6 +273,7 @@ let peliculaController = {
       })
       .catch((err) => console.log(err));
   },
+  
   list: async () => {
     console.log("Listando Películas...");
 
@@ -352,6 +353,7 @@ let peliculaController = {
         console.error("Error al listar Usuarios:", error);
       });
   },
+
   delete: () => {
     if (confirm("¿Quiere eliminar la película?")) {
       peliculaController.data.id = document.getElementById(

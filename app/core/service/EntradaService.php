@@ -37,7 +37,7 @@ final class EntradaService  extends Service implements InterfaceService
         return $dao->load($id);
     }
 
-    public function loadByNumeroTicket($numeroTicket): EntradaDTO
+    public function loadByNumeroTicket($numeroTicket): array
     {
         $conn = Connection::get();
         $dao = new EntradaDAO($conn);
@@ -92,5 +92,12 @@ final class EntradaService  extends Service implements InterfaceService
         $conn = Connection::get();
         $dao = new EntradaDAO($conn);
         return $dao->list();
+    }
+
+    public function listEntradas(): array
+    {
+        $conn = Connection::get();
+        $dao = new EntradaDAO($conn);
+        return $dao->listEntradas();
     }
 }

@@ -176,7 +176,8 @@ final class FuncionDAO extends DAO implements InterfaceDAO
     WHERE 
         p.vigente = 1 AND
         f.fecha >= CURDATE() AND
-        pf.id = :id
+        pf.id = :id AND 
+        s.estado = 1
     ";
 
     $stmt = $this->conn->prepare($sql);

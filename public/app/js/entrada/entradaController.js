@@ -10,162 +10,164 @@ let entradaController = {
     usuarioId: 0,
   },
 
-  cantidad:{
+  cantidad: {
+    numero: 0,
+  },
+  save: () => {
+    let form = document.forms["formEntrada"];
 
-    numero:0
-
-  }
-,
-save: () => {
-  let form = document.forms["formEntrada"];
-
-  // Validación de los campos del formulario
-  const horarioFuncion = form.fechaHoraFuncion.value;
-  const precio = form.precio.value;
-  const funcionId = form.numeroFuncion.value;
-  const usuarioId = form.cuentaCliente.value;
-  const cantidad = form.cantidad.value;
-  const disponible = form.disponible.value;
-  // Validar que los campos no estén vacíos
-  if (!horarioFuncion || !precio || !funcionId || !usuarioId) {
+    // Validación de los campos del formulario
+    const horarioFuncion = form.fechaHoraFuncion.value;
+    const precio = form.precio.value;
+    const funcionId = form.numeroFuncion.value;
+    const usuarioId = form.cuentaCliente.value;
+    const cantidad = form.cantidad.value;
+    const disponible = form.disponible.value;
+    // Validar que los campos no estén vacíos
+    if (!horarioFuncion || !precio || !funcionId || !usuarioId) {
       alert("Por favor, complete todos los campos obligatorios.");
       return; // Detener la ejecución si hay campos vacíos
-  }
+    }
 
-  // Validar que el precio sea un número positivo
-  if (isNaN(precio) || parseFloat(precio) <= 0 || parseInt(funcionId) == 0) {
+    // Validar que el precio sea un número positivo
+    if (isNaN(precio) || parseFloat(precio) <= 0 || parseInt(funcionId) == 0) {
       alert("El precio debe ser un número positivo.");
       return; // Detener la ejecución si el precio no es válido
-  }
+    }
 
-  if(cantidad>disponible){
-    alert("Quiere comprar una cantidad de entradas que excede a la disponible")
-    return
-  }
+    if (cantidad > disponible) {
+      alert(
+        "Quiere comprar una cantidad de entradas que excede a la disponible"
+      );
+      return;
+    }
 
-  if(cantidad<=0){
-    alert("Seleccione una cantidad de entradas a comprar")
-    return
-  }
-  
-  // Obtener la fecha y hora actual en formato 'YYYY-MM-DDTHH:MM'
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  const hours = String(now.getHours()).padStart(2, '0');
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-  const datetime = `${year}-${month}-${day}T${hours}:${minutes}`;
+    if (cantidad <= 0) {
+      alert("Seleccione una cantidad de entradas a comprar");
+      return;
+    }
 
-  // Asignar los valores validados al objeto `entradaController.data`
-  entradaController.data.horarioFuncion = horarioFuncion;
-  entradaController.data.horarioVenta = datetime;
-  entradaController.data.precio = parseFloat(precio);
-  entradaController.data.funcionId = parseInt(funcionId);
-  entradaController.data.usuarioId = parseInt(usuarioId);
-  entradaController.data.estado = entradaController.data.estado; // Asegúrate de que el estado se establece correctamente
-  entradaController.cantidad.numero = parseInt(cantidad);
+    // Obtener la fecha y hora actual en formato 'YYYY-MM-DDTHH:MM'
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    const datetime = `${year}-${month}-${day}T${hours}:${minutes}`;
 
-  let a=false;
+    // Asignar los valores validados al objeto `entradaController.data`
+    entradaController.data.horarioFuncion = horarioFuncion;
+    entradaController.data.horarioVenta = datetime;
+    entradaController.data.precio = parseFloat(precio);
+    entradaController.data.funcionId = parseInt(funcionId);
+    entradaController.data.usuarioId = parseInt(usuarioId);
+    entradaController.data.estado = entradaController.data.estado; // Asegúrate de que el estado se establece correctamente
+    entradaController.cantidad.numero = parseInt(cantidad);
 
-  // Llamada al servicio para guardar los datos
-  for (let index = 0; index < entradaController.cantidad.numero; index++) {
+    let a = false;
+
+    // Llamada al servicio para guardar los datos
+    for (let index = 0; index < entradaController.cantidad.numero; index++) {
       entradaService
-          .save(entradaController.data)
-          .then((data) => {
-              console.log("Guardando Datos");
-              if (data.error !== "") {
-                  alert("Error al guardar la entrada: " + data.error);
-              } else {
+        .save(entradaController.data)
+        .then((data) => {
+          console.log("Guardando Datos");
+          if (data.error !== "") {
+            alert("Error al guardar la entrada: " + data.error);
+          } else {
+            if (!a) {
+              alert("Entrada/s guardada con éxito");
+              a = true;
+            }
 
-                  if(!a){
-                    alert("Entrada/s guardada con éxito");
-                    a=true;
-                  }
+            // Puedes recargar la página o realizar otras acciones aquí
+          }
+        })
+        .catch((error) => {
+          console.error("Error en la Petición ", error);
+          alert("Ocurrió un error al guardar la entrada");
+        });
+    }
+  },
+  saveCompra: () => {
+    let form = document.forms["formEntrada"];
 
-                  // Puedes recargar la página o realizar otras acciones aquí
-              }
-          })
-          .catch((error) => {
-              console.error("Error en la Petición ", error);
-              alert("Ocurrió un error al guardar la entrada");
-          });
-  }
-}
-,
-
-saveCompra:()=>{
-  let form = document.forms["formEntrada"];
-
-  // Validación de los campos del formulario
-  const horarioFuncion = document.getElementById("getDatosEntrada").dataset.funcionhora;
-  const precio = document.getElementById("ticket-price").dataset.precio
-  const funcionId = document.getElementById("getDatosEntrada").dataset.idfuncion;
-  const usuarioId = document.getElementById("getDatosEntrada").dataset.iduser;
-  const cantidad = document.getElementById("ticket-quantity").value
-  const disponible = document.getElementById("available-tickets").value
-  // Validar que los campos no estén vacíos
-  if (!horarioFuncion || !precio || !funcionId || !usuarioId) {
+    // Validación de los campos del formulario
+    const horarioFuncion =
+      document.getElementById("getDatosEntrada").dataset.funcionhora;
+    const precio = document.getElementById("ticket-price").dataset.precio;
+    const funcionId =
+      document.getElementById("getDatosEntrada").dataset.idfuncion;
+    const usuarioId = document.getElementById("getDatosEntrada").dataset.iduser;
+    const cantidad = document.getElementById("ticket-quantity").value;
+    const disponible = document.getElementById("available-tickets").value;
+    // Validar que los campos no estén vacíos
+    if (!horarioFuncion || !precio || !funcionId || !usuarioId) {
       alert("Por favor, complete todos los campos obligatorios.");
-      console.log(entradaController.data)
+      console.log(entradaController.data);
       return; // Detener la ejecución si hay campos vacíos
-  }
+    }
 
-  // Validar que el precio sea un número positivo
-  if (isNaN(precio) || parseFloat(precio) <= 0 || parseInt(funcionId) == 0) {
+    // Validar que el precio sea un número positivo
+    if (isNaN(precio) || parseFloat(precio) <= 0 || parseInt(funcionId) == 0) {
       alert("El precio debe ser un número positivo.");
       return; // Detener la ejecución si el precio no es válido
-  }
+    }
 
-  if(cantidad>disponible){
-    alert("Quiere comprar una cantidad de entradas que excede a la disponible")
-    return
-  }
-  
-  // Obtener la fecha y hora actual en formato 'YYYY-MM-DDTHH:MM'
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  const hours = String(now.getHours()).padStart(2, '0');
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-  const datetime = `${year}-${month}-${day}T${hours}:${minutes}`;
+    if (cantidad > disponible) {
+      alert(
+        "Quiere comprar una cantidad de entradas que excede a la disponible"
+      );
+      return;
+    }
 
-  // Asignar los valores validados al objeto `entradaController.data`
-  entradaController.data.horarioFuncion = horarioFuncion;
-  entradaController.data.horarioVenta = datetime;
-  entradaController.data.precio = parseFloat(precio);
-  entradaController.data.funcionId = parseInt(funcionId);
-  entradaController.data.usuarioId = parseInt(usuarioId);
-  entradaController.data.estado = entradaController.data.estado; // Asegúrate de que el estado se establece correctamente
-  entradaController.cantidad.numero = parseInt(cantidad);
+    // Obtener la fecha y hora actual en formato 'YYYY-MM-DDTHH:MM'
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    const datetime = `${year}-${month}-${day}T${hours}:${minutes}`;
 
-  // Llamada al servicio para guardar los datos
-  for (let index = 0; index < entradaController.cantidad.numero; index++) {
+    // Asignar los valores validados al objeto `entradaController.data`
+    entradaController.data.horarioFuncion = horarioFuncion;
+    entradaController.data.horarioVenta = datetime;
+    entradaController.data.precio = parseFloat(precio);
+    entradaController.data.funcionId = parseInt(funcionId);
+    entradaController.data.usuarioId = parseInt(usuarioId);
+    entradaController.data.estado = entradaController.data.estado; // Asegúrate de que el estado se establece correctamente
+    entradaController.cantidad.numero = parseInt(cantidad);
+
+    // Llamada al servicio para guardar los datos
+    for (let index = 0; index < entradaController.cantidad.numero; index++) {
       entradaService
-          .save(entradaController.data)
-          .then((data) => {
-              console.log("Guardando Datos");
-              if (data.error !== "") {
-                  alert("Error al guardar la entrada: " + data.error);
-              } else {
-
-              }
-          })
-          .catch((error) => {
-              console.error("Error en la Petición ", error);
-              alert("Ocurrió un error al guardar la entrada");
-          });
-  }
-
-}
-,
-update: () => {
-    if(confirm("¿Quieres actualizar el estado de la entrada?")){
-
-      entradaController.data.estado = parseInt(document.getElementById("btnToggleEntrada").value);
-      entradaController.data.id=parseInt(document.getElementById("tbodyEntradas").dataset.id)
-      entradaController.data.funcionId=parseInt(document.getElementById("tbodyEntradas").dataset.funcion)
+        .save(entradaController.data)
+        .then((data) => {
+          console.log("Guardando Datos");
+          if (data.error !== "") {
+            alert("Error al guardar la entrada: " + data.error);
+          } else {
+          }
+        })
+        .catch((error) => {
+          console.error("Error en la Petición ", error);
+          alert("Ocurrió un error al guardar la entrada");
+        });
+    }
+  },
+  update: () => {
+    if (confirm("¿Quieres actualizar el estado de la entrada?")) {
+      entradaController.data.estado = parseInt(
+        document.getElementById("btnToggleEntrada").value
+      );
+      entradaController.data.id = parseInt(
+        document.getElementById("tbodyEntradas").dataset.id
+      );
+      entradaController.data.funcionId = parseInt(
+        document.getElementById("tbodyEntradas").dataset.funcion
+      );
       entradaService
         .update(entradaController.data)
         .then((data) => {
@@ -175,46 +177,40 @@ update: () => {
             alert("Error al actualizar el entrada: " + data.error);
           } else {
             alert("entrada actualizado con éxito");
-             setTimeout(() => {
-               location.reload();
-             }, 300);
+            setTimeout(() => {
+              location.reload();
+            }, 300);
           }
         })
         .catch((error) => {
           console.error("Error en la Petición ", error);
           alert("Ocurrió un error al actualizar el Usuario");
         });
-    
-
     }
-
   },
 
-list: async () => {
+  list: () => {
     //listo
     console.log("Listando entrada...");
 
     index = 0;
-    let data=await entradaService.list()
-    console.log("entrada listados:", data);
+    entradaService
+      .listEntradas()
+      .then((data) => {
+        console.log("entrada listados:", data);
         let tabla = document.getElementById("tbodyEntradas");
         let txt = "";
 
-    for(const element of data.result){
-
-      txt += "<tr>";
+        for (const element of data.result) {
+          txt += "<tr>";
           txt += "<th>" + (index = index + 1) + "</th>";
-          
-          let txts2 = await singletonController.loadFuncion(element.funcionId);
-          
-          txt += "<td>" + txts2.numeroFuncion + "</td>";
+
+          txt += "<td>" + element.numeroFuncion + "</td>";
           txt += "<td>" + formatDate(element.horarioFuncion) + "</td>";
           txt += "<td>" + formatDate(element.horarioVenta) + "</td>";
           txt += "<td>" + element.precio + "</td>";
           txt += "<td>" + element.numeroTicket + "</td>";
-
-          let txts = await singletonController.loadUsuario(element.usuarioId)
-          txt += "<td>" + txts.cuenta + "</td>";
+          txt += "<td>" + element.cuenta + "</td>";
 
           if (element.estado === 1) {
             txt +=
@@ -229,374 +225,289 @@ list: async () => {
             element.id +
             '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
           txt += "</tr>";
-        };
+        }
 
         tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
-      }
-,
-loadByCuenta: async () => {
-  console.log("Listando entrada...");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },
+  loadByCuenta: () => {
+    console.log("Listando entrada...");
 
-  // Obtener el valor de la cuenta desde el input y convertirlo en un número entero
-  let cuenta = document.getElementById("filterCuentaClienteInput").value;
-  console.log(cuenta);
-  cuenta = parseInt(cuenta);
+    // Obtener el valor de la cuenta desde el input y convertirlo en un número entero
+    let cuenta = document.getElementById("filterCuentaClienteInput").value;
+    console.log(cuenta);
+    cuenta = parseInt(cuenta);
 
+    index = 0;
+    entradaService
+      .loadByCuenta(cuenta)
+      .then((data) => {
+        let tabla = document.getElementById("tbodyEntradas");
+        let txt = "";
 
-  let index = 0;
-
-  let tabla = document.getElementById("tbodyEntradas");
-  let txt = "";
-      // Llamar al servicio para cargar las entradas por cuenta
-      const data = await entradaService.loadByCuenta(cuenta);
-
-      // Verificar si se encontraron resultados
-      if (!data.result || data.result.length === 0) {
-          
-          txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron entradas.</td></tr>"
+        if (data.result.length == 0) {
+          txt =
+            "<tr><td colspan='15' style='text-align: center;'>No se encontraron Entradas.</td></tr>";
           tabla.innerHTML = txt;
           return;
-      }
+        }
 
-      console.log("Entradas listadas:", data);
-      
-
-      // Iterar sobre los resultados de las entradas y construir las filas de la tabla
-      for (const element of data.result) {
+        for (const element of data.result) {
           txt += "<tr>";
+          txt += "<th>" + (index = index + 1) + "</th>";
 
-          // Incrementar el índice para la fila actual
-          txt += "<th>" + (++index) + "</th>";
+          txt += "<td>" + element.numeroFuncion + "</td>";
+          txt += "<td>" + formatDate(element.horarioFuncion) + "</td>";
+          txt += "<td>" + formatDate(element.horarioVenta) + "</td>";
+          txt += "<td>" + element.precio + "</td>";
+          txt += "<td>" + element.numeroTicket + "</td>";
+          txt += "<td>" + element.cuenta + "</td>";
 
-          // Cargar el usuario asociado a la cuenta usando el singleton
-          let usuario;
-          let funcion;
-          funcion = await singletonController.loadFuncion(element.funcionId);
-          
-          txt += "<td>" + (funcion.numeroFuncion) + "</td>";
-          txt += "<td>" + (formatDate(element.horarioFuncion))  + "</td>";
-          txt += "<td>" + (formatDate(element.horarioVenta))  + "</td>";
-          txt += "<td>" + (element.precio ) + "</td>";
-          txt += "<td>" + (element.numeroTicket ) + "</td>";
-
-          // Cargar la función asociada usando el singleton
-          
-          
-          usuario = await singletonController.loadUsuario(cuenta);
-          
-          txt += "<td>" + (usuario.cuenta || "Desconocido") + "</td>";
-
-          // Mostrar el estado de la entrada con un ícono
           if (element.estado === 1) {
-              txt += "<td><i class='fas fa-circle text-success' title='Activo'></i></td>";
+            txt +=
+              "<td> <i class='fas fa-circle text-success' title='Activo'></i> </td>";
           } else {
-              txt += "<td><i class='fas fa-circle text-danger' title='Desactivado'></i></td>";
+            txt +=
+              "<td> <i class='fas fa-circle text-danger' title='Desactivado'></i> </td>";
           }
 
-          // Agregar un botón para editar la entrada
-          txt += `
-              <td>
-                  <a href="http://localhost/SG_CINE_2024/public/entrada/edit/${element.id}" class="btn btn-sm btn-warning">
-                      <i class="fas fa-edit"></i>
-                  </a>
-              </td>`;
+          txt +=
+            '<td><a href="http://localhost/SG_CINE_2024/public/entrada/edit/' +
+            element.id +
+            '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
           txt += "</tr>";
-      }
+        }
 
-      // Actualizar el contenido de la tabla con las filas generadas
-      tabla.innerHTML = txt;
+        tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },
+  loadByFuncion: () => {
+    console.log("Listando entrada...");
 
-}
-,
+    // Obtener el valor de la función desde el input y convertirlo en un número entero
+    let funcionId = parseInt(
+      document.getElementById("filterNumeroFuncionInput").value,
+      10
+    );
 
+    index = 0;
+    entradaService
+      .loadByFuncion(funcionId)
+      .then((data) => {
+        let tabla = document.getElementById("tbodyEntradas");
+        let txt = "";
 
-loadByFuncion: async () => {
-  console.log("Listando entrada...");
+        if (data.result.length == 0) {
+          txt =
+            "<tr><td colspan='15' style='text-align: center;'>No se encontraron Entradas.</td></tr>";
+          tabla.innerHTML = txt;
+          return;
+        }
 
-  // Obtener el valor de la función desde el input y convertirlo en un número entero
-  let funcionId = parseInt(document.getElementById("filterNumeroFuncionInput").value, 10);
+        for (const element of data.result) {
+          txt += "<tr>";
+          txt += "<th>" + (index = index + 1) + "</th>";
 
-  // Validar el número de función
-  if (isNaN(funcionId) || funcionId <= 0) {
-      alert("Por favor, ingresa un número de función válido.");
-      return;
-  }
+          txt += "<td>" + element.numeroFuncion + "</td>";
+          txt += "<td>" + formatDate(element.horarioFuncion) + "</td>";
+          txt += "<td>" + formatDate(element.horarioVenta) + "</td>";
+          txt += "<td>" + element.precio + "</td>";
+          txt += "<td>" + element.numeroTicket + "</td>";
+          txt += "<td>" + element.cuenta + "</td>";
 
-  let index = 0;
-  const data = await entradaService.loadByFuncion(funcionId);
+          if (element.estado === 1) {
+            txt +=
+              "<td> <i class='fas fa-circle text-success' title='Activo'></i> </td>";
+          } else {
+            txt +=
+              "<td> <i class='fas fa-circle text-danger' title='Desactivado'></i> </td>";
+          }
 
-  console.log("Entrada listadas:", data);
-  let tabla = document.getElementById("tbodyEntradas");
-  let txt = "";
+          txt +=
+            '<td><a href="http://localhost/SG_CINE_2024/public/entrada/edit/' +
+            element.id +
+            '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
+          txt += "</tr>";
+        }
 
-  // Verificar si se encontraron resultados
-  if (!data.result || data.result.length === 0) {
-    txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron Entradas.</td></tr>"
-    tabla.innerHTML = txt;
-    return
-  }
+        tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },
 
- 
+  loadByNumeroTicket: () => {
+    console.log("Listando entrada...");
 
-  // Iterar sobre los resultados de las entradas y construir las filas de la tabla
-  for (const element of data.result) {
-      txt += "<tr>";
+    // Obtener el valor del número de ticket desde el input y convertirlo en un número entero
+    let numeroTicket = parseInt(
+      document.getElementById("filterNumeroTicketInput").value,
+      10
+    );
+    index = 0;
+    entradaService
+      .loadByNumeroTicket(numeroTicket)
+      .then((data) => {
+        let tabla = document.getElementById("tbodyEntradas");
+        let txt = "";
 
-      // Incrementar el índice para la fila actual
-      txt += "<th>" + (++index) + "</th>";
+        if (data.result.length == 0) {
+          txt =
+            "<tr><td colspan='15' style='text-align: center;'>No se encontraron Entradas.</td></tr>";
+          tabla.innerHTML = txt;
+          return;
+        }
 
-      // Cargar la función asociada usando el singleton
-      let funcion = await singletonController.loadFuncion(element.funcionId);
-      txt += "<td>" + (funcion.numeroFuncion || "Desconocido") + "</td>";
-      
-      // Formatear y agregar horario de función y venta
-      txt += "<td>" + (formatDate(element.horarioFuncion))  + "</td>";
-          txt += "<td>" + (formatDate(element.horarioVenta))  + "</td>";
-      
-      // Agregar el precio y el número de ticket
-      txt += "<td>" + (element.precio) + "</td>";
-      txt += "<td>" + (element.numeroTicket) + "</td>";
+        for (const element of data.result) {
+          txt += "<tr>";
+          txt += "<th>" + (index = index + 1) + "</th>";
 
-      // Cargar el usuario asociado usando el singleton
-      let usuario = await singletonController.loadUsuario(element.usuarioId);
-      txt += "<td>" + (usuario.cuenta || "Desconocido") + "</td>";
+          txt += "<td>" + element.numeroFuncion + "</td>";
+          txt += "<td>" + formatDate(element.horarioFuncion) + "</td>";
+          txt += "<td>" + formatDate(element.horarioVenta) + "</td>";
+          txt += "<td>" + element.precio + "</td>";
+          txt += "<td>" + element.numeroTicket + "</td>";
+          txt += "<td>" + element.cuenta + "</td>";
 
-      // Mostrar el estado de la entrada con un ícono
-      if (element.estado === 1) {
-          txt += "<td><i class='fas fa-circle text-success' title='Activo'></i></td>";
-      } else {
-          txt += "<td><i class='fas fa-circle text-danger' title='Desactivado'></i></td>";
-      }
+          if (element.estado === 1) {
+            txt +=
+              "<td> <i class='fas fa-circle text-success' title='Activo'></i> </td>";
+          } else {
+            txt +=
+              "<td> <i class='fas fa-circle text-danger' title='Desactivado'></i> </td>";
+          }
 
-      // Agregar un botón para editar la entrada
-      txt += `
-          <td>
-              <a href="http://localhost/SG_CINE_2024/public/entrada/edit/${element.id}" class="btn btn-sm btn-warning">
-                  <i class="fas fa-edit"></i>
-              </a>
-          </td>`;
-      txt += "</tr>";
-  }
+          txt +=
+            '<td><a href="http://localhost/SG_CINE_2024/public/entrada/edit/' +
+            element.id +
+            '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
+          txt += "</tr>";
+        }
 
-  // Actualizar el contenido de la tabla con las filas generadas
-  tabla.innerHTML = txt;
-}
+        tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },
+  loadByProgramacion: () => {
+    console.log("Listando entradas por programación...");
 
-,
-loadByNumeroTicket: async () => {
-  console.log("Listando entrada...");
+    // Obtener el valor de la programación desde el input y convertirlo en un número entero
+    let programacionId = parseInt(
+      document.getElementById("filterProgramacionInput").value,
+      10
+    );
 
-  // Obtener el valor del número de ticket desde el input y convertirlo en un número entero
-  let numeroTicket = parseInt(document.getElementById("filterNumeroTicketInput").value, 10);
-  let tabla = document.getElementById("tbodyEntradas");
-  let txt = "";
-  // Validar el número de ticket
-  if (isNaN(numeroTicket) || numeroTicket <= 0) {
-      alert("Por favor, ingresa un número de ticket válido.");
-      return;
-  }
+    index = 0;
+    entradaService
+      .loadByProgramacion(programacionId)
+      .then((data) => {
+        let tabla = document.getElementById("tbodyEntradas");
+        let txt = "";
 
-  let index = 0;
-  const element = await entradaService.loadByNumeroTicket(numeroTicket);
+        if (data.result.length == 0) {
+          txt =
+            "<tr><td colspan='15' style='text-align: center;'>No se encontraron Entradas.</td></tr>";
+          tabla.innerHTML = txt;
+          return;
+        }
 
-  // Verificar si se encontraron resultados
-  if (!element.result || element.result.length === 0) {
-    txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron Entradas.</td></tr>"
-    tabla.innerHTML = txt;
-    return
-  }
+        for (const element of data.result) {
+          txt += "<tr>";
+          txt += "<th>" + (index = index + 1) + "</th>";
 
-  console.log("Entrada listadas:", element);
-  
+          txt += "<td>" + element.numeroFuncion + "</td>";
+          txt += "<td>" + formatDate(element.horarioFuncion) + "</td>";
+          txt += "<td>" + formatDate(element.horarioVenta) + "</td>";
+          txt += "<td>" + element.precio + "</td>";
+          txt += "<td>" + element.numeroTicket + "</td>";
+          txt += "<td>" + element.cuenta + "</td>";
 
-  // Iterar sobre los resultados de las entradas y construir las filas de la tabla
-      txt += "<tr>";
+          if (element.estado === 1) {
+            txt +=
+              "<td> <i class='fas fa-circle text-success' title='Activo'></i> </td>";
+          } else {
+            txt +=
+              "<td> <i class='fas fa-circle text-danger' title='Desactivado'></i> </td>";
+          }
 
-      // Incrementar el índice para la fila actual
-      txt += "<th>" + (++index) + "</th>";
+          txt +=
+            '<td><a href="http://localhost/SG_CINE_2024/public/entrada/edit/' +
+            element.id +
+            '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
+          txt += "</tr>";
+        }
 
-      // Cargar la función asociada usando el singleton
-      let funcion = await singletonController.loadFuncion(element.result.funcionId);
-      txt += "<td>" + (funcion.numeroFuncion || "Desconocido") + "</td>";
-      
-      // Formatear y agregar horario de función y venta
-      txt += "<td>" + formatDate(element.result.horarioFuncion) + "</td>";
-      txt += "<td>" + formatDate(element.result.horarioVenta) + "</td>";
-      
-      // Agregar el precio y el número de ticket
-      txt += "<td>" + (element.result.precio) + "</td>";
-      txt += "<td>" + (element.result.numeroTicket) + "</td>";
+        tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },
 
-      // Cargar el usuario asociado usando el singleton
-      let usuario = await singletonController.loadUsuario(element.result.usuarioId);
-      txt += "<td>" + (usuario.cuenta || "Desconocido") + "</td>";
+  loadByPelicula: () => {
+    console.log("Listando entradas por película...");
 
-      // Mostrar el estado de la entrada con un ícono
-      if (element.result.estado==1) {
-        txt +=
-          "<td> <i class='fas fa-circle text-success' title='Activo'></i> </td>";
-      } else {
-        txt +=
-          "<td> <i class='fas fa-circle text-danger' title='Desactivado'></i> </td>";
-      }
+    // Obtener el valor de la película desde el input y convertirlo en un número entero
+    let peliculaId = parseInt(
+      document.getElementById("filterPeliculaInput").value,
+      10
+    );
 
-      // Agregar un botón para editar la entrada
-      txt += `
-          <td>
-              <a href="http://localhost/SG_CINE_2024/public/entrada/edit/${element.result.id}" class="btn btn-sm btn-warning">
-                  <i class="fas fa-edit"></i>
-              </a>
-          </td>`;
-      txt += "</tr>";
-  
+    index = 0;
+    entradaService
+      .loadByPelicula(peliculaId)
+      .then((data) => {
+        let tabla = document.getElementById("tbodyEntradas");
+        let txt = "";
 
-  // Actualizar el contenido de la tabla con las filas generadas
-  tabla.innerHTML = txt;
-}
-,
+        if (data.result.length == 0) {
+          txt =
+            "<tr><td colspan='15' style='text-align: center;'>No se encontraron Entradas.</td></tr>";
+          tabla.innerHTML = txt;
+          return;
+        }
 
-loadByProgramacion: async () => {
-  console.log("Listando entradas por programación...");
+        for (const element of data.result) {
+          txt += "<tr>";
+          txt += "<th>" + (index = index + 1) + "</th>";
 
-  // Obtener el valor de la programación desde el input y convertirlo en un número entero
-  let programacionId = parseInt(document.getElementById("filterProgramacionInput").value, 10);
+          txt += "<td>" + element.numeroFuncion + "</td>";
+          txt += "<td>" + formatDate(element.horarioFuncion) + "</td>";
+          txt += "<td>" + formatDate(element.horarioVenta) + "</td>";
+          txt += "<td>" + element.precio + "</td>";
+          txt += "<td>" + element.numeroTicket + "</td>";
+          txt += "<td>" + element.cuenta + "</td>";
 
-  // Validar el número de programación
-  if (isNaN(programacionId) || programacionId <= 0) {
-      alert("Por favor, ingresa un número de programación válido.");
-      return;
-  }
+          if (element.estado === 1) {
+            txt +=
+              "<td> <i class='fas fa-circle text-success' title='Activo'></i> </td>";
+          } else {
+            txt +=
+              "<td> <i class='fas fa-circle text-danger' title='Desactivado'></i> </td>";
+          }
 
-  let index = 0;
-  const data = await entradaService.loadByProgramacion(programacionId);
-  let tabla = document.getElementById("tbodyEntradas");
-  let txt = "";
-  // Verificar si se encontraron resultados
-  if (!data.result || data.result.length === 0) {
-    txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron Entradas.</td></tr>"
-    tabla.innerHTML = txt;
-    return
-  }
+          txt +=
+            '<td><a href="http://localhost/SG_CINE_2024/public/entrada/edit/' +
+            element.id +
+            '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
+          txt += "</tr>";
+        }
 
-  console.log("Entradas listadas:", data);
-  
-
-  // Iterar sobre los resultados de las entradas y construir las filas de la tabla
-  for (const element of data.result) {
-      txt += "<tr>";
-
-      // Incrementar el índice para la fila actual
-      txt += "<th>" + (++index) + "</th>";
-
-      // Cargar la programación asociada usando el singleton
-      let funcion = await singletonController.loadFuncion(element.funcionId);
-      txt += "<td>" + (funcion.numeroFuncion || "Desconocido") + "</td>";
-
-      // Formatear y agregar horario de función y venta
-      txt += "<td>" + (formatDate(element.horarioFuncion))  + "</td>";
-          txt += "<td>" + (formatDate(element.horarioVenta))  + "</td>";
-
-      // Agregar el precio y el número de ticket
-      txt += "<td>" + (element.precio) + "</td>";
-      txt += "<td>" + (element.numeroTicket) + "</td>";
-
-      // Cargar el usuario asociado usando el singleton
-      let usuario = await singletonController.loadUsuario(element.usuarioId);
-      txt += "<td>" + (usuario.cuenta || "Desconocido") + "</td>";
-
-      // Mostrar el estado de la entrada con un ícono
-      if (element.estado === 1) {
-          txt += "<td><i class='fas fa-circle text-success' title='Activo'></i></td>";
-      } else {
-          txt += "<td><i class='fas fa-circle text-danger' title='Desactivado'></i></td>";
-      }
-
-      // Agregar un botón para editar la entrada
-      txt += `
-          <td>
-              <a href="http://localhost/SG_CINE_2024/public/entrada/edit/${element.id}" class="btn btn-sm btn-warning">
-                  <i class="fas fa-edit"></i>
-              </a>
-          </td>`;
-      txt += "</tr>";
-  }
-
-  // Actualizar el contenido de la tabla con las filas generadas
-  tabla.innerHTML = txt;
-},
-
-loadByPelicula: async () => {
-  console.log("Listando entradas por película...");
-
-  // Obtener el valor de la película desde el input y convertirlo en un número entero
-  let peliculaId = parseInt(document.getElementById("filterPeliculaInput").value, 10);
-
-  // Validar el número de película
-  if (isNaN(peliculaId) || peliculaId <= 0) {
-      alert("Por favor, ingresa un número de película válido.");
-      return;
-  }
-  let tabla = document.getElementById("tbodyEntradas");
-  let txt = "";
-  let index = 0;
-  const data = await entradaService.loadByPelicula(peliculaId);
-
-  // Verificar si se encontraron resultados
-  if (!data.result || data.result.length === 0) {
-    txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron Entradas.</td></tr>"
-    tabla.innerHTML = txt;
-    return
-  }
-
-  console.log("Entradas listadas:", data);
-  
-
-  // Iterar sobre los resultados de las entradas y construir las filas de la tabla
-  for (const element of data.result) {
-      txt += "<tr>";
-
-      // Incrementar el índice para la fila actual
-      txt += "<th>" + (++index) + "</th>";
-
-      // Cargar la película asociada usando el singleton
-      let funcion = await singletonController.loadFuncion(element.funcionId);
-      txt += "<td>" + (funcion.numeroFuncion || "Desconocido") + "</td>";
-
-      // Formatear y agregar horario de función y venta
-      txt += "<td>" + (formatDate(element.horarioFuncion))  + "</td>";
-          txt += "<td>" + (formatDate(element.horarioVenta))  + "</td>";
-
-      // Agregar el precio y el número de ticket
-      txt += "<td>" + (element.precio) + "</td>";
-      txt += "<td>" + (element.numeroTicket) + "</td>";
-
-      // Cargar el usuario asociado usando el singleton
-      let usuario = await singletonController.loadUsuario(element.usuarioId);
-      txt += "<td>" + (usuario.cuenta || "Desconocido") + "</td>";
-
-      // Mostrar el estado de la entrada con un ícono
-      if (element.estado== 1) {
-          txt += "<td><i class='fas fa-circle text-success' title='Activo'></i></td>";
-      } else {
-          txt += "<td><i class='fas fa-circle text-danger' title='Desactivado'></i></td>";
-      }
-
-      // Agregar un botón para editar la entrada
-      txt += `
-          <td>
-              <a href="http://localhost/SG_CINE_2024/public/entrada/edit/${element.id}" class="btn btn-sm btn-warning">
-                  <i class="fas fa-edit"></i>
-              </a>
-          </td>`;
-      txt += "</tr>";
-  }
-
-  // Actualizar el contenido de la tabla con las filas generadas
-  tabla.innerHTML = txt;
-}
-,
-
-
+        tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },
   print: () => {
     //lista
     const $elementoParaConvertir = document.getElementById("tablaEntradas"); // <-- Aquí puedes elegir cualquier elemento del DOM
@@ -680,23 +591,21 @@ loadByPelicula: async () => {
       })
       .catch((err) => console.log(err));
   },
-  
 };
 
 const formatDate = (dateString) => {
   // Divide la fecha y la hora usando el espacio
-  const [datePart, timePart] = dateString.split(' ');
-  
+  const [datePart, timePart] = dateString.split(" ");
+
   // Divide la fecha en año, mes y día
   const [year, month, day] = datePart.split("-");
-  
+
   // Divide la hora en horas y minutos (después de eliminar los segundos)
   const [hora, minutos] = timePart.split(":");
 
   // Retorna el formato deseado
   return `${day}/${month}/${year} a las ${hora}:${minutos}`;
 };
-
 
 document.addEventListener("DOMContentLoaded", () => {
   let btnAltaEntrada = document.getElementById("btnAltaEntrada");
@@ -708,50 +617,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (btnGuardarEntrada != null) {
     btnGuardarEntrada.addEventListener("click", () => {
-        // Verificar si la compra es confirmada por el usuario
-        if (confirmPurchase() === true) {     
-            entradaController.saveCompra();
-            setTimeout(() => {
-                location.reload();
-            }, 300);
-        }
+      // Verificar si la compra es confirmada por el usuario
+      if (confirmPurchase() === true) {
+        entradaController.saveCompra();
+        setTimeout(() => {
+          location.reload();
+        }, 300);
+      }
     });
-} else {
+  } else {
     if (btnPDFEntrada != null) {
       entradaController.list();
 
       btnPDFEntrada.onclick = entradaController.print;
 
-      btnAltaEntrada.addEventListener("click",()=>{
-
-        if(confirm("¿Quieres guardar las entradas?")){
-
+      btnAltaEntrada.addEventListener("click", () => {
+        if (confirm("¿Quieres guardar las entradas?")) {
           entradaController.save();
           setTimeout(() => {
             location.reload();
-        }, 300);
-        
+          }, 300);
         }
-
-        
-      })
+      });
 
       btnBuscarEntrada.addEventListener("click", function () {
         let filterType = document.getElementById("filterType").value;
-        
+
         if (filterType === "numeroTicket") {
-            entradaController.loadByNumeroTicket();
+          entradaController.loadByNumeroTicket();
         } else if (filterType === "numeroFuncion") {
-            entradaController.loadByFuncion();
+          entradaController.loadByFuncion();
         } else if (filterType === "cuentaCliente") {
-            entradaController.loadByCuenta();
+          entradaController.loadByCuenta();
         } else if (filterType === "pelicula") {
-            entradaController.loadByPelicula();
+          entradaController.loadByPelicula();
         } else if (filterType === "programacion") {
-            entradaController.loadByProgramacion();
+          entradaController.loadByProgramacion();
         }
-    });
-    
+      });
 
       btnListarEntrada.onclick = entradaController.list;
     } else if (btnModificarEntrada != null) {

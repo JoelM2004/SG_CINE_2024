@@ -31,9 +31,14 @@
         <li class="nav-item">
           <a class="nav-link fw-bold" href="<?= APP_FRONT . 'info/index' ?>">Acerca de Nosotros</a>
         </li>
+
+        <li class="nav-item">
+          <a class="nav-link fw-bold" <?php if ((!isset($_SESSION["token"]) || $_SESSION["token"] != APP_TOKEN)||(($_SESSION["perfil"]) !=="Administrador")) echo 'hidden'; ?> href="<?= APP_FRONT . 'reporte/index' ?>">Reportes</a>
+        </li>
+
         <li class="nav-item dropdown" <?php if ((!isset($_SESSION["token"]) || $_SESSION["token"] != APP_TOKEN)||(($_SESSION["perfil"]) !=="Administrador")&&(($_SESSION["perfil"]) !=="Operador")) echo 'hidden'; ?>>
           <a class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Funcionalidades
+            Administración
           </a>
           <ul class="dropdown-menu dropdown-menu-dark">
             <li><a class="dropdown-item" href="<?= APP_FRONT . 'sala/index' ?>"<?php if (($_SESSION["perfil"]) !=="Administrador") echo 'hidden'; ?>>Gestionar Salas</a></li>

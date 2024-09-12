@@ -86,10 +86,6 @@ final class EntradaDAO extends DAO implements InterfaceDAO
 
         $capacidadDisponible = $result->capacidad - $cantidadCompradas;
 
-        if ($capacidadDisponible < 0) {
-            throw new \Exception("La cantidad de entradas compradas excede la capacidad disponible.");
-        }
-
         return $capacidadDisponible;
     }
 
@@ -112,9 +108,9 @@ final class EntradaDAO extends DAO implements InterfaceDAO
 
     public function update(InterfaceDTO $object): void
     {
-        
+
         $capacidadDisponible = $this->cantidadEntradasDisponibles($object->getFuncionId());
-        if ($capacidadDisponible <= 0 && $object->getEstado()==1) {
+        if ($capacidadDisponible <= 0 && $object->getEstado() == 1) {
             throw new \Exception("No hay suficientes entradas disponibles para esta función.");
         }
 
@@ -129,78 +125,121 @@ final class EntradaDAO extends DAO implements InterfaceDAO
 
     public function loadByCuenta($usuarioId): array
     {
-        $sql = "SELECT * FROM {$this->table} WHERE usuarioId = :usuarioId";
+
+        $sql = "SELECT 
+            e.id,
+            f.numeroFuncion,
+            e.horarioFuncion,
+            e.horarioVenta,
+            e.precio,
+            e.numeroTicket,
+            e.estado,
+            u.cuenta
+         FROM {$this->table} e
+        inner join funciones f on f.id=e.funcionId
+        inner join usuarios u on u.id=e.usuarioId
+        where u.id=:id
+        ";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(["usuarioId" => $usuarioId]);
-        // Recuperar todos los resultados y convertirlos a objetos EntradaDTO
-        $Entradas = [];
-        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $Entradas[] = new EntradaDTO($row);
-        }
-        return $Entradas;
+
+        $stmt->execute(["id" => $usuarioId]);
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public function loadByNumeroTicket($numeroTicket): EntradaDTO
+    public function loadByNumeroTicket($numeroTicket): array
     {
-        $sql = "SELECT *  FROM {$this->table} WHERE numeroTicket = :numeroTicket";
+        $sql = "SELECT 
+        e.id,
+        f.numeroFuncion,
+        e.horarioFuncion,
+        e.horarioVenta,
+        e.precio,
+        e.numeroTicket,
+        e.estado,
+        u.cuenta
+        FROM {$this->table} e
+        inner join funciones f on f.id=e.funcionId
+        inner join usuarios u on u.id=e.usuarioId
+        inner join peliculas p on p.id=f.peliculaId
+        where e.numeroTicket=:id
+        ";
         $stmt = $this->conn->prepare($sql);
 
-        $stmt->execute(["numeroTicket" => $numeroTicket]);
+        $stmt->execute(["id" => $numeroTicket]);
 
-        if ($stmt->rowCount() !== 1) {
-
-            throw new \Exception("La Entrada no se cargó correctamente");
-        }
-
-        return new EntradaDTO($stmt->fetch(\PDO::FETCH_ASSOC));
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function loadByFuncion($funcionId): array
     {
-        $sql = "SELECT * FROM {$this->table} WHERE funcionId = :funcionId";
+        $sql = "SELECT 
+            e.id,
+            f.numeroFuncion,
+            e.horarioFuncion,
+            e.horarioVenta,
+            e.precio,
+            e.numeroTicket,
+            e.estado,
+            u.cuenta
+         FROM {$this->table} e
+        inner join funciones f on f.id=e.funcionId
+        inner join usuarios u on u.id=e.usuarioId
+        where f.id=:id
+        ";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(["funcionId" => $funcionId]);
-        // Recuperar todos los resultados y convertirlos a objetos EntradaDTO
-        $Entradas = [];
-        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $Entradas[] = new EntradaDTO($row);
-        }
-        return $Entradas;
+
+        $stmt->execute(["id" => $funcionId]);
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function loadByProgramacion($programacionId): array
     {
-        $sql = "SELECT e.id, e.horarioFuncion, e.horarioVenta, e.precio, e.numeroTicket, e.estado, e.funcionId, e.usuarioId FROM {$this->table} e
-        Inner join funciones f on f.id= e.funcionId
-        inner join programaciones p on f.programacionId=p.id
-        WHERE programacionId = :programacionId";
-
+        $sql = "SELECT 
+        e.id,
+        f.numeroFuncion,
+        e.horarioFuncion,
+        e.horarioVenta,
+        e.precio,
+        e.numeroTicket,
+        e.estado,
+        u.cuenta
+        FROM {$this->table} e
+        inner join funciones f on f.id=e.funcionId
+        inner join usuarios u on u.id=e.usuarioId
+        inner join programaciones p on p.id=f.programacionId
+        where p.id=:id
+        ";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(["programacionId" => $programacionId]);
-        // Recuperar todos los resultados y convertirlos a objetos EntradaDTO
-        $Entradas = [];
-        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $Entradas[] = new EntradaDTO($row);
-        }
-        return $Entradas;
+
+        $stmt->execute(["id" => $programacionId]);
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function loadByPelicula($peliculaId): array
     {
-        $sql = "SELECT e.id, e.horarioFuncion, e.horarioVenta, e.precio, e.numeroTicket, e.estado, e.funcionId, e.usuarioId FROM {$this->table} e
-        Inner join funciones f on f.id= e.funcionId
-        inner join peliculas p on f.peliculaId=p.id
-
-        WHERE f.peliculaId = :peliculaId";
-        
+        $sql = "SELECT 
+        e.id,
+        f.numeroFuncion,
+        e.horarioFuncion,
+        e.horarioVenta,
+        e.precio,
+        e.numeroTicket,
+        e.estado,
+        u.cuenta
+        FROM {$this->table} e
+        inner join funciones f on f.id=e.funcionId
+        inner join usuarios u on u.id=e.usuarioId
+        inner join peliculas p on p.id=f.peliculaId
+        where p.id=:id
+        ";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(["peliculaId" => $peliculaId]);
-        // Recuperar todos los resultados y convertirlos a objetos EntradaDTO
-        $Entradas = [];
-        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $Entradas[] = new EntradaDTO($row);
-        }
-        return $Entradas;
+
+        $stmt->execute(["id" => $peliculaId]);
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function delete($id): void
@@ -220,6 +259,28 @@ final class EntradaDAO extends DAO implements InterfaceDAO
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    public function listEntradas(): array
+    {
+        $sql = "SELECT 
+            e.id,
+            f.numeroFuncion,
+            e.horarioFuncion,
+            e.horarioVenta,
+            e.precio,
+            e.numeroTicket,
+            e.estado,
+            u.cuenta
+         FROM {$this->table} e
+        inner join funciones f on f.id=e.funcionId
+        inner join usuarios u on u.id=e.usuarioId
+        
+        ";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+
     private function generateUniqueTicketNumber(): string
     {
         do {
@@ -235,21 +296,22 @@ final class EntradaDAO extends DAO implements InterfaceDAO
 
         return $ticketNumber;
     }
-    
-    public function existe($id): bool{
+
+    public function existe($id): bool
+    {
         $sql = "SELECT count(id) AS cantidad FROM {$this->table} WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
-    
+
         // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
         $params = [
             ':id' => $id
         ];
-    
+
         $stmt->execute($params);
         $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
-    
+
         if ($result->cantidad > 0) {
             return true;
-       } else return false;
-    } 
+        } else return false;
+    }
 }
