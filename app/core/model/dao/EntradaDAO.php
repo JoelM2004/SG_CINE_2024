@@ -147,6 +147,30 @@ final class EntradaDAO extends DAO implements InterfaceDAO
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    public function loadByCuentaView($usuarioId): array
+    {
+
+        $sql = "SELECT 
+            e.id,
+            f.numeroFuncion,
+            e.horarioFuncion,
+            e.horarioVenta,
+            e.precio,
+            e.numeroTicket,
+            p.nombre
+         FROM {$this->table} e
+        inner join funciones f on f.id=e.funcionId
+        inner join usuarios u on u.id=e.usuarioId
+        inner join peliculas p on p.id=f.peliculaId
+        where u.id=:id
+        ";
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->execute(["id" => $usuarioId]);
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
     public function loadByNumeroTicket($numeroTicket): array
     {
         $sql = "SELECT 

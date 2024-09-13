@@ -92,60 +92,137 @@ final class FuncionDAO extends DAO implements InterfaceDAO
   
     }
 
-    public function loadByNumeroSala($salaId): array {
-        $sql = "SELECT * FROM {$this->table} WHERE salaId = :salaId";
+    public function listF():array{
+
+        $sql = "SELECT 
+        f.id,
+        f.fecha,
+        f.horaInicio,
+        f.duracion,
+        f.numeroFuncion,
+        f.precio,
+        p.nombre,
+        s.numeroSala,
+        pr.fechaInicio,
+        pr.fechaFin
+
+        FROM {$this->table} f
+        inner join peliculas p on f.peliculaId=p.id
+        inner join salas s on f.salaId=s.id
+        inner join programaciones pr on f.programacionId=pr.id
+        
+        
+        " ;
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(["salaId" => $salaId]);
-    
-        // Recuperar todos los resultados y convertirlos a objetos UsuarioDTO
-        $funciones = [];
-        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $funciones[] = new FuncionDTO($row);
-        }
-    
-        return $funciones;
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+  
+    }
+
+    public function loadByNumeroSala($salaId): array {
+        $sql = "SELECT 
+        f.id,
+        f.fecha,
+        f.horaInicio,
+        f.duracion,
+        f.numeroFuncion,
+        f.precio,
+        p.nombre,
+        s.numeroSala,
+        pr.fechaInicio,
+        pr.fechaFin
+
+        FROM {$this->table} f
+        inner join peliculas p on f.peliculaId=p.id
+        inner join salas s on f.salaId=s.id
+        inner join programaciones pr on f.programacionId=pr.id
+        where f.salaId=:id
+        
+        " ;
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(["id"=>$salaId]);
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function loadByNombrePelicula($peliculaId): array {
-        $sql = "SELECT * FROM {$this->table} WHERE peliculaId = :peliculaId";
+        $sql = "SELECT 
+        f.id,
+        f.fecha,
+        f.horaInicio,
+        f.duracion,
+        f.numeroFuncion,
+        f.precio,
+        p.nombre,
+        s.numeroSala,
+        pr.fechaInicio,
+        pr.fechaFin
+
+        FROM {$this->table} f
+        inner join peliculas p on f.peliculaId=p.id
+        inner join salas s on f.salaId=s.id
+        inner join programaciones pr on f.programacionId=pr.id
+        where f.peliculaId=:id
+        
+        " ;
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(["peliculaId" => $peliculaId]);
-    
-        // Recuperar todos los resultados y convertirlos a objetos UsuarioDTO
-        $funciones = [];
-        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $funciones[] = new FuncionDTO($row);
-        }
-    
-        return $funciones;
+        $stmt->execute(["id"=>$peliculaId]);
+        
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function loadByFechaProgramacion($programacionId): array {
-        $sql = "SELECT * FROM {$this->table} WHERE programacionId = :programacionId";
+        $sql = "SELECT 
+        f.id,
+        f.fecha,
+        f.horaInicio,
+        f.duracion,
+        f.numeroFuncion,
+        f.precio,
+        p.nombre,
+        s.numeroSala,
+        pr.fechaInicio,
+        pr.fechaFin
+
+        FROM {$this->table} f
+        inner join peliculas p on f.peliculaId=p.id
+        inner join salas s on f.salaId=s.id
+        inner join programaciones pr on f.programacionId=pr.id
+        where f.programacionId=:id
+        
+        " ;
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(["programacionId" => $programacionId]);
-    
-        // Recuperar todos los resultados y convertirlos a objetos UsuarioDTO
-        $funciones = [];
-        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $funciones[] = new FuncionDTO($row);
-        }
-    
-        return $funciones;
+        $stmt->execute(["id"=>$programacionId]);
+        
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public function loadByNumeroFuncion($numeroFuncion):FuncionDTO{
-        $sql = "SELECT *  FROM {$this->table} WHERE numeroFuncion = :numeroFuncion";
-       $stmt = $this->conn->prepare($sql);
+    public function loadByNumeroFuncion($numeroFuncion):array{
 
-       $stmt->execute(["numeroFuncion" => $numeroFuncion]);
+        $this->existeF($numeroFuncion);
+        $sql = "SELECT 
+        f.id,
+        f.fecha,
+        f.horaInicio,
+        f.duracion,
+        f.numeroFuncion,
+        f.precio,
+        p.nombre,
+        s.numeroSala,
+        pr.fechaInicio,
+        pr.fechaFin
 
-       if ($stmt->rowCount() !== 1) {
-
-           throw new \Exception("La función no se cargó correctamente");
-       }
-
-       return new FuncionDTO($stmt->fetch(\PDO::FETCH_ASSOC));
+        FROM {$this->table} f
+        inner join peliculas p on f.peliculaId=p.id
+        inner join salas s on f.salaId=s.id
+        inner join programaciones pr on f.programacionId=pr.id
+        where f.numeroFuncion=:id
+        
+        " ;
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(["id"=>$numeroFuncion]);
+        
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
    }
 
@@ -160,7 +237,12 @@ final class FuncionDAO extends DAO implements InterfaceDAO
         f.peliculaId AS peliculaId,
         f.salaId AS salaId,
         f.programacionId AS programacionId,
-        f.precio AS precio
+        f.precio AS precio,
+        s.numeroSala as numeroSala,
+        pf.nombre as nombrePelicula,
+        t.nombre as nombreTipo,
+        a.nombre as nombreAudio
+
     FROM 
         funciones f
     INNER JOIN 
@@ -183,12 +265,7 @@ final class FuncionDAO extends DAO implements InterfaceDAO
     $stmt = $this->conn->prepare($sql);
     $stmt->execute(["id" => $id]);
 
-    $funciones = [];
-    while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-        $funciones[] = new FuncionDTO($row);
-    }
-
-    return $funciones;
+    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
 }
 
 public function listActivas(): array
@@ -398,6 +475,25 @@ public function existeCartelera($id): bool{
         return true;
    } else return false;
 } 
+
+public function existeF($id): void{
+    $sql = "SELECT count(id) AS cantidad FROM {$this->table} WHERE numeroFuncion = :id";
+    $stmt = $this->conn->prepare($sql);
+
+    // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
+    $params = [
+        ':id' => $id
+    ];
+
+    $stmt->execute($params);
+    $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
+
+    if ($result->cantidad <= 0) {
+        throw new \Exception("No existe está función");
+        
+   } 
+} 
+
 
 private function validateentradas($id): void
     {

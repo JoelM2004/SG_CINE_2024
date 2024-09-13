@@ -114,7 +114,7 @@ let funcionService = {
   },
 
   list: () => {
-    return fetch("funcion/list", {
+    return fetch("funcion/listF", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

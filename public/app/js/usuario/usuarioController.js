@@ -96,57 +96,56 @@ let userController = {
     }
   },
 
-  loadByNameAccount: async () => {
+  loadByNameAccount: () => {
     const nombre = document.getElementById("filterNombreCuenta").value;
-    aux = await singletonController.listPerfil();
     let txt = "";
+    let index = 0; // Inicializa el índice
+
     console.log("Buscando Usuarios...");
     let tabla = document.getElementById("tbodyUsuario");
-    await userService
-      .loadByNameAccount(nombre)
-      .then((data) => {
-        if (data.error == "") {
-          console.log("Usuario encontrado:", data);
 
-          let txts;
-          
+    userService
+        .loadByNameAccount(nombre)
+        .then((data) => {
+            // Verificar si no se encontraron usuarios
+            if (data.result.length === 0) {
+                txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron Usuarios.</td></tr>";
+                tabla.innerHTML = txt;
+                return;
+            }
 
-          // Aquí se espera un solo objeto, no un array
-          const usuario = data.result;
+            // Si no hay error y se encontraron usuarios
+            if (data.error === "") {
+                console.log("Usuario encontrado:", data);
 
-          if (usuario) {
-            txt += "<tr>";
-            txt += "<th>1</th>"; // Solo un perfil, por lo tanto, índice fijo en 1
-            txt += "<td>" + usuario.cuenta + "</td>";
-            txt += "<td>" + usuario.nombres + "</td>";
-            txt += "<td>" + usuario.apellido + "</td>";
-            txt += "<td>" + usuario.correo + "</td>";
+                data.result.forEach((element) => {
+                    txt += "<tr>";
+                    txt += "<th>" + (++index) + "</th>"; // Incrementa el índice correctamente
+                    txt += "<td>" + element.cuenta + "</td>";
+                    txt += "<td>" + element.nombres + "</td>";
+                    txt += "<td>" + element.apellido + "</td>";
+                    txt += "<td>" + element.correo + "</td>";
 
-            
-            aux.forEach((elemento) => {
-              if (elemento.id == usuario.perfilId) txts = elemento.nombre;
-            });
+                    let perfil = element.perfil; // Utiliza directamente el perfil
+                    txt += "<td>" + perfil + "</td>";
 
-            // let perfil = perfiles.find(p => p.id === element.perfilId);
-            // let txtAux = perfil ? perfil.nombre : "Desconocido";
+                    // Botón de edición
+                    txt +=
+                        '<td><a href="http://localhost/SG_CINE_2024/public/usuario/edit/' +
+                        element.id +
+                        '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
+                    txt += "</tr>";
+                });
 
-            txt += "<td>" + txts + "</td>";
+                // Actualiza el contenido HTML de la tabla
+                tabla.innerHTML = txt;
+            }
+        })
+        .catch((error) => {
+            console.error("Error al listar Usuarios:", error);
+        });
+},
 
-            txt +=
-              '<td><a href="http://localhost/SG_CINE_2024/public/usuario/edit/' +
-              usuario.id +
-              '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
-            txt += "</tr>";
-          } 
-        } else {
-          txt = "<tr><td colspan='15' style='text-align: center;'>No se encontró al Usuario.</td></tr>";
-        }
-        tabla.innerHTML = txt;
-      })
-      .catch((error) => {
-        console.error("Error al buscar Usuario:", error);
-      });
-  },
 
   update: () => {
     if (confirm("¿Seguro que lo quieres actualizar?")) {
@@ -210,11 +209,11 @@ let userController = {
     }
   },
 
-  list: async () => {
+  list:  () => {
     console.log("Listando Usuarios...");
-    aux = await singletonController.listPerfil();
+    
     index = 0;
-    await userService
+    userService
       .list()
       .then((data) => {
         console.log("Usuarios listados:", data);
@@ -231,9 +230,8 @@ let userController = {
           txt += "<td>" + element.correo + "</td>";
 
           let txts;
-          aux.forEach((elemento) => {
-            if (elemento.id == element.perfilId) txts = elemento.nombre;
-          });
+          txts = element.perfil;
+          
 
           // let perfil = perfiles.find(p => p.id === element.perfilId);
           // let txtAux = perfil ? perfil.nombre : "Desconocido";
@@ -391,50 +389,56 @@ let userController = {
       .catch((err) => console.log(err));
   },
 
-  loadByPerfil: async () => {
+  loadByPerfil: () => {
     console.log("Listando Usuarios...");
-    aux = await singletonController.listPerfil();
-    index = 0;
-    await userService
-      .loadByPerfil(document.getElementById("filterTipoPerfil").value)
-      .then((data) => {
-        console.log("Usuarios listados:", data);
-        let tabla = document.getElementById("tbodyUsuario");
-        let txt = "";
+    let tabla = document.getElementById("tbodyUsuario");
+    let index = 0; // Inicializa el índice correctamente
+    let txt = ""; // Asegura la inicialización de txt
 
-        if(data.result.length>0){
+    userService
+        .loadByPerfil(document.getElementById("filterTipoPerfil").value)
+        .then((data) => {
+            // Verificar si no se encontraron usuarios
+            if (data.result.length === 0) {
+                txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron Usuarios.</td></tr>";
+                tabla.innerHTML = txt;
+                return;
+            }
 
-        // Obtener la lista de perfiles
-        data.result.forEach((element) => {
-          txt += "<tr>";
-          txt += "<th>" + (index = index + 1) + "</th>";
-          txt += "<td>" + element.cuenta + "</td>";
-          txt += "<td>" + element.nombres + "</td>";
-          txt += "<td>" + element.apellido + "</td>";
-          txt += "<td>" + element.correo + "</td>";
+            // Si no hay error y se encontraron usuarios
+            if (data.error === "") {
+                console.log("Usuario encontrado:", data);
 
-          let txts;
-          aux.forEach((elemento) => {
-            if (elemento.id == element.perfilId) txts = elemento.nombre;
-          });
+                data.result.forEach((element) => {
+                    txt += "<tr>";
+                    txt += "<th>" + (++index) + "</th>"; // Incrementa el índice correctamente
+                    txt += "<td>" + element.cuenta + "</td>";
+                    txt += "<td>" + element.nombres + "</td>";
+                    txt += "<td>" + element.apellido + "</td>";
+                    txt += "<td>" + element.correo + "</td>";
 
-          // let perfil = perfiles.find(p => p.id === element.perfilId);
-          // let txtAux = perfil ? perfil.nombre : "Desconocido";
+                    let perfil = element.perfil; // Utiliza directamente el perfil
+                    txt += "<td>" + perfil + "</td>";
 
-          txt += "<td>" + txts + "</td>";
-          txt +=
-            '<td><a href="http://localhost/SG_CINE_2024/public/usuario/edit/' +
-            element.id +
-            '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
-          txt += "</tr>";
-        })}else{ txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron Usuarios.</td></tr>";}
+                    // Botón de edición
+                    txt +=
+                        '<td><a href="http://localhost/SG_CINE_2024/public/usuario/edit/' +
+                        element.id +
+                        '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
+                    txt += "</tr>";
+                });
 
-        tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
-      })
-      .catch((error) => {
-        console.error("Error al listar Usuarios:", error);
-      });
-  },
+                // Actualiza el contenido HTML de la tabla
+                tabla.innerHTML = txt;
+            } else {
+                console.error("Error en la respuesta:", data.error);
+            }
+        })
+        .catch((error) => {
+            console.error("Error al listar Usuarios:", error);
+        });
+},
+
 
 
 };

@@ -164,14 +164,13 @@ final class PeliculaDAO extends DAO implements InterfaceDAO
 
     public function list(): array
     {
-
         $sql = "SELECT * FROM {$this->table}";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public function loadByNombrePelicula($nombre): PeliculaDTO
+    public function loadByNombrePelicula($nombre): array
     {
         $sql = "SELECT * FROM {$this->table} WHERE nombre = :nombre";
         $stmt = $this->conn->prepare($sql);
@@ -183,7 +182,7 @@ final class PeliculaDAO extends DAO implements InterfaceDAO
             throw new \Exception("La Pelicula no se cargó correctamente");
         }
 
-        return new PeliculaDTO($stmt->fetch(\PDO::FETCH_ASSOC));
+        return $arrsy=[];
     }
 
     public function loadByGenero($generoId): array

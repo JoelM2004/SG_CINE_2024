@@ -144,17 +144,23 @@ final class FuncionController extends Controller implements InterfaceController,
 
     }
 
+    public function listF(Request $request, Response $response):void{
+
+        $service = new FuncionService();
+        $response->setResult($service->listF());
+        $response->setMessage("La función se listó correctamente");
+        $response->send();
+
+    }
+
     public function listFunciones(Request $request, Response $response):void{
 
         $service = new FuncionService();
         $id = $request->getParam("id");
         $funciones = $service->listFunciones($id);
-        $funcionesArray = array_map(function($funcion) {
-        return $funcion->toArray(); // Convierte el objeto UsuarioDTO a un array
-        }, $funciones);
 
-        $response->setResult($funcionesArray);
-        $response->setMessage("La/las funciones se listaron correctamente");
+        $response->setResult($funciones); // Convierte el objeto PerfilDTO a un array
+        $response->setMessage("Función cargada correctamente");
         $response->send();
 
     }
@@ -164,7 +170,7 @@ final class FuncionController extends Controller implements InterfaceController,
         $numeroFuncion = $request->getParam('numeroFuncion'); 
         $funcion = $service->loadByNumeroFuncion($numeroFuncion);
 
-        $response->setResult($funcion->toArray()); // Convierte el objeto PerfilDTO a un array
+        $response->setResult($funcion); // Convierte el objeto PerfilDTO a un array
         $response->setMessage("Función cargada correctamente");
         $response->send();
     }
@@ -174,11 +180,8 @@ final class FuncionController extends Controller implements InterfaceController,
         $service = new FuncionService();
         $pelicula = $request->getParam('pelicula');
         $funciones = $service->loadByNombrePelicula($pelicula);
-        $funcionesArray = array_map(function($funcion) {
-        return $funcion->toArray(); // Convierte el objeto UsuarioDTO a un array
-        }, $funciones);
 
-        $response->setResult($funcionesArray);
+        $response->setResult($funciones);
         $response->setMessage("La/las funciones se listaron correctamente");
         $response->send();
     }
@@ -188,11 +191,8 @@ final class FuncionController extends Controller implements InterfaceController,
         $service = new FuncionService();
         $sala = $request->getParam('sala');
         $funciones = $service->loadByNumeroSala($sala);
-        $funcionesArray = array_map(function($funcion) {
-        return $funcion->toArray(); // Convierte el objeto UsuarioDTO a un array
-        }, $funciones);
 
-        $response->setResult($funcionesArray);
+        $response->setResult($funciones);
         $response->setMessage("La/las funciones se listaron correctamente");
         $response->send();
     }
@@ -202,11 +202,8 @@ final class FuncionController extends Controller implements InterfaceController,
         $service = new FuncionService();
         $programacion = $request->getParam('programacion');
         $funciones = $service->loadByFechaProgramacion($programacion);
-        $funcionesArray = array_map(function($funcion) {
-        return $funcion->toArray(); // Convierte el objeto UsuarioDTO a un array
-        }, $funciones);
 
-        $response->setResult($funcionesArray);
+        $response->setResult($funciones);
         $response->setMessage("La/las funciones se listaron correctamente");
         $response->send();
     }

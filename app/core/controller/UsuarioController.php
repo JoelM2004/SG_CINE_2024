@@ -15,8 +15,7 @@ final class UsuarioController extends Controller implements InterfaceController,
         parent::__construct([
              "app/js/usuario/usuarioController.js",
               "app/js/usuario/usuarioService.js",
-              "app/js/singleton/singletonController.js",
-              "app/js/singleton/singletonService.js",
+              
             //  "app/js/perfil/perfilService.js",
             //  "app/js/perfil/perfilController.js"
             "assets/libs/js/viewUsuario.js"
@@ -64,7 +63,7 @@ final class UsuarioController extends Controller implements InterfaceController,
         $nombre = $request->getParam('nombre'); 
         $usuario = $service->loadByNameAccount($nombre);
 
-        $response->setResult($usuario->toArray()); // Convierte el objeto PerfilDTO a un array
+        $response->setResult($usuario); // Convierte el objeto PerfilDTO a un array
         $response->setMessage("Usuario cargado correctamente");
         $response->send();
     }
@@ -73,14 +72,9 @@ final class UsuarioController extends Controller implements InterfaceController,
 
         $service = new UsuarioService();
         $perfil = $request->getParam('perfil');
-
         $usuarios = $service->loadByPerfil($perfil);
 
-        $usuariosArray = array_map(function($usuario) {
-        return $usuario->toArray(); // Convierte el objeto UsuarioDTO a un array
-        }, $usuarios);
-
-        $response->setResult($usuariosArray);
+        $response->setResult($usuarios);
         $response->setMessage("El/los usuarios se listaron correctamente");
         $response->send();
 
@@ -163,6 +157,15 @@ final class UsuarioController extends Controller implements InterfaceController,
 
         $service = new UsuarioService();
         $response->setResult($service->list());
+        $response->setMessage("El usuario se listó correctamente");
+        $response->send();
+
+    }
+
+    public function listUsu(Request $request, Response $response):void{
+
+        $service = new UsuarioService();
+        $response->setResult($service->listUsu());
         $response->setMessage("El usuario se listó correctamente");
         $response->send();
 

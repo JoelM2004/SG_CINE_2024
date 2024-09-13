@@ -50,14 +50,9 @@ final class ComentarioController extends Controller
 
         $service = new ComentarioService();
         $pelicula = $request->getParam('pelicula');
-
         $comentarios = $service->listPeli($pelicula);
 
-        $comentariosArray = array_map(function($comentario) {
-        return $comentario->toArray(); // Convierte el objeto UsuarioDTO a un array
-        }, $comentarios);
-
-        $response->setResult($comentariosArray);
+        $response->setResult($comentarios);
         $response->setMessage("El/los comentarios se listaron correctamente");
         $response->send();
 

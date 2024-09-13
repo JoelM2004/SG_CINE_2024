@@ -44,15 +44,7 @@ final class ComentarioDAO extends DAO implements InterfaceDAO
     }
 
     public function update(InterfaceDTO $object):void{
-        $this->validate($object);
-        $sql="UPDATE {$this->table} SET 
-        peliculaId=:peliculaId,
-        usuarioId=:usuarioId,
-        comentario=:comentario 
-        WHERE id=:id";
-        $stmt=$this ->conn->prepare($sql);
-        $stmt->execute($object->toArray());
-
+        
     }
 
     public function delete($id):void{
@@ -76,19 +68,28 @@ final class ComentarioDAO extends DAO implements InterfaceDAO
     }
 
     public function listPeli($pelicula): array
-{
-    $sql = "SELECT * FROM {$this->table} WHERE peliculaId = :peliculaId";
-    $stmt = $this->conn->prepare($sql);
-    $stmt->execute(["peliculaId" => $pelicula]);
-
-    // Recuperar todos los resultados y convertirlos en objetos ComentarioDTO
-    $comentarios = [];
-    while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-        $comentarios[] = new ComentarioDTO($row);  // Aquí debes agregar a $comentarios, no a $usuarios
+    {
+        $sql = "
+        SELECT
+            c.id,
+            c.peliculaId,
+            c.comentario,
+            u.cuenta as cuenta,
+            p.nombre as perfil,
+            u.id as userId
+        FROM {$this->table} c
+        INNER JOIN usuarios u ON c.usuarioId = u.id
+        INNER JOIN perfiles p ON u.perfilId = p.id
+        WHERE c.peliculaId = :peliculaId
+        ";
+    
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(["peliculaId" => $pelicula]);
+    
+        // Recuperar todos los resultados y convertirlos en un arreglo asociativo
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
-
-    return $comentarios;  // Devuelve el array $comentarios
-}
+    
 
 
 

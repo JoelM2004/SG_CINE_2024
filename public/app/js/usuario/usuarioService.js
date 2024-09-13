@@ -90,31 +90,9 @@ let userService = {
         });
     },
     
-    load: (id) => {
-      return fetch(`usuario/load/${id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(response.status);
-          }
-          return response.json();
-        })
-        .then((data) => {
-          return data;
-        })
-        .catch((error) => {
-          console.error("Error en la petición: ", error);
-          throw error;
-        });
-    },
   
     list: () => {
-      return fetch("usuario/list", {
+      return fetch("usuario/listUsu", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

@@ -195,16 +195,12 @@ let funcionController = {
       })
       .catch((err) => console.log(err));
   },
-  
-  list: async () => {
+
+  list: () => {
     console.log("Listando Funciones...");
 
-    pelicula = await singletonController.listPelicula();
-    sala = await singletonController.listSala();
-    programacion = await singletonController.listProgramacion();
-
     index = 0;
-    await funcionService
+    funcionService
       .list()
       .then((data) => {
         console.log("Funciones listadas:", data);
@@ -219,26 +215,16 @@ let funcionController = {
           txt += "<td>" + formatHour(element.horaInicio) + "</td>";
           txt += "<td>" + element.duracion + "</td>";
           txt += "<td>" + element.numeroFuncion + "</td>";
+          txt += "<td>" + element.nombre + "</td>";  
+          txt += "<td>" + element.numeroSala + "</td>";
+        
 
-          pelicula.forEach((elemento) => {
-            if (elemento.id == element.peliculaId)
-              txt += "<td>" + elemento.nombre  + "</td>";
-          });
-
-          sala.forEach((elemento) => {
-            if (elemento.id == element.salaId)
-              txt += "<td>" + elemento.numeroSala + "</td>";
-          });
-
-          programacion.forEach((elemento) => {
-            if (elemento.id == element.programacionId)
-              txt +=
-                "<td>" +
-                formatDate(elemento.fechaInicio) +
-                " a " +
-                formatDate(elemento.fechaFin) +
-                "</td>";
-          });
+          txt +=
+            "<td>" +
+            formatDate(element.fechaInicio) +
+            " a " +
+            formatDate(element.fechaFin) +
+            "</td>";
 
           txt += "<td>" + element.precio + "</td>";
 
@@ -267,7 +253,7 @@ let funcionController = {
           alert(data.mensaje); // Muestra el mensaje del servidor al usuario
           setTimeout(() => {
             location.reload();
-        }, 300);
+          }, 300);
         })
         .catch((error) => {
           console.error("Error al eliminar la función:", error);
@@ -395,23 +381,25 @@ let funcionController = {
     }
   },
 
-  loadByNumeroSala: async () => {
+  loadByNumeroSala:  () => {
     console.log("Listando Funciones...");
 
-    pelicula = await singletonController.listPelicula();
-    sala = await singletonController.listSala();
-    programacion = await singletonController.listProgramacion();
-
     index = 0;
-    await funcionService
+    funcionService
       .loadByNumeroSala(document.getElementById("filterNumeroSalaInput").value)
       .then((data) => {
         console.log("Funciones listadas:", data);
         let tabla = document.getElementById("tbodyFunciones");
         let txt = "";
 
+        if (data.result.length == 0) {
+          txt =
+            "<tr><td colspan='15' style='text-align: center;'>No se encontraron Funciones.</td></tr>";
+          tabla.innerHTML = txt;
+          return;
+        }
+
         // Obtener la lista de perfiles
-        if(data.result.length>0){
         data.result.forEach((element) => {
           txt += "<tr>";
           txt += "<th>" + (index = index + 1) + "</th>";
@@ -419,26 +407,16 @@ let funcionController = {
           txt += "<td>" + formatHour(element.horaInicio) + "</td>";
           txt += "<td>" + element.duracion + "</td>";
           txt += "<td>" + element.numeroFuncion + "</td>";
+          txt += "<td>" + element.nombre + "</td>";  
+          txt += "<td>" + element.numeroSala + "</td>";
+        
 
-          pelicula.forEach((elemento) => {
-            if (elemento.id == element.peliculaId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
-
-          sala.forEach((elemento) => {
-            if (elemento.id == element.salaId)
-              txt += "<td>" + elemento.numeroSala + "</td>";
-          });
-
-          programacion.forEach((elemento) => {
-            if (elemento.id == element.programacionId)
-              txt +=
-                "<td>" +
-                formatDate(elemento.fechaInicio) +
-                " a " +
-                formatDate(elemento.fechaFin) +
-                "</td>";
-          });
+          txt +=
+            "<td>" +
+            formatDate(element.fechaInicio) +
+            " a " +
+            formatDate(element.fechaFin) +
+            "</td>";
 
           txt += "<td>" + element.precio + "</td>";
 
@@ -447,28 +425,20 @@ let funcionController = {
             element.id +
             '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
           txt += "</tr>";
-        })} else{txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron funciones.</td></tr>"
-
-
-
-        }
+        });
 
         tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
       })
       .catch((error) => {
-        console.error("Error al listar Usuarios:", error);
+        console.error("Error al listar Funciones:", error);
       });
   },
 
-  loadByFechaProgramacion: async () => {
+  loadByFechaProgramacion:  () => {
     console.log("Listando Funciones...");
 
-    pelicula = await singletonController.listPelicula();
-    sala = await singletonController.listSala();
-    programacion = await singletonController.listProgramacion();
-
     index = 0;
-    await funcionService
+    funcionService
       .loadByFechaProgramacion(
         document.getElementById("filterFechaProgramacionInput").value
       )
@@ -477,7 +447,14 @@ let funcionController = {
         let tabla = document.getElementById("tbodyFunciones");
         let txt = "";
 
-        if(data.result.length>0) {
+        if (data.result.length == 0) {
+          txt =
+            "<tr><td colspan='15' style='text-align: center;'>No se encontraron Funciones.</td></tr>";
+          tabla.innerHTML = txt;
+          return;
+        }
+
+        // Obtener la lista de perfiles
         data.result.forEach((element) => {
           txt += "<tr>";
           txt += "<th>" + (index = index + 1) + "</th>";
@@ -485,26 +462,16 @@ let funcionController = {
           txt += "<td>" + formatHour(element.horaInicio) + "</td>";
           txt += "<td>" + element.duracion + "</td>";
           txt += "<td>" + element.numeroFuncion + "</td>";
+          txt += "<td>" + element.nombre + "</td>";  
+          txt += "<td>" + element.numeroSala + "</td>";
+        
 
-          pelicula.forEach((elemento) => {
-            if (elemento.id == element.peliculaId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
-
-          sala.forEach((elemento) => {
-            if (elemento.id == element.salaId)
-              txt += "<td>" + elemento.numeroSala + "</td>";
-          });
-
-          programacion.forEach((elemento) => {
-            if (elemento.id == element.programacionId)
-              txt +=
-                "<td>" +
-                formatDate(elemento.fechaInicio) +
-                " a " +
-                formatDate(elemento.fechaFin) +
-                "</td>";
-          });
+          txt +=
+            "<td>" +
+            formatDate(element.fechaInicio) +
+            " a " +
+            formatDate(element.fechaFin) +
+            "</td>";
 
           txt += "<td>" + element.precio + "</td>";
 
@@ -513,24 +480,20 @@ let funcionController = {
             element.id +
             '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
           txt += "</tr>";
-        })} else{txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron funciones.</td></tr>"}
+        });
 
         tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
       })
       .catch((error) => {
-        console.error("Error al listar Usuarios:", error);
+        console.error("Error al listar Funciones:", error);
       });
   },
 
-  loadByNombrePelicula: async () => {
+  loadByNombrePelicula:  () => {
     console.log("Listando Funciones...");
 
-    pelicula = await singletonController.listPelicula();
-    sala = await singletonController.listSala();
-    programacion = await singletonController.listProgramacion();
-
     index = 0;
-    await funcionService
+    funcionService
       .loadByNombrePelicula(
         document.getElementById("filterNombrePeliculaInput").value
       )
@@ -539,7 +502,14 @@ let funcionController = {
         let tabla = document.getElementById("tbodyFunciones");
         let txt = "";
 
-        if(data.result.length>0){
+        if (data.result.length == 0) {
+          txt =
+            "<tr><td colspan='15' style='text-align: center;'>No se encontraron Funciones.</td></tr>";
+          tabla.innerHTML = txt;
+          return;
+        }
+
+        // Obtener la lista de perfiles
         data.result.forEach((element) => {
           txt += "<tr>";
           txt += "<th>" + (index = index + 1) + "</th>";
@@ -547,26 +517,16 @@ let funcionController = {
           txt += "<td>" + formatHour(element.horaInicio) + "</td>";
           txt += "<td>" + element.duracion + "</td>";
           txt += "<td>" + element.numeroFuncion + "</td>";
+          txt += "<td>" + element.nombre + "</td>";  
+          txt += "<td>" + element.numeroSala + "</td>";
+        
 
-          pelicula.forEach((elemento) => {
-            if (elemento.id == element.peliculaId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
-
-          sala.forEach((elemento) => {
-            if (elemento.id == element.salaId)
-              txt += "<td>" + elemento.numeroSala + "</td>";
-          });
-
-          programacion.forEach((elemento) => {
-            if (elemento.id == element.programacionId)
-              txt +=
-                "<td>" +
-                formatDate(elemento.fechaInicio) +
-                " a " +
-                formatDate(elemento.fechaFin) +
-                "</td>";
-          });
+          txt +=
+            "<td>" +
+            formatDate(element.fechaInicio) +
+            " a " +
+            formatDate(element.fechaFin) +
+            "</td>";
 
           txt += "<td>" + element.precio + "</td>";
 
@@ -575,25 +535,20 @@ let funcionController = {
             element.id +
             '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
           txt += "</tr>";
-        })}else{txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron funciones.</td></tr>"}
+        });
 
         tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
       })
       .catch((error) => {
-        console.error("Error al listar Usuarios:", error);
+        console.error("Error al listar Funciones:", error);
       });
   },
 
-  loadByNumeroFuncion: async () => {
+  loadByNumeroFuncion:  () => {
     console.log("Listando Funciones...");
 
-    pelicula = await singletonController.listPelicula();
-    sala = await singletonController.listSala();
-    programacion = await singletonController.listProgramacion();
-
-
     index = 0;
-    await funcionService
+    funcionService
       .loadByNumeroFuncion(
         document.getElementById("filterNumeroFuncionInput").value
       )
@@ -602,125 +557,96 @@ let funcionController = {
         let tabla = document.getElementById("tbodyFunciones");
         let txt = "";
 
+        if (data.result.length == 0) {
+          txt =
+            "<tr><td colspan='15' style='text-align: center;'>No se encontraron Funciones.</td></tr>";
+          tabla.innerHTML = txt;
+          return;
+        }
 
-        if(data.error==""){
         // Obtener la lista de perfiles
-        element = data.result;
-        txt += "<tr>";
-        txt += "<th>" + (index = index + 1) + "</th>";
-        txt += "<td>" + formatDate(element.fecha) + "</td>";
-        txt += "<td>" + formatHour(element.horaInicio) + "</td>";
-        txt += "<td>" + element.duracion + "</td>";
-        txt += "<td>" + element.numeroFuncion + "</td>";
+        data.result.forEach((element) => {
+          txt += "<tr>";
+          txt += "<th>" + (index = index + 1) + "</th>";
+          txt += "<td>" + formatDate(element.fecha) + "</td>";
+          txt += "<td>" + formatHour(element.horaInicio) + "</td>";
+          txt += "<td>" + element.duracion + "</td>";
+          txt += "<td>" + element.numeroFuncion + "</td>";
+          txt += "<td>" + element.nombre + "</td>";  
+          txt += "<td>" + element.numeroSala + "</td>";
+        
 
-        pelicula.forEach((elemento) => {
-          if (elemento.id == element.peliculaId)
-            txt += "<td>" + elemento.nombre + "</td>";
+          txt +=
+            "<td>" +
+            formatDate(element.fechaInicio) +
+            " a " +
+            formatDate(element.fechaFin) +
+            "</td>";
+
+          txt += "<td>" + element.precio + "</td>";
+
+          txt +=
+            '<td><a href="http://localhost/SG_CINE_2024/public/funcion/edit/' +
+            element.id +
+            '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
+          txt += "</tr>";
         });
 
-        sala.forEach((elemento) => {
-          if (elemento.id == element.salaId)
-            txt += "<td>" + elemento.numeroSala + "</td>";
-        });
-
-        programacion.forEach((elemento) => {
-          if (elemento.id == element.programacionId)
-            txt +=
-              "<td>" +
-              formatDate(elemento.fechaInicio) +
-              " a " +
-              formatDate(elemento.fechaFin) +
-              "</td>";
-        });
-
-        txt += "<td>" + element.precio + "</td>";
-
-        txt +=
-          '<td><a href="http://localhost/SG_CINE_2024/public/funcion/edit/' +
-          element.id +
-          '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
-        txt += "</tr>";
-      }else{txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron funciones.</td></tr>"}
         tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
       })
       .catch((error) => {
-        console.error("Error al listar Usuarios:", error);
+        console.error("Error al listar Funciones:", error);
       });
   },
 
-  listFunciones: async () => {
+  listFunciones: () => {
     console.log("Listando Funciones...");
-
-
-    let salas = await singletonController.listSala();
-    let audios = await singletonController.listAudio();
-    let tipos = await singletonController.listTipo();
-    let peliculas = await singletonController.listPelicula();
-
-    let data = await funcionService.listFunciones(document.getElementById("peliculaId").dataset.id);
-    console.log("Funciones listadas:", data);
-
-    let listaFunciones = document.getElementById("funciones-lista");
-    let txt = "";
-
-    if (data.result.length === 0) {
+  
+    funcionService.listFunciones(
+      document.getElementById("peliculaId").dataset.id
+    ).then((data) => {
+      console.log("Funciones listadas:", data.result);
+  
+      let listaFunciones = document.getElementById("funciones-lista");
+      let txt = "";
+  
+      if (data.result.length === 0) {
         // Si no hay funciones disponibles, muestra un mensaje
         txt = `<p class="list-group-item">No hay funciones disponibles.</p>`;
-    } else {
+      } else {
         // Generar dinámicamente las funciones
         data.result.forEach((element) => {
-            let salatxt = "";
-            let audiotxt = "";
-            let tipotxt = "";
-
-            let id=element.id
-            console.log(element)
-
-
-            salas.forEach((elemento) => {
-                if (elemento.id == element.salaId) salatxt = elemento.numeroSala;
-            });
-
-            let pelicula = {};
-            peliculas.forEach((elemento) => {
-                if (elemento.id == element.peliculaId) {
-                    pelicula = elemento;
-                }
-            });
-
-            tipos.forEach((elemento) => {
-                if (elemento.id == pelicula.tipoId) tipotxt = elemento.nombre;
-            });
-
-            audios.forEach((elemento) => {
-                if (elemento.id == pelicula.audioId) audiotxt = elemento.nombre;
-            });
-
-            txt += `
-  <a href="http://localhost/SG_CINE_2024/public/entrada/view/${element.id}" class="list-group-item list-group-item-action py-3">
-    <div class="d-flex w-100 justify-content-between">
-      <h5 class="mb-1" style="font-size: 1.25rem; font-weight: bold;">
-        <i class="fas fa-film"></i> Función ${element.numeroFuncion} - ${formatDate(element.fecha)} a las ${formatHour(element.horaInicio)}
-      </h5>
-      <small style="font-size: 1rem;">
-        <i class="fas fa-clock"></i> Duración: ${element.duracion} min
-      </small>
-    </div>
-    <p class="mb-1" style="font-size: 1.15rem;">
-      <i class="fas fa-theater-masks"></i> Sala ${salatxt} - ${tipotxt} - <i class="fas fa-volume-up"></i> ${audiotxt} - <i class="fas fa-dollar-sign"></i> $${element.precio}
-    </p>
-  </a>
-`;
-
+          let salatxt = element.numeroSala;
+          let tipotxt = element.nombreTipo;
+          let audiotxt = element.nombreAudio;
+  
+          txt += `
+          <a href="http://localhost/SG_CINE_2024/public/entrada/view/${element.id}" class="list-group-item list-group-item-action py-3">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1" style="font-size: 1.25rem; font-weight: bold;">
+                <i class="fas fa-film"></i> Función ${element.numeroFuncion} - ${formatDate(element.fecha)} a las ${formatHour(element.horaInicio)}
+              </h5>
+              <small style="font-size: 1rem;">
+                <i class="fas fa-clock"></i> Duración: ${element.duracion} min
+              </small>
+            </div>
+            <p class="mb-1" style="font-size: 1.15rem;">
+              <i class="fas fa-theater-masks"></i> Sala ${salatxt} - ${tipotxt} - 
+              <i class="fas fa-volume-up"></i> ${audiotxt} - 
+              <i class="fas fa-dollar-sign"></i> $${element.precio}
+            </p>
+          </a>
+          `;
         });
-    }
+      }
+  
+      listaFunciones.innerHTML = txt; // Reemplaza el contenido HTML con las funciones generadas
+    });
+  }
+,  
 
-    listaFunciones.innerHTML = txt; // Reemplaza el contenido HTML con las funciones generadas
-},
-
-
-};
-
+}
+  
 const formatDate = (dateString) => {
   const [year, month, day] = dateString.split("-");
   return `${day}/${month}/${year}`;

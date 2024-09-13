@@ -46,7 +46,13 @@ final class FuncionService  extends Service implements InterfaceService {
         return $dao->list();
     }
 
-    public function loadByNumeroFuncion($NumeroFuncio):FuncionDTO{
+    public function listF():array{
+        $conn=Connection::get();
+        $dao= new FuncionDAO($conn);
+        return $dao->listF();
+    }
+
+    public function loadByNumeroFuncion($NumeroFuncio):array{
         $conn= Connection::get();
         $dao= new FuncionDAO($conn);
         return $dao->loadByNumeroFuncion($NumeroFuncio);

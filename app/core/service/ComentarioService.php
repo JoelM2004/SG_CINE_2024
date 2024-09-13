@@ -28,9 +28,7 @@ final class ComentarioService  extends Service implements InterfaceService {
     }
 
     public function update(array $object):void{
-        $conn= Connection::get();
-        $dao= new ComentarioDAO($conn);
-        $dao->update(new ComentarioDTO($object)); 
+        
     }
 
     public function delete($id):void{

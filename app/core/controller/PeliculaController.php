@@ -149,7 +149,7 @@ final class PeliculaController extends Controller implements InterfaceController
         $nombre = $request->getParam('nombre'); 
         $Pelicula = $service->loadByNombrePelicula($nombre);
 
-        $response->setResult($Pelicula->toArray()); // Convierte el objeto PerfilDTO a un array
+        $response->setResult($Pelicula); // Convierte el objeto PerfilDTO a un array
         $response->setMessage("Pelicula cargado correctamente");
         $response->send();
     }
@@ -161,11 +161,8 @@ final class PeliculaController extends Controller implements InterfaceController
 
         $peliculas = $service->loadByGenero($generoId);
 
-        $peliculasArray = array_map(function($pelicula) {
-        return $pelicula->toArray(); // Convierte el objeto PeliculaDTO a un array
-        }, $peliculas);
 
-        $response->setResult($peliculasArray);
+        $response->setResult($peliculas);
         $response->setMessage("La/las películas se listaron correctamente");
         $response->send();
 
@@ -178,11 +175,7 @@ final class PeliculaController extends Controller implements InterfaceController
 
         $peliculas = $service->loadByCalificacion($calificacionId);
 
-        $peliculasArray = array_map(function($pelicula) {
-        return $pelicula->toArray(); // Convierte el objeto PeliculaDTO a un array
-        }, $peliculas);
-
-        $response->setResult($peliculasArray);
+        $response->setResult($peliculas);
         $response->setMessage("La/las películas se listaron correctamente");
         $response->send();
 
@@ -195,11 +188,8 @@ final class PeliculaController extends Controller implements InterfaceController
 
         $peliculas = $service->loadByIdioma($idiomaId);
 
-        $peliculasArray = array_map(function($pelicula) {
-        return $pelicula->toArray(); // Convierte el objeto PeliculaDTO a un array
-        }, $peliculas);
 
-        $response->setResult($peliculasArray);
+        $response->setResult($peliculas);
         $response->setMessage("La/las películas se listaron correctamente");
         $response->send();
 
@@ -212,11 +202,8 @@ final class PeliculaController extends Controller implements InterfaceController
 
         $peliculas = $service->loadByPais($paisId);
 
-        $peliculasArray = array_map(function($pelicula) {
-        return $pelicula->toArray(); // Convierte el objeto PeliculaDTO a un array
-        }, $peliculas);
 
-        $response->setResult($peliculasArray);
+        $response->setResult($peliculas);
         $response->setMessage("La/las películas se listaron correctamente");
         $response->send();
 

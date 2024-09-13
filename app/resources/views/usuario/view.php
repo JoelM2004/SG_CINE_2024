@@ -12,7 +12,7 @@ $dao = new UsuarioDAO($conn);
 $datos = $dao->load($id);
 
 $daoEntrada = new EntradaDAO($conn);
-$entradas = $daoEntrada->loadByCuenta($id);
+$entradas = $daoEntrada->loadByCuentaView($id);
 $entradas=array_reverse($entradas);
 
 $daoPelicula = new PeliculaDAO($conn);
@@ -90,12 +90,12 @@ function formatDate($date) {
                 <ul class="list-group list-group-flush">
                     <?php foreach ($entradas as $elemento): ?>
                         <?php
-                        $funcion = $daoFuncion->load($elemento->getFuncionId())->getNumeroFuncion();
-                        $pelicula = $daoPelicula->load($daoFuncion->load($elemento->getFuncionId())->getPeliculaId())->getNombre();
-                        $horaFuncion = $elemento->getHoraFuncion();
-                        $horaVenta = $elemento->getHoraVenta();
-                        $numeroTicket = $elemento->getNumeroTicket();
-                        $precio=$elemento->getPrecio();
+                        $funcion = $elemento["numeroFuncion"];
+                        $pelicula = $elemento["nombre"];
+                        $horaFuncion = $elemento["horarioFuncion"];
+                        $horaVenta = $elemento["horarioVenta"];
+                        $numeroTicket = $elemento["numeroTicket"];
+                        $precio=$elemento["precio"];
                         ?>
                         <li class="list-group-item d-flex justify-content-between align-items-start">
                             <div>

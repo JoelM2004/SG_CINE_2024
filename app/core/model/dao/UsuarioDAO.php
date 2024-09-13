@@ -167,12 +167,6 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
         }
     }
 
-
-
-
-
-
-
     private function generateRandomPassword(int $minLength, int $maxLength): string
     {
         $length = rand($minLength, $maxLength);
@@ -208,34 +202,46 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
     }
 
 
-    public function loadByNameAccount($cuenta): UsuarioDTO
+    public function loadByNameAccount($cuenta): array
     {
-        $sql = "SELECT id,cuenta,nombres,clave,correo,perfilId,apellido  FROM {$this->table} WHERE cuenta = :cuenta";
+        $sql = "SELECT
+        u.id, 
+        u.cuenta,
+        u.nombres,
+        u.correo,
+        u.apellido,
+        p.nombre as perfil
+
+        FROM {$this->table} u
+        inner join perfiles p on u.perfilId=p.id
+            
+        where u.cuenta = :id
+
+        ";
         $stmt = $this->conn->prepare($sql);
-
-        $stmt->execute(["cuenta" => $cuenta]);
-
-        if ($stmt->rowCount() !== 1) {
-
-            throw new \Exception("El Usuario no se cargó correctamente");
-        }
-
-        return new UsuarioDTO($stmt->fetch(\PDO::FETCH_ASSOC));
+        $stmt->execute(["id"=>$cuenta]);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function loadByPerfil($perfil): array
     {
-        $sql = "SELECT id, cuenta, nombres, clave, correo, perfilId, apellido FROM {$this->table} WHERE perfilId = :perfilId";
+        $sql = "SELECT
+        u.id, 
+        u.cuenta,
+        u.nombres,
+        u.correo,
+        u.apellido,
+        p.nombre as perfil
+
+        FROM {$this->table} u
+        inner join perfiles p on u.perfilId=p.id
+
+        where p.id = :id
+
+        ";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(["perfilId" => $perfil]);
-
-        // Recuperar todos los resultados y convertirlos a objetos UsuarioDTO
-        $usuarios = [];
-        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $usuarios[] = new UsuarioDTO($row);
-        }
-
-        return $usuarios;
+        $stmt->execute(["id"=>$perfil]);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function delete($id): void
@@ -253,8 +259,25 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
 
     public function list(): array
     {
-
         $sql = "SELECT * FROM {$this->table}";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function listUsu(): array
+    {
+        $sql = "SELECT
+        u.id, 
+        u.cuenta,
+        u.nombres,
+        u.correo,
+        u.apellido,
+        p.nombre as perfil
+
+        FROM {$this->table} u
+        inner join perfiles p on u.perfilId=p.id
+        ";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -310,8 +333,8 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
     private function validateCorreoExiste(array $object): void
     {
         $sql = "SELECT count(u.id) AS cantidad FROM {$this->table} u
-    inner join perfiles p on u.perfilId=p.id
-    WHERE u.correo = :correo AND p.nombre='Externos'";
+        inner join perfiles p on u.perfilId=p.id
+        WHERE u.correo = :correo AND p.nombre='Externos'";
         $stmt = $this->conn->prepare($sql);
 
         $params = [
@@ -325,7 +348,6 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
             throw new \Exception("El dato correo ({$object["correo"]}) no existe en la base de datos o usted está deseando cambiar la contraseña de un tipo de cuenta que no está permitido, en este caso, comuníquese con un Administrador");
         }
     }
-
 
     private function validateCuenta(UsuarioDTO $object): void
     {

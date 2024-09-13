@@ -27,7 +27,7 @@ final class UsuarioService  extends Service implements InterfaceService {
         return $dao->load($id);
     }
 
-    public function loadByNameAccount($nombre):UsuarioDTO{
+    public function loadByNameAccount($nombre):array{
         $conn= Connection::get();
         $dao= new UsuarioDAO($conn);
         return $dao->loadByNameAccount($nombre);
@@ -70,6 +70,12 @@ final class UsuarioService  extends Service implements InterfaceService {
         $conn= Connection::get();
         $dao= new UsuarioDAO($conn);
         return $dao->list();
+    }
+
+    public function listUsu():array{
+        $conn= Connection::get();
+        $dao= new UsuarioDAO($conn);
+        return $dao->listUsu();
     }
 
    
