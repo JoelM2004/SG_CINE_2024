@@ -170,79 +170,198 @@ final class PeliculaDAO extends DAO implements InterfaceDAO
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public function loadByNombrePelicula($nombre): array
+    public function listP(): array
     {
-        $sql = "SELECT * FROM {$this->table} WHERE nombre = :nombre";
+        $sql = "SELECT 
+        p.id,
+        p.nombre as nombrePelicula,
+        p.duracion,
+        p.anoEstreno,
+        p.disponibilidad,
+        p.fechaIngreso,
+        g.nombre as genero,
+        pa.nombre as pais,
+        i.nombre as idioma,
+        c.nombre as calificacion,
+        t.nombre as tipo,
+        a.nombre as audio
+
+        FROM {$this->table} p
+
+        inner join generos g on p.generoId=g.id
+        inner join paises pa on p.paisId=pa.id
+        inner join idiomas i on p.idiomaId=i.id
+        inner join calificaciones c on p.calificacionId=c.id
+        inner join tipos t on p.tipoId=t.id
+        inner join audios a on p.audioId=a.id
+
+        ";
         $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
 
-        $stmt->execute(["nombre" => $nombre]);
 
-        if ($stmt->rowCount() !== 1) {
+    public function loadByNombrePelicula($nombre): array
+    {   
+        $this->existep($nombre);
 
-            throw new \Exception("La Pelicula no se cargó correctamente");
-        }
+        $sql = "SELECT 
+        p.id,
+        p.nombre as nombrePelicula,
+        p.duracion,
+        p.anoEstreno,
+        p.disponibilidad,
+        p.fechaIngreso,
+        g.nombre as genero,
+        pa.nombre as pais,
+        i.nombre as idioma,
+        c.nombre as calificacion,
+        t.nombre as tipo,
+        a.nombre as audio
 
-        return $arrsy=[];
+        FROM {$this->table} p
+
+        inner join generos g on p.generoId=g.id
+        inner join paises pa on p.paisId=pa.id
+        inner join idiomas i on p.idiomaId=i.id
+        inner join calificaciones c on p.calificacionId=c.id
+        inner join tipos t on p.tipoId=t.id
+        inner join audios a on p.audioId=a.id
+
+        where p.nombre= :id
+        ";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(["id"=>$nombre]);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function loadByGenero($generoId): array
     {
-        $sql = "SELECT * FROM {$this->table} WHERE generoId = :generoId";
+        $sql = "SELECT 
+        p.id,
+        p.nombre as nombrePelicula,
+        p.duracion,
+        p.anoEstreno,
+        p.disponibilidad,
+        p.fechaIngreso,
+        g.nombre as genero,
+        pa.nombre as pais,
+        i.nombre as idioma,
+        c.nombre as calificacion,
+        t.nombre as tipo,
+        a.nombre as audio
+
+        FROM {$this->table} p
+
+        inner join generos g on p.generoId=g.id
+        inner join paises pa on p.paisId=pa.id
+        inner join idiomas i on p.idiomaId=i.id
+        inner join calificaciones c on p.calificacionId=c.id
+        inner join tipos t on p.tipoId=t.id
+        inner join audios a on p.audioId=a.id
+
+        where g.id= :id
+        ";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(["generoId" => $generoId]);
-
-        // Recuperar todos los resultados y convertirlos a objetos PeliculaDTO
-        $Peliculas = [];
-        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $Peliculas[] = new PeliculaDTO($row);
-        }
-
-        return $Peliculas;
+        $stmt->execute(["id"=>$generoId]);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function loadByPais($pais): array
     {
-        $sql = "SELECT * FROM {$this->table} WHERE paisId = :paisId";
+        $sql = "SELECT 
+        p.id,
+        p.nombre as nombrePelicula,
+        p.duracion,
+        p.anoEstreno,
+        p.disponibilidad,
+        p.fechaIngreso,
+        g.nombre as genero,
+        pa.nombre as pais,
+        i.nombre as idioma,
+        c.nombre as calificacion,
+        t.nombre as tipo,
+        a.nombre as audio
+
+        FROM {$this->table} p
+
+        inner join generos g on p.generoId=g.id
+        inner join paises pa on p.paisId=pa.id
+        inner join idiomas i on p.idiomaId=i.id
+        inner join calificaciones c on p.calificacionId=c.id
+        inner join tipos t on p.tipoId=t.id
+        inner join audios a on p.audioId=a.id
+
+        where pa.id= :id
+        ";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(["paisId" => $pais]);
-
-        // Recuperar todos los resultados y convertirlos a objetos PeliculaDTO
-        $Peliculas = [];
-        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $Peliculas[] = new PeliculaDTO($row);
-        }
-
-        return $Peliculas;
+        $stmt->execute(["id"=>$pais]);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function loadByIdioma($idioma): array
     {
-        $sql = "SELECT * FROM {$this->table} WHERE idiomaId = :idiomaId";
+        $sql = "SELECT 
+        p.id,
+        p.nombre as nombrePelicula,
+        p.duracion,
+        p.anoEstreno,
+        p.disponibilidad,
+        p.fechaIngreso,
+        g.nombre as genero,
+        pa.nombre as pais,
+        i.nombre as idioma,
+        c.nombre as calificacion,
+        t.nombre as tipo,
+        a.nombre as audio
+
+        FROM {$this->table} p
+
+        inner join generos g on p.generoId=g.id
+        inner join paises pa on p.paisId=pa.id
+        inner join idiomas i on p.idiomaId=i.id
+        inner join calificaciones c on p.calificacionId=c.id
+        inner join tipos t on p.tipoId=t.id
+        inner join audios a on p.audioId=a.id
+
+        where i.id= :id
+        ";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(["idiomaId" => $idioma]);
-
-        // Recuperar todos los resultados y convertirlos a objetos PeliculaDTO
-        $Peliculas = [];
-        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $Peliculas[] = new PeliculaDTO($row);
-        }
-
-        return $Peliculas;
+        $stmt->execute(["id"=>$idioma]);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function loadByCalificacion($calificacion): array
     {
-        $sql = "SELECT * FROM {$this->table} WHERE calificacionId = :calificacionId";
+        $sql = "SELECT 
+        p.id,
+        p.nombre as nombrePelicula,
+        p.duracion,
+        p.anoEstreno,
+        p.disponibilidad,
+        p.fechaIngreso,
+        g.nombre as genero,
+        pa.nombre as pais,
+        i.nombre as idioma,
+        c.nombre as calificacion,
+        t.nombre as tipo,
+        a.nombre as audio
+
+        FROM {$this->table} p
+
+        inner join generos g on p.generoId=g.id
+        inner join paises pa on p.paisId=pa.id
+        inner join idiomas i on p.idiomaId=i.id
+        inner join calificaciones c on p.calificacionId=c.id
+        inner join tipos t on p.tipoId=t.id
+        inner join audios a on p.audioId=a.id
+
+        where c.id= :id
+        ";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(["calificacionId" => $calificacion]);
-
-        // Recuperar todos los resultados y convertirlos a objetos PeliculaDTO
-        $Peliculas = [];
-        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $Peliculas[] = new PeliculaDTO($row);
-        }
-
-        return $Peliculas;
+        $stmt->execute(["id"=>$calificacion]);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     private function validate(PeliculaDTO $object): void
@@ -326,6 +445,7 @@ final class PeliculaDAO extends DAO implements InterfaceDAO
     } 
 
 
+
     public function existeCartelera($id): bool{
         $sql = "SELECT count(p.id) AS cantidad FROM {$this->table} p
         inner join funciones f on f.peliculaId = p.id
@@ -398,5 +518,24 @@ final class PeliculaDAO extends DAO implements InterfaceDAO
         if ($result->cantidad > 0) {
             throw new \Exception("Existe una imagen que está utilizando está película, elimine la/las imágenes para poder eliminar ésta película");
         }
+    }
+
+    private function existep ($nombre):void{
+
+        $sql = "SELECT count(id) AS cantidad FROM {$this->table} WHERE nombre =:id";
+        $stmt = $this->conn->prepare($sql);
+
+        // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
+        $params = [
+            ':id' => $nombre
+        ];
+
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
+
+        if ($result->cantidad = 0) {
+            throw new \Exception("No existe está película");
+        }
+
     }
 }

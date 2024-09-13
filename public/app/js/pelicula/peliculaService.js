@@ -114,7 +114,7 @@ let peliculaService = {
   },
 
   list: () => {
-    return fetch("pelicula/list", {
+    return fetch("pelicula/listP", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

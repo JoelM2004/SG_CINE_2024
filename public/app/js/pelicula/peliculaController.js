@@ -274,18 +274,11 @@ let peliculaController = {
       .catch((err) => console.log(err));
   },
   
-  list: async () => {
+  list:  () => {
     console.log("Listando Películas...");
 
-    tipos = await singletonController.listTipo();
-    audios = await singletonController.listAudio();
-    generos = await singletonController.listGenero();
-    calificaciones = await singletonController.listCalificacion();
-    idiomas = await singletonController.listIdioma();
-    paises = await singletonController.listPais();
-
     index = 0;
-    await peliculaService
+    peliculaService
       .list()
       .then((data) => {
         console.log("Películas listados:", data);
@@ -296,7 +289,7 @@ let peliculaController = {
         data.result.forEach((element) => {
           txt += "<tr>";
           txt += "<th>" + (index = index + 1) + "</th>";
-          txt += "<td>" + element.nombre + "</td>";
+          txt += "<td>" + element.nombrePelicula + "</td>";
           txt += "<td>" + element.duracion + "</td>";
           txt += "<td>" + element.anoEstreno + "</td>";
 
@@ -310,35 +303,18 @@ let peliculaController = {
 
           txt += "<td>" + formatDate(element.fechaIngreso) + "</td>";
 
-          generos.forEach((elemento) => {
-            if (elemento.id == element.generoId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
+          txt += "<td>" + element.genero + "</td>";
+          
+          txt += "<td>" + element.pais + "</td>";
+          
+          txt += "<td>" + element.idioma + "</td>";
 
-          paises.forEach((elemento) => {
-            if (elemento.id == element.paisId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
+          txt += "<td>" + element.calificacion + "</td>";
+          
+          txt += "<td>" + element.tipo + "</td>";
 
-          idiomas.forEach((elemento) => {
-            if (elemento.id == element.idiomaId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
-
-          calificaciones.forEach((elemento) => {
-            if (elemento.id == element.calificacionId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
-
-          tipos.forEach((elemento) => {
-            if (elemento.id == element.tipoId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
-
-          audios.forEach((elemento) => {
-            if (elemento.id == element.audioId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
+          txt += "<td>" + element.audio + "</td>";
+          
 
           txt +=
             '<td><a href="http://localhost/SG_CINE_2024/public/pelicula/edit/' +
@@ -350,7 +326,7 @@ let peliculaController = {
         tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
       })
       .catch((error) => {
-        console.error("Error al listar Usuarios:", error);
+        console.error("Error al listar Películas:", error);
       });
   },
 
@@ -378,18 +354,11 @@ let peliculaController = {
     }
   },
 
-  loadByGenero: async () => {
+  loadByGenero:  () => {
     console.log("Listando Películas...");
 
-    tipos = await singletonController.listTipo();
-    audios = await singletonController.listAudio();
-    generos = await singletonController.listGenero();
-    calificaciones = await singletonController.listCalificacion();
-    idiomas = await singletonController.listIdioma();
-    paises = await singletonController.listPais();
-
     index = 0;
-    await peliculaService
+    peliculaService
       .loadByGenero(document.getElementById("filterGeneroInput").value)
       .then((data) => {
         console.log("Películas listados:", data);
@@ -400,7 +369,7 @@ let peliculaController = {
         data.result.forEach((element) => {
           txt += "<tr>";
           txt += "<th>" + (index = index + 1) + "</th>";
-          txt += "<td>" + element.nombre + "</td>";
+          txt += "<td>" + element.nombrePelicula + "</td>";
           txt += "<td>" + element.duracion + "</td>";
           txt += "<td>" + element.anoEstreno + "</td>";
 
@@ -414,35 +383,18 @@ let peliculaController = {
 
           txt += "<td>" + formatDate(element.fechaIngreso) + "</td>";
 
-          generos.forEach((elemento) => {
-            if (elemento.id == element.generoId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
+          txt += "<td>" + element.genero + "</td>";
+          
+          txt += "<td>" + element.pais + "</td>";
+          
+          txt += "<td>" + element.idioma + "</td>";
 
-          paises.forEach((elemento) => {
-            if (elemento.id == element.paisId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
+          txt += "<td>" + element.calificacion + "</td>";
+          
+          txt += "<td>" + element.tipo + "</td>";
 
-          idiomas.forEach((elemento) => {
-            if (elemento.id == element.idiomaId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
-
-          calificaciones.forEach((elemento) => {
-            if (elemento.id == element.calificacionId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
-
-          tipos.forEach((elemento) => {
-            if (elemento.id == element.tipoId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
-
-          audios.forEach((elemento) => {
-            if (elemento.id == element.audioId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
+          txt += "<td>" + element.audio + "</td>";
+          
 
           txt +=
             '<td><a href="http://localhost/SG_CINE_2024/public/pelicula/edit/' +
@@ -458,18 +410,11 @@ let peliculaController = {
       })
   },
 
-  loadByPais: async () => {
+  loadByPais:  () => {
     console.log("Listando Películas...");
 
-    tipos = await singletonController.listTipo();
-    audios = await singletonController.listAudio();
-    generos = await singletonController.listGenero();
-    calificaciones = await singletonController.listCalificacion();
-    idiomas = await singletonController.listIdioma();
-    paises = await singletonController.listPais();
-
     index = 0;
-    await peliculaService
+    peliculaService
       .loadByPais(document.getElementById("filterPaisInput").value)
       .then((data) => {
         console.log("Películas listados:", data);
@@ -477,11 +422,10 @@ let peliculaController = {
         let txt = "";
 
         if(data.result.length>0){
-        // Obtener la lista de perfiles
         data.result.forEach((element) => {
           txt += "<tr>";
           txt += "<th>" + (index = index + 1) + "</th>";
-          txt += "<td>" + element.nombre + "</td>";
+          txt += "<td>" + element.nombrePelicula + "</td>";
           txt += "<td>" + element.duracion + "</td>";
           txt += "<td>" + element.anoEstreno + "</td>";
 
@@ -495,73 +439,49 @@ let peliculaController = {
 
           txt += "<td>" + formatDate(element.fechaIngreso) + "</td>";
 
-          generos.forEach((elemento) => {
-            if (elemento.id == element.generoId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
+          txt += "<td>" + element.genero + "</td>";
+          
+          txt += "<td>" + element.pais + "</td>";
+          
+          txt += "<td>" + element.idioma + "</td>";
 
-          paises.forEach((elemento) => {
-            if (elemento.id == element.paisId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
+          txt += "<td>" + element.calificacion + "</td>";
+          
+          txt += "<td>" + element.tipo + "</td>";
 
-          idiomas.forEach((elemento) => {
-            if (elemento.id == element.idiomaId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
-
-          calificaciones.forEach((elemento) => {
-            if (elemento.id == element.calificacionId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
-
-          tipos.forEach((elemento) => {
-            if (elemento.id == element.tipoId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
-
-          audios.forEach((elemento) => {
-            if (elemento.id == element.audioId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
+          txt += "<td>" + element.audio + "</td>";
+          
 
           txt +=
             '<td><a href="http://localhost/SG_CINE_2024/public/pelicula/edit/' +
             element.id +
             '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
           txt += "</tr>";
-        });
-      }else{ txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron películas.</td></tr>";}
+        })
+      } else{ txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron películas.</td></tr>";}
         tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
       })
       .catch((error) => {
         console.error("Error al listar Usuarios:", error);
-      });
+      })
   },
 
-  loadByIdioma: async () => {
+  loadByIdioma:  () => {
     console.log("Listando Películas...");
 
-    tipos = await singletonController.listTipo();
-    audios = await singletonController.listAudio();
-    generos = await singletonController.listGenero();
-    calificaciones = await singletonController.listCalificacion();
-    idiomas = await singletonController.listIdioma();
-    paises = await singletonController.listPais();
-
     index = 0;
-    await peliculaService
+    peliculaService
       .loadByIdioma(document.getElementById("filterIdiomaInput").value)
       .then((data) => {
         console.log("Películas listados:", data);
         let tabla = document.getElementById("tbodyPelicula");
         let txt = "";
 
-        if(data.result.length>0){// Obtener la lista de perfiles
+        if(data.result.length>0){
         data.result.forEach((element) => {
           txt += "<tr>";
           txt += "<th>" + (index = index + 1) + "</th>";
-          txt += "<td>" + element.nombre + "</td>";
+          txt += "<td>" + element.nombrePelicula + "</td>";
           txt += "<td>" + element.duracion + "</td>";
           txt += "<td>" + element.anoEstreno + "</td>";
 
@@ -575,62 +495,37 @@ let peliculaController = {
 
           txt += "<td>" + formatDate(element.fechaIngreso) + "</td>";
 
-          generos.forEach((elemento) => {
-            if (elemento.id == element.generoId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
+          txt += "<td>" + element.genero + "</td>";
+          
+          txt += "<td>" + element.pais + "</td>";
+          
+          txt += "<td>" + element.idioma + "</td>";
 
-          paises.forEach((elemento) => {
-            if (elemento.id == element.paisId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
+          txt += "<td>" + element.calificacion + "</td>";
+          
+          txt += "<td>" + element.tipo + "</td>";
 
-          idiomas.forEach((elemento) => {
-            if (elemento.id == element.idiomaId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
-
-          calificaciones.forEach((elemento) => {
-            if (elemento.id == element.calificacionId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
-
-          tipos.forEach((elemento) => {
-            if (elemento.id == element.tipoId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
-
-          audios.forEach((elemento) => {
-            if (elemento.id == element.audioId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
+          txt += "<td>" + element.audio + "</td>";
+          
 
           txt +=
             '<td><a href="http://localhost/SG_CINE_2024/public/pelicula/edit/' +
             element.id +
             '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
           txt += "</tr>";
-        })}
-        else{ txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron películas.</td></tr>";}
+        })
+      } else{ txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron películas.</td></tr>";}
         tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
       })
       .catch((error) => {
         console.error("Error al listar Usuarios:", error);
-      });
+      })
   },
 
-  loadByCalificacion: async () => {
+  loadByCalificacion:  () => {
     console.log("Listando Películas...");
-
-    tipos = await singletonController.listTipo();
-    audios = await singletonController.listAudio();
-    generos = await singletonController.listGenero();
-    calificaciones = await singletonController.listCalificacion();
-    idiomas = await singletonController.listIdioma();
-    paises = await singletonController.listPais();
-
     index = 0;
-    await peliculaService
+    peliculaService
       .loadByCalificacion(document.getElementById("filterCalificacionInput").value)
       .then((data) => {
         console.log("Películas listados:", data);
@@ -641,7 +536,7 @@ let peliculaController = {
         data.result.forEach((element) => {
           txt += "<tr>";
           txt += "<th>" + (index = index + 1) + "</th>";
-          txt += "<td>" + element.nombre + "</td>";
+          txt += "<td>" + element.nombrePelicula + "</td>";
           txt += "<td>" + element.duracion + "</td>";
           txt += "<td>" + element.anoEstreno + "</td>";
 
@@ -655,83 +550,53 @@ let peliculaController = {
 
           txt += "<td>" + formatDate(element.fechaIngreso) + "</td>";
 
-          generos.forEach((elemento) => {
-            if (elemento.id == element.generoId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
+          txt += "<td>" + element.genero + "</td>";
+          
+          txt += "<td>" + element.pais + "</td>";
+          
+          txt += "<td>" + element.idioma + "</td>";
 
-          paises.forEach((elemento) => {
-            if (elemento.id == element.paisId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
+          txt += "<td>" + element.calificacion + "</td>";
+          
+          txt += "<td>" + element.tipo + "</td>";
 
-          idiomas.forEach((elemento) => {
-            if (elemento.id == element.idiomaId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
-
-          calificaciones.forEach((elemento) => {
-            if (elemento.id == element.calificacionId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
-
-          tipos.forEach((elemento) => {
-            if (elemento.id == element.tipoId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
-
-          audios.forEach((elemento) => {
-            if (elemento.id == element.audioId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
+          txt += "<td>" + element.audio + "</td>";
+          
 
           txt +=
             '<td><a href="http://localhost/SG_CINE_2024/public/pelicula/edit/' +
             element.id +
             '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
           txt += "</tr>";
-        })}
-        else{ txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron películas.</td></tr>"}
-
+        })
+      } else{ txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron películas.</td></tr>";}
         tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
       })
       .catch((error) => {
         console.error("Error al listar Usuarios:", error);
-      });
+      })
   },
 
-  loadByNombrePelicula: async () => {
-    console.log("Listando Películas...");
-
-    tipos = await singletonController.listTipo();
-    audios = await singletonController.listAudio();
-    generos = await singletonController.listGenero();
-    calificaciones = await singletonController.listCalificacion();
-    idiomas = await singletonController.listIdioma();
-    paises = await singletonController.listPais();
-
+  loadByNombrePelicula:  () => {
+ 
     if(document.getElementById("filterTituloInput").value.length<=0){
       alert("Inserte un título válido")
       return
     }
 
     index = 0;
-    await peliculaService
+     peliculaService
       .loadByNombrePelicula(document.getElementById("filterTituloInput").value)
       .then((data) => {
         console.log("Películas listados:", data);
         let tabla = document.getElementById("tbodyPelicula");
         let txt = "";
 
-        element=data.result
-        
-        if(data.error===""){
-
-        
-        // Obtener la lista de perfiles
+        if(data.result.length>0){
+        data.result.forEach((element) => {
           txt += "<tr>";
           txt += "<th>" + (index = index + 1) + "</th>";
-          txt += "<td>" + element.nombre + "</td>";
+          txt += "<td>" + element.nombrePelicula + "</td>";
           txt += "<td>" + element.duracion + "</td>";
           txt += "<td>" + element.anoEstreno + "</td>";
 
@@ -745,49 +610,31 @@ let peliculaController = {
 
           txt += "<td>" + formatDate(element.fechaIngreso) + "</td>";
 
-          generos.forEach((elemento) => {
-            if (elemento.id == element.generoId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
+          txt += "<td>" + element.genero + "</td>";
+          
+          txt += "<td>" + element.pais + "</td>";
+          
+          txt += "<td>" + element.idioma + "</td>";
 
-          paises.forEach((elemento) => {
-            if (elemento.id == element.paisId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
+          txt += "<td>" + element.calificacion + "</td>";
+          
+          txt += "<td>" + element.tipo + "</td>";
 
-          idiomas.forEach((elemento) => {
-            if (elemento.id == element.idiomaId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
-
-          calificaciones.forEach((elemento) => {
-            if (elemento.id == element.calificacionId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
-
-          tipos.forEach((elemento) => {
-            if (elemento.id == element.tipoId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
-
-          audios.forEach((elemento) => {
-            if (elemento.id == element.audioId)
-              txt += "<td>" + elemento.nombre + "</td>";
-          });
+          txt += "<td>" + element.audio + "</td>";
+          
 
           txt +=
             '<td><a href="http://localhost/SG_CINE_2024/public/pelicula/edit/' +
             element.id +
             '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
           txt += "</tr>";
-        }else{ txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron películas.</td></tr>";}
-
-
-          tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
         })
+      } else{ txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron películas.</td></tr>";}
+        tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
+      })
       .catch((error) => {
         console.error("Error al listar Usuarios:", error);
-      });
+      })
   },
 
   listImagenes: async () => {

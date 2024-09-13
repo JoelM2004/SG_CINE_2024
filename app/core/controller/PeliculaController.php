@@ -209,4 +209,12 @@ final class PeliculaController extends Controller implements InterfaceController
 
     }
 
+    public function listP(Request $request, Response $response): void {
+        $service = new PeliculaService();
+        $response->setResult($service->listP());
+        $response->setMessage("La Película se listó correctamente");
+        $response->send();
+
+    }
+
 }

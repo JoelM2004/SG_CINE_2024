@@ -111,6 +111,9 @@ final class IdMiddleware extends Middleware implements InterfaceMiddleware {
         if ($controlador === "entrada" && $accion === "view") {
             $conn = Connection::get();
             $dao = new FuncionDAO($conn);
+
+            
+
             if($dao->existeCartelera($id)){
                 $this->next($request, $response);   
             }else header("refresh:0.1;url=" . APP_FRONT . "inicio/index");
