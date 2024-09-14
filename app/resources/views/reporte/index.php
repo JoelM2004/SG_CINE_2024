@@ -34,7 +34,7 @@ function formatDate($dateString)
 }
 
 ?>
-<div class="container mt-5">
+<div class="container mt-5" id="imprimir">
     <h1 class="text-center mb-4">Generar Reportes de Cine</h1>
 
     <!-- Formulario para generación de reportes -->
@@ -105,6 +105,8 @@ function formatDate($dateString)
 
         <div class="text-center mt-4">
             <button type="button" class="btn btn-primary" id="generarReporteBtn">Generar Reporte</button>
+            <!-- Botón para generar PDF -->
+            <button type="button" class="btn btn-secondary" id="generarPDFBtn">Generar PDF</button>
         </div>
     </form>
 
