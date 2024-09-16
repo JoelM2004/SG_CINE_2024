@@ -66,14 +66,25 @@ final class UsuarioDTO implements InterfaceDTO
     }
 
     public function setApellido($apellido): void
-    {
-        $this->apellido = is_string($apellido) && (strlen(trim($apellido)) <= 45) ? trim($apellido) : "";
+{
+    // Expresión regular para permitir letras (mayúsculas y minúsculas) y acentos
+    if (is_string($apellido) && preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/", trim($apellido)) && strlen(trim($apellido)) <= 45) {
+        $this->apellido = trim($apellido);
+    } else {
+        $this->apellido = "";
     }
+}
 
-    public function setNombres($nombres): void
-    {
-        $this->nombres = is_string($nombres) && (strlen(trim($nombres)) <= 45) ? trim($nombres) : "";
+public function setNombres($nombres): void
+{
+    // Expresión regular para permitir letras (mayúsculas y minúsculas) y acentos
+    if (is_string($nombres) && preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/", trim($nombres)) && strlen(trim($nombres)) <= 45) {
+        $this->nombres = trim($nombres);
+    } else {
+        $this->nombres = "";
     }
+}
+
 
     public function setCorreo($correo): void
     {
