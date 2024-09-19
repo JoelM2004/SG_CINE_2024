@@ -209,61 +209,72 @@ $daoImagen = new ImagenDAO($conn);
                             </div>
 
                             <button type="button" id="btnModificarPelicula" class="btn btn-primary w-100">Modificar Película</button>
-                            <button id="btnBorrarPelicula" class="btn btn-danger w-100 mt-3">Borrar Película</button>
+                            <button type="button" id="btnBorrarPelicula" class="btn btn-danger w-100 mt-3">Borrar Película</button>
                         </form>
                     </div>
                 </div>
             </div>
 
             <!-- Carrusel de Fotos -->
-            <div id="carruselFotos" class="carousel slide mt-4" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    
-                </div>
+<div id="carruselFotos" class="carousel slide mt-4" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        <!-- Las imágenes se insertarán dinámicamente aquí -->
+    </div>
 
-                <button class="carousel-control-prev" type="button" data-bs-target="#carruselFotos" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Anterior</span>
-                </button>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carruselFotos" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
+    </button>
 
-                <button class="carousel-control-next" type="button" data-bs-target="#carruselFotos" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Siguiente</span>
-                </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carruselFotos" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Siguiente</span>
+    </button>
+</div>
+
+<!-- Sección para Agregar Nueva Imagen -->
+<div class="row mt-4">
+    <!-- Botón para Agregar Imagen -->
+    <div class="col-md-6 col-lg-3 mb-3">
+        <button type="submit" class="btn btn-secondary w-100" id="btnAgregarImagen">Agregar Imagen</button>
+    </div>
+
+    <!-- Campo para seleccionar una nueva imagen -->
+    <div class="col-md-6 col-lg-3 mb-3">
+        <label for="inputImagen" class="form-label">Seleccionar Imagen</label>
+        <input type="file" class="form-control" id="inputImagen" accept="image/*">
+    </div>
+
+    <!-- Previsualización de Imagen -->
+    <div class="col-md-6 col-lg-3 mb-3">
+        <div class="border p-2">
+            <label for="previsualizarImagen" class="form-label">Previsualización de Imagen</label>
+            <img id="previsualizarImagen" src="#" alt="Previsualización" class="img-fluid" style="display: none;">
+        </div>
+    </div>
+
+    <!-- Selector de Portada -->
+    <div class="col-md-6 col-lg-3 mb-3">
+        <label for="esPortada" class="form-label">Portada</label>
+        <select class="form-select" id="esPortada">
+            <option value="1">Sí</option>
+            <option value="0">No</option>
+        </select>
+    </div>
+</div>
+
+<!-- Modal para ver la imagen en pantalla completa -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <i class="fas fa-arrow-left back-arrow" id="backToCarousel"></i>
+                <img id="fullImage" src="#" alt="Imagen completa" class="img-fluid">
             </div>
-                                    
-            
+        </div>
+    </div>
+</div>
 
-            <!-- Sección para Agregar Nueva Imagen -->
-            <div class="row mt-4">
-                <!-- Botón para Agregar Imagen -->
-                <div class="col-md-6 col-lg-3 mb-3">
-                    <button type="submit" class="btn btn-secondary w-100" id="btnAgregarImagen">Agregar Imagen</button>
-                </div>
-
-                <!-- Campo para seleccionar una nueva imagen -->
-                <div class="col-md-6 col-lg-3 mb-3">
-                    <label for="inputImagen" class="form-label">Seleccionar Imagen</label>
-                    <input type="file" class="form-control" id="inputImagen" accept="image/*">
-                </div>
-
-                <!-- Previsualización de Imagen -->
-                <div class="col-md-6 col-lg-3 mb-3">
-                    <div class="border p-2">
-                        <label for="previsualizarImagen" class="form-label">Previsualización de Imagen</label>
-                        <img id="previsualizarImagen" src="#" alt="Previsualización" class="img-fluid" style="display: none;">
-                    </div>
-                </div>
-
-                <!-- Selector de Portada -->
-                <div class="col-md-6 col-lg-3 mb-3">
-                    <label for="esPortada" class="form-label">Portada</label>
-                    <select class="form-select" id="esPortada">
-                        <option value="1">Sí</option>
-                        <option value="0">No</option>
-                    </select>
-                </div>
-            </div>
         </div>
     </div>
 </div>

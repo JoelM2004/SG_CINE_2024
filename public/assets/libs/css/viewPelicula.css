@@ -51,8 +51,93 @@
     text-decoration: underline; /* Subrayado del enlace al pasar el ratón */
 }
 
-.carousel-inner img {
-    object-fit: cover; /* Cubre el contenedor sin distorsionar la imagen */
-    height: 500px;     /* Ajusta la altura del carrusel (puedes modificarlo según lo necesites) */
-    width: 100%;       /* Asegura que ocupe el ancho completo */
+/* Ajustes para el contenedor del carrusel */
+.carousel-inner {
+    display: flex;
+    align-items: center;  /* Centra las imágenes verticalmente */
+    justify-content: center;  /* Centra las imágenes horizontalmente */
+    height: 500px;  /* Establece una altura fija para el carrusel */
+    background-color: #000;  /* Fondo oscuro para que las imágenes resalten */
 }
+
+/* Imágenes del carrusel */
+.carousel-inner img {
+    object-fit: contain; /* Asegura que la imagen no se corte */
+    max-height: 100%;    /* Ajusta la imagen a la altura del carrusel */
+    max-width: 100%;     /* Asegura que la imagen no sobrepase el contenedor */
+    margin: auto;        /* Centra la imagen dentro de su contenedor */
+}
+
+/* Estilo para las flechas del carrusel */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente para las flechas */
+    border-radius: 50%;  /* Flechas redondeadas */
+    padding: 10px;
+}
+
+
+/* Imagen en pantalla completa pero limitada en tamaño */
+.modal-body img {
+    max-width: 80%;  /* Limita el ancho de la imagen al 80% del contenedor */
+    max-height: 80vh;  /* Limita la altura de la imagen al 80% de la pantalla */
+    display: block;
+    margin: auto;  /* Centra la imagen horizontalmente */
+    border-radius: 10px; /* Bordes redondeados para darle un estilo más limpio */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Añade una sombra para destacarla */
+    background-color: rgba(255, 255, 255, 0.8); /* Añade un fondo claro para mejorar la visibilidad si la imagen es pequeña */
+    padding: 20px; /* Añade un padding para dejar espacio alrededor de imágenes pequeñas */
+}
+
+/* Ajuste para imágenes muy pequeñas */
+.modal-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro para resaltar la imagen */
+    padding: 10px;
+}
+
+/* Posiciona mejor la flecha */
+.modal-body .back-arrow {
+    position: absolute;
+    top: 20px;    /* Separa la flecha un poco más del borde superior */
+    left: 20px;   /* Separa la flecha un poco más del borde izquierdo */
+    font-size: 2.5rem; /* Tamaño de la flecha */
+    color: white;  /* Color blanco para resaltar */
+    cursor: pointer;  /* Aparece como clickeable */
+    background: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente para que sea visible sobre cualquier imagen */
+    padding: 10px;
+    border-radius: 50%;  /* Redondea el fondo de la flecha */
+    transition: background 0.3s ease; /* Transición suave en el hover */
+}
+
+.modal-body .back-arrow:hover {
+    background: rgba(0, 0, 0, 0.7); /* Cambia el fondo al pasar el ratón */
+}
+
+/* Ajuste para que el modal no ocupe toda la pantalla */
+.modal-content {
+    max-width: 90%;  /* Limita el ancho máximo del modal */
+    max-height: 90vh;  /* Limita la altura máxima del modal */
+    margin: auto;  /* Centra el modal en la pantalla */
+    border-radius: 15px; /* Bordes redondeados para un diseño más estético */
+    overflow: hidden;  /* Asegura que los bordes redondeados funcionen correctamente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Espaciado extra para imágenes pequeñas */
+.modal-body img.small-img {
+    max-width: 60%;  /* Limita más el tamaño para imágenes muy pequeñas */
+    padding: 40px;  /* Añade más padding para dar sensación de espacio */
+    background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco para que no se vea "perdida" en el modal */
+}
+
+/* Evita el estiramiento de imágenes pequeñas */
+.modal-body img {
+    object-fit: contain;  /* Asegura que la imagen mantenga su proporción sin estirarse */
+}
+
+

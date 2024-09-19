@@ -78,3 +78,17 @@ $daoImagen = new ImagenDAO($conn);
     <span class="visually-hidden">Next</span>
   </button>
 </div> 
+
+<!-- Modal para pantalla completa -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <!-- Flecha para volver al carrusel -->
+        <i class="fas fa-arrow-left back-arrow" id="backToCarousel"></i>
+        <img id="fullImage" src="" alt="Imagen completa" class="img-fluid">
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -339,7 +339,8 @@ let peliculaController = {
       peliculaService
         .delete(peliculaController.data)
         .then((data) => {
-          alert(data.mensaje); // Muestra el mensaje del servidor al usuario
+          alert(data.mensaje);
+           // Muestra el mensaje del servidor al usuario
           setTimeout(() => {
             location.reload();
         }, 300);
@@ -658,13 +659,19 @@ let peliculaController = {
                 // Establece la primera imagen como activa
                 carouselItem.classList.add('active');
             }
+
             // Crea la etiqueta de imagen
             const imgElement = document.createElement('img');
-
-            
             imgElement.src = imgSrc.imagen;
             imgElement.className = 'd-block w-100';
             imgElement.alt = 'Imagen de la película';
+
+            // Evento para abrir la imagen en pantalla completa (modal)
+            imgElement.addEventListener('click', function() {
+                document.getElementById('fullImage').src = imgSrc.imagen;
+                const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+                modal.show();
+            });
 
             // Crear botones para borrar y actualizar con dataset-id
             const buttonContainer = document.createElement('div');
@@ -703,8 +710,15 @@ let peliculaController = {
             // Agregar el div al carrusel
             carouselInner.appendChild(carouselItem);
         });
+
+        // Evento para la flecha de retroceso en el modal
+        document.getElementById('backToCarousel').addEventListener('click', function() {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('imageModal'));
+            modal.hide();
+        });
     } 
 }
+
 ,
 deleteImagen: (id) => {
   if (confirm("¿Quiere eliminar la imagen?")) {
@@ -753,41 +767,46 @@ updateImagen: (id,peliculaId) => {
 }
 
 ,
-  listImagenesUsuarios:async()=>{
-    // Llama a la función del controlador para obtener las imágenes
-    const peliculaId = parseInt(document.getElementById("peliculaUsuario").dataset.id);
-    const imagenes = await singletonController.listImagenes(peliculaId);
+listImagenesUsuarios: async () => {
+  const peliculaId = parseInt(document.getElementById("peliculaUsuario").dataset.id);
+  const imagenes = await singletonController.listImagenes(peliculaId);
+  const carouselInner = document.querySelector("#movieCarousel .carousel-inner");
 
-    // console.log(imagenes)
-    // Selecciona el contenedor del carrusel
-    const carouselInner = document.querySelector("#movieCarousel .carousel-inner");
+  carouselInner.innerHTML = '';
 
-    // Limpiar contenido previo (si hay)
-    carouselInner.innerHTML = '';
+  if (imagenes.length > 0) {
+      imagenes.forEach((imgSrc, index) => {
+          const carouselItem = document.createElement('div');
+          carouselItem.className = 'carousel-item';
+          if (index === 0) {
+              carouselItem.classList.add('active');
+          }
 
-    // Verifica si hay imágenes
-    if (imagenes.length > 0) {
-        imagenes.forEach((imgSrc, index) => {
-            // Crea un div para cada imagen
-            const carouselItem = document.createElement('div');
-            carouselItem.className = 'carousel-item';
-            if (index === 0) {
-                // Establece la primera imagen como activa
-                carouselItem.classList.add('active');
-            }
-            // Crea la etiqueta de imagen
-            const imgElement = document.createElement('img');
-            imgElement.src = imgSrc.imagen;
-            imgElement.className = 'd-block w-100';
-            imgElement.alt = 'Imagen de la película';
+          const imgElement = document.createElement('img');
+          imgElement.src = imgSrc.imagen;
+          imgElement.className = 'd-block w-100';
+          imgElement.alt = 'Imagen de la película';
 
-            // Agrega la imagen al div
-            carouselItem.appendChild(imgElement);
-            // Agrega el div al carrusel
-            carouselInner.appendChild(carouselItem);
-        });
-    } 
+          // Agrega evento para abrir imagen en pantalla completa
+          imgElement.addEventListener('click', function() {
+              document.getElementById('fullImage').src = imgSrc.imagen;
+              const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+              modal.show();
+          });
+
+          carouselItem.appendChild(imgElement);
+          carouselInner.appendChild(carouselItem);
+      });
+
+      // Evento para la flecha de retroceso en el modal
+      document.getElementById('backToCarousel').addEventListener('click', function() {
+          const modal = bootstrap.Modal.getInstance(document.getElementById('imageModal'));
+          modal.hide();
+      });
   }
+}
+
+
 
   }
 
@@ -845,6 +864,7 @@ document.addEventListener("DOMContentLoaded", () => {
   } else if (btnModificarPelicula != null) {
     
     peliculaController.listImagenes()
+    
     btnModificarPelicula.onclick = peliculaController.update;
     btnBorrarPelicula.onclick = peliculaController.delete;
 
