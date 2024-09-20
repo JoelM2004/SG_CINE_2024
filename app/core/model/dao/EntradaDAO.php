@@ -23,6 +23,14 @@ final class EntradaDAO extends DAO implements InterfaceDAO
     {
         $data = $object->toArray();
 
+        if (!$this->existeUsuario($data["usuarioId"])) {
+            throw new \Exception("No existe este usuario.");
+        }
+
+        if (!$this->existeFuncion($data["funcionId"])) {
+            throw new \Exception("No existe esta función o no se encuentra disponible.");
+        }
+
         $capacidadDisponible = $this->cantidadEntradasDisponibles($data["funcionId"]);
         if ($capacidadDisponible <= 0) {
             throw new \Exception("No hay suficientes entradas disponibles para esta función.");
@@ -43,6 +51,42 @@ final class EntradaDAO extends DAO implements InterfaceDAO
         // Establecer el ID en el objeto
         $object->setId((int)$this->conn->lastInsertId());
     }
+
+    public function saveCliente(InterfaceDTO $object): void
+    {
+        $data = $object->toArray();
+
+        $data["usuarioId"]=$_SESSION["id"];
+
+        if (!$this->existeUsuario($data["usuarioId"])) {
+            throw new \Exception("No existe este usuario.");
+        }
+
+        if (!$this->existeFuncion($data["funcionId"])) {
+            throw new \Exception("No existe esta función o no se encuentra disponible.");
+        }
+
+        $capacidadDisponible = $this->cantidadEntradasDisponibles($data["funcionId"]);
+        if ($capacidadDisponible <= 0) {
+            throw new \Exception("No hay suficientes entradas disponibles para esta función.");
+        }
+        // Generar un número de ticket único
+        $data['numeroTicket'] = $this->generateUniqueTicketNumber();
+        $data['precio'] = (float)$data['precio'];
+        $sql = "INSERT INTO {$this->table} VALUES(DEFAULT,:horarioFuncion,:horarioVenta,:precio,:numeroTicket,1,:funcionId,:usuarioId)";
+        $stmt = $this->conn->prepare($sql);
+
+        // Eliminar el id del array de datos
+        unset($data["id"]);
+        unset($data["estado"]);
+
+        // Ejecutar la consulta
+        $stmt->execute($data);
+
+        // Establecer el ID en el objeto
+        $object->setId((int)$this->conn->lastInsertId());
+    }
+
     private function cantidadEntrada(int $funcionId): int
     {
         $sql = "SELECT count(e.id) AS cantidad 
@@ -337,5 +381,47 @@ final class EntradaDAO extends DAO implements InterfaceDAO
         if ($result->cantidad > 0) {
             return true;
         } else return false;
+    }
+
+    private function existeUsuario($id): bool
+    {
+        $sql = "SELECT count(id) AS cantidad FROM usuarios WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+
+        // Parámetro id
+        $params = [
+            ':id' => $id
+        ];
+
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ);
+
+        // Comparación corregida
+        if ($result->cantidad == 0) {
+            return false;  // El usuario no existe
+        }
+
+        return true;  // El usuario existe
+    }
+
+    private function existeFuncion($id): bool
+    {
+        $sql = "SELECT count(f.id) AS cantidad 
+            FROM funciones f
+            INNER JOIN programaciones p ON f.programacionId = p.id
+            WHERE f.id = :id AND p.vigente = 1";
+
+        $stmt = $this->conn->prepare($sql);
+
+        // Parámetro id
+        $params = [
+            ':id' => $id
+        ];
+
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ);
+
+        // Retorna true si la función existe y está vigente
+        return $result->cantidad > 0;
     }
 }

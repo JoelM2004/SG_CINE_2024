@@ -28,7 +28,7 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
         $clave = password_hash($object->getClave(), PASSWORD_DEFAULT);
         $this->validateCuenta($object);
         $this->validateCorreo($object);
-
+        $this->existePerfil($object->getPerfilId());
         $sql = "INSERT INTO {$this->table} VALUES(DEFAULT,:cuenta,:nombres,:clave,:correo,:perfilId,:apellido)"; //:apellido, variable reemplazada por un dato, o una consulta preparada
         $stmt = $this->conn->prepare($sql);
         $data = $object->toArray();
@@ -63,6 +63,7 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
         $this->validate($object);
         $this->validateCorreo($object);
         $this->validateCuenta($object);
+        $this->existePerfil($object->getPerfilId());
         // $object =parse_ini_file(UsuarioDTO,$object);
 
         $sql = "UPDATE {$this->table} 
@@ -420,5 +421,25 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
         if ($result->cantidad > 0) {
             throw new \Exception("El usuario tiene comprada una o más entradas, no lo podrá eliminar");
         }
+    }
+
+    private function existePerfil($id): void
+    {
+        $sql = "SELECT count(f.id) AS cantidad 
+            FROM perfiles f
+            WHERE f.id = :id";
+
+        $stmt = $this->conn->prepare($sql);
+
+        // Parámetro id
+        $params = [
+            ':id' => $id
+        ];
+
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ);
+
+        // Retorna true si la función existe y está vigente
+        if($result->cantidad == 0) throw  new \Exception("No existe esté perfil");
     }
 }

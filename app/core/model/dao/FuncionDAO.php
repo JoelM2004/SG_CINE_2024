@@ -15,6 +15,9 @@ final class FuncionDAO extends DAO implements InterfaceDAO
     }
 
     public function save(InterfaceDTO $object):void{
+        $this->existePelicula($object->getPeliculaId());
+        $this->existeProgramacion($object->getProgramacionId());
+        $this->existeSala($object->getSalaId());
 
         $this->validate($object);
         $this->validateFuncion($object);
@@ -50,12 +53,17 @@ final class FuncionDAO extends DAO implements InterfaceDAO
     }
 
     public function update(InterfaceDTO $object):void{
+        $this->existePelicula($object->getPeliculaId());
+        $this->existeProgramacion($object->getProgramacionId());
+        $this->existeSala($object->getSalaId());
+        
         $this->validate($object);
         $this->validateFuncion($object);
         $this->validateFechaYSala($object);
         $this->validateProgramacion($object);
         $this->validateSala($object);
         $this->validatePelicula($object);
+
         $sql="UPDATE {$this->table} SET 
         fecha=:fecha,
         horaInicio=:horaInicio, 
@@ -239,6 +247,7 @@ final class FuncionDAO extends DAO implements InterfaceDAO
         f.programacionId AS programacionId,
         f.precio AS precio,
         s.numeroSala as numeroSala,
+        s.estado as estadoSala,
         pf.nombre as nombrePelicula,
         t.nombre as nombreTipo,
         a.nombre as nombreAudio
@@ -258,8 +267,7 @@ final class FuncionDAO extends DAO implements InterfaceDAO
     WHERE 
         p.vigente = 1 AND
         f.fecha >= CURDATE() AND
-        pf.id = :id AND 
-        s.estado = 1
+        pf.id = :id
     ";
 
     $stmt = $this->conn->prepare($sql);
@@ -515,4 +523,66 @@ private function validateentradas($id): void
     }
 
 
+
+    private function existeSala($id): void
+    {
+        $sql = "SELECT count(f.id) AS cantidad 
+            FROM salas f
+            WHERE f.id = :id";
+
+        $stmt = $this->conn->prepare($sql);
+
+        // Parámetro id
+        $params = [
+            ':id' => $id
+        ];
+
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ);
+
+        // Retorna true si la función existe y está vigente
+        if($result->cantidad == 0) throw  new \Exception("No existe esta sala");
+    }
+
+    private function existeProgramacion($id): void
+    {
+        $sql = "SELECT count(f.id) AS cantidad 
+            FROM programaciones f
+            WHERE f.id = :id";
+
+        $stmt = $this->conn->prepare($sql);
+
+        // Parámetro id
+        $params = [
+            ':id' => $id
+        ];
+
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ);
+
+        // Retorna true si la función existe y está vigente
+        if($result->cantidad == 0) throw  new \Exception("No existe esta programacion");
+    }
+
+    private function existePelicula($id): void
+    {
+        $sql = "SELECT count(f.id) AS cantidad 
+            FROM peliculas f
+            WHERE f.id = :id AND disponibilidad=1";
+
+        $stmt = $this->conn->prepare($sql);
+
+        // Parámetro id
+        $params = [
+            ':id' => $id
+        ];
+
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ);
+
+        // Retorna true si la función existe y está vigente
+        if($result->cantidad == 0) throw  new \Exception("No existe esta pelicula");
+    }
 }
+
+

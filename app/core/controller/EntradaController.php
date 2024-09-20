@@ -102,6 +102,13 @@ final class EntradaController extends Controller implements InterfaceController,
         $response->send();
     }
 
+    public function saveCliente(Request $request, Response $response):void{
+        $service = new EntradaService();
+        $service->saveCliente($request->getData());
+        $response->setMessage("La Entrada se registró correctamente");
+        $response->send();
+    }
+
     /*
     Invoca la vista corerspondiente para poder modificar los datos de una entidad existente
     */

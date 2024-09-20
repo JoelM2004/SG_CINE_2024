@@ -86,7 +86,7 @@ let entradaController = {
         })
         .catch((error) => {
           console.error("Error en la Petición ", error);
-          alert("Ocurrió un error al guardar la entrada");
+          alert("Ocurrió un error al guardar la entrada"+ error);
         });
     }
   },
@@ -143,7 +143,7 @@ let entradaController = {
     // Llamada al servicio para guardar los datos
     for (let index = 0; index < entradaController.cantidad.numero; index++) {
       entradaService
-        .save(entradaController.data)
+        .saveCliente(entradaController.data)
         .then((data) => {
           console.log("Guardando Datos");
           if (data.error !== "") {
