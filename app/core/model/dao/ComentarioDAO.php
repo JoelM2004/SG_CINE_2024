@@ -96,7 +96,7 @@ final class ComentarioDAO extends DAO implements InterfaceDAO
     private function validate(ComentarioDTO $object):void{
 
         if($object->getComentario()==""){
-            throw new \Exception("El campo está vacio, o puede ser que está introduciendo números en el campo");
+            throw new \Exception("El campo está vacio, o puede ser que está introduciendo números o caracteres no permitidos en el campo");
         }
 
     }

@@ -103,7 +103,7 @@ let entradaController = {
     const cantidad = document.getElementById("ticket-quantity").value;
     const disponible = document.getElementById("available-tickets").value;
     // Validar que los campos no estén vacíos
-    if (!horarioFuncion || !precio || !funcionId || !usuarioId) {
+    if (!precio || !funcionId) {
       alert("Por favor, complete todos los campos obligatorios.");
       console.log(entradaController.data);
       return; // Detener la ejecución si hay campos vacíos

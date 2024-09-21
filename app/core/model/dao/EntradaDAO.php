@@ -66,6 +66,8 @@ final class EntradaDAO extends DAO implements InterfaceDAO
             throw new \Exception("No existe esta función o no se encuentra disponible.");
         }
 
+        $data["horarioFuncion"]=$this->obtenerHorario($data["funcionId"]);
+
         $capacidadDisponible = $this->cantidadEntradasDisponibles($data["funcionId"]);
         if ($capacidadDisponible <= 0) {
             throw new \Exception("No hay suficientes entradas disponibles para esta función.");
@@ -424,4 +426,30 @@ final class EntradaDAO extends DAO implements InterfaceDAO
         // Retorna true si la función existe y está vigente
         return $result->cantidad > 0;
     }
+
+    private function obtenerHorario($id)
+{
+    $sql = "SELECT f.horaInicio as hora, f.fecha as fecha
+            FROM funciones f
+            WHERE f.id = :id";
+
+    $stmt = $this->conn->prepare($sql);
+
+    // Parámetro id
+    $params = [
+        ':id' => $id
+    ];
+
+    $stmt->execute($params);
+    $result = $stmt->fetch(\PDO::FETCH_OBJ);
+
+    // Retorna false si no se encuentra la función
+    if (!$result) {
+        return false;
+    }
+
+    // Retorna la fecha y hora concatenada
+    return $result->fecha . " " . $result->hora;
+}
+
 }
