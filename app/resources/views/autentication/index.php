@@ -19,6 +19,10 @@
                     <label for="password" class="form-label">Contraseña</label>
                     <div class="input-group">
                         <input type="password" class="form-control" id="password" placeholder="Ingresa tu contraseña" required>
+                        <!-- Botón ojo con clase toggle-password y data-toggle -->
+                        <span class="input-group-text">
+                            <i class="far fa-eye toggle-password" data-toggle="password" style="cursor: pointer;"></i>
+                        </span>
                     </div>
                 </div>
                 <button id="btnLogin" type="button" class="btn btn-primary w-100">Iniciar Sesión</button>

@@ -22,7 +22,10 @@ final class ProgramacionDAO extends DAO implements InterfaceDAO
 
         $this->validate($object);
 
-        $this->validateFechasUnicas($object);
+        // $this->validateFechasUnicas($object);
+
+        $this->validateFechasInicio($object);
+        $this->validateFechasFin($object);
 
         $this->validateVigencia($object);
 
@@ -66,7 +69,8 @@ final class ProgramacionDAO extends DAO implements InterfaceDAO
         $this->validateVigencia($object);
         $this->validate($object);
 
-        $this->validateFechasUnicas($object);
+        $this->validateFechasInicio($object);
+        $this->validateFechasFin($object);
 
         $this->validateFechas($object);
 
@@ -183,7 +187,7 @@ final class ProgramacionDAO extends DAO implements InterfaceDAO
         // Valida que ni la fecha de inicio ni la fecha de fin sean duplicadas en otro registro
         $sql = "SELECT count(id) AS cantidad 
             FROM {$this->table} 
-            WHERE (fechaInicio = :fechaInicio OR fechaFin = :fechaFin) 
+            WHERE (fechaInicio = :fechaInicio AND fechaFin = :fechaFin) 
             AND id != :id";
         $stmt = $this->conn->prepare($sql);
 
@@ -200,6 +204,53 @@ final class ProgramacionDAO extends DAO implements InterfaceDAO
             throw new \Exception("La combinación de fecha inicio ({$object->getFechaInicio()}) y fecha fin ({$object->getFechaFin()}) ya existe en la base de datos");
         }
     }
+
+    private function validateFechasInicio(ProgramacionDTO $object): void
+    {
+        // Valida que ni la fecha de inicio ni la fecha de fin sean duplicadas en otro registro
+        $sql = "SELECT count(id) AS cantidad 
+            FROM {$this->table} 
+            WHERE (fechaInicio = :fechaInicio) 
+            AND id != :id";
+        $stmt = $this->conn->prepare($sql);
+
+        $params = [
+            ':id' => $object->getId(),
+            ':fechaInicio' => $object->getFechaInicio(),
+        ];
+
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ);
+
+        if ($result->cantidad > 0) {
+            throw new \Exception("Ya existe una cartelera que inicia este día ".$object->getFechaInicio());
+        }
+    }
+
+    private function validateFechasFin(ProgramacionDTO $object): void
+    {
+        // Valida que ni la fecha de inicio ni la fecha de fin sean duplicadas en otro registro
+        $sql = "SELECT count(id) AS cantidad 
+            FROM {$this->table} 
+            WHERE (fechaInicio = :fechaFin) 
+            AND id != :id";
+        $stmt = $this->conn->prepare($sql);
+
+        $params = [
+            ':id' => $object->getId(),
+            ':fechaInicio' => $object->getFechaFin(),
+        ];
+
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ);
+
+        if ($result->cantidad > 0) {
+            throw new \Exception("Ya existe una cartelera que finaliza este día ".$object->getFechaFin());
+        }
+    }
+
+
+
     public function existe($id): bool
     {
         $sql = "SELECT count(id) AS cantidad FROM {$this->table} WHERE id = :id";

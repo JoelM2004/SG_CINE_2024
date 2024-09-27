@@ -18,6 +18,19 @@ if(document.getElementById('filterType')!=null){document.getElementById('filterT
     }
 });}
 
+toggleInputs = async () => {
+    const duracionPelicula = document.getElementById("duracion");
+    const pelicula= document.getElementById("nombrePelicula")
+    // Llamada a la función para cargar los detalles de la función.
+    console.log(duracionPelicula)
+    let peliculaDur = await singletonController.loadPelicula(pelicula.value);
+  
+    duracionPelicula.value=peliculaDur.duracion;
+  };
+
+
+
+
 if(document.getElementById('filterForm')!=null){
 document.getElementById('filterForm').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -40,3 +53,8 @@ document.getElementById('filterForm').addEventListener('submit', function(e) {
 
     // Aquí puedes agregar la lógica para realizar el filtrado en la tabla
 });}
+
+if(document.getElementById("duracion")!=null){
+    document.getElementById("nombrePelicula").onchange=toggleInputs;
+}
+    

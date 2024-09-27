@@ -351,7 +351,7 @@ let singletonController = {
     await singletonService
       .listPelicula()
       .then((data) => {
-        console.log("Peliculas listadas:", data);
+        
         data.result.forEach((element) => {
           array.push(element);
         });

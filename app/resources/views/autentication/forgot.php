@@ -18,6 +18,13 @@
                 <button type="button" id="btnforgetAuth" class="btn btn-primary w-100">Enviar Instrucciones</button>
             </form>
 
+            <!-- Spinner oculto por defecto -->
+            <div id="loading-spinner" class="text-center my-3" style="display: none;">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Procesando...</span>
+                </div>
+            </div>
+
             <!-- Botón de regreso -->
             <div class="text-center mt-3">
                 <a href="<?= APP_FRONT . 'autentication/index' ?>" class="btn btn-secondary w-100" id="back-to-login-button">Volver al inicio de sesión</a>
@@ -25,3 +32,4 @@
         </div>
     </div>
 </div>
+

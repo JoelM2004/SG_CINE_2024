@@ -17,7 +17,13 @@ final class AuthenticationMiddleware extends Middleware implements InterfaceMidd
                 $request->getController() !== "autentication" && 
                 $request->getController() !== "info" && 
                 $request->getController() !== "inicio" && 
-                $request->getAction() !== "login"
+                $request->getAction() !== "login"&&
+                
+                $request->getController()!=="imagen"&&
+                $request->getController()."/".$request->getAction()!=="pelicula/view"&&
+                $request->getController()."/".$request->getAction()!=="funcion/view"&&
+                $request->getAction()!=="listFunciones"
+                
             ){
                
                 $request->setController("autentication");

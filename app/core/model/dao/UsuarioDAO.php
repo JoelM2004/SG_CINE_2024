@@ -3,10 +3,13 @@
 
 namespace app\core\model\dao;
 
-use Exception;
-use Swift_SmtpTransport;
-use Swift_Mailer;
-use Swift_Message;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+//use Exception;
+//use Swift_SmtpTransport;
+//use Swift_Mailer;
+//use Swift_Message;
 use app\core\model\base\InterfaceDAO;
 use app\core\model\base\DAO;
 use app\core\model\base\InterfaceDTO;
@@ -116,62 +119,133 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
     }
 
     function sendPasswordByEmail(string $email, string $password): void
-    {
-        // Configuración del transporte SMTP para Hotmail/Outlook
-        $transport = (new Swift_SmtpTransport('smtp.office365.com', 587, 'tls'))
-            ->setUsername(CORREO) // Tu correo de Hotmail/Outlook
-            ->setPassword(CLAVECORREO); // Tu contraseña de Hotmail/Outlook
-        // Crear el mailer usando el transporte SMTP
-        $mailer = new Swift_Mailer($transport);
+{
+    $mail = new PHPMailer(true);
 
-        // Crear un mensaje
-        $message = (new Swift_Message('Recuperación de Contraseña'))
-            ->setFrom([CORREO => 'Soporte'])
-            ->setTo([$email])
-            ->setBody(
-                '<html lang="es">
-                <head>
-                    <meta charset="UTF-8">
-                    <style>
-                        body { font-family: Arial, sans-serif; color: #333; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f4; }
-                        .container { width: 90%; max-width: 600px; margin: 20px auto; padding: 20px; background-color: #ffffff; border: 1px solid #ddd; border-radius: 8px; }
-                        h1 { color: #007bff; }
-                        p { margin: 10px 0; }
-                        .password { font-size: 1.2em; font-weight: bold; color: #007bff; }
-                        .footer { font-size: 0.9em; color: #666; margin-top: 20px; }
-                        .button { display: inline-block; padding: 10px 20px; margin-top: 20px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px; }
-                        .logo { display: block; margin: 0 auto; max-width: 200px; }
-                    </style>
-                </head>
-                <body>
-                    <div class="container">
-                        <h1>Recuperación de Contraseña</h1>
-                        <p>Hola,</p>
-                        <p>Has solicitado recuperar tu contraseña. Aquí está tu nueva contraseña:</p>
-                        <p class="password"><strong>' . htmlspecialchars($password) . '</strong></p>
-                        <p>Por favor, cámbiala después de iniciar sesión.</p>
-                        <a href="' . APP_FRONT . 'autentication/index" class="button">Iniciar Sesión</a>
-                        <div class="footer">
-                            <p>Saludos,</p>
-                            <p>El equipo de soporte de <strong>Los Pollos Hermanos</strong></p>
-                        </div>
-                    </div>
-                </body>
-            </html>',
-                'text/html'
-            );
+    try {
+        // Configuración del servidor SMTP para Gmail
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';           
+        $mail->SMTPAuth = true;
+        $mail->Username = CORREO;                 // Tu correo de Gmail
+        $mail->Password = CLAVECORREO;            // Tu contraseña de Gmail o contraseña de aplicación
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
 
-        try {
-            $result = $mailer->send($message);
-        } catch (Exception $e) {
-            error_log("Error al enviar el correo: " . $e->getMessage());
-        }
+        // Configurar el correo emisor y el destinatario
+        $mail->setFrom(CORREO, 'Soporte Los Pollos Hermanos');
+        $mail->addAddress($email);
+
+        // Configuración del contenido del correo
+        $mail->isHTML(true);
+        $mail->Subject = 'Nueva Clave - Los Pollos Hermanos';
+        $mail->Body = '
+        <html lang="es">
+        <head>
+            <meta charset="UTF-8">
+            <style>
+                @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Lobster&display=swap");
+                body {
+                    font-family: "Roboto", sans-serif;
+                    background-color: #f3f4f6;
+                    margin: 0;
+                    padding: 0;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: 40px auto;
+                    padding: 20px;
+                    background-color: #ffffff;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                }
+                h1 {
+                    font-family: "Lobster", cursive;
+                    color: #ff4c29;
+                    text-align: center;
+                    font-size: 2.4em;
+                    margin-bottom: 20px;
+                }
+                .hero {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+                .hero img {
+                    max-width: 100%;
+                    border-radius: 12px;
+                }
+                p {
+                    color: #333;
+                    font-size: 1.1em;
+                    margin-bottom: 20px;
+                    text-align: center;
+                }
+                .password {
+                    font-size: 1.5em;
+                    font-weight: bold;
+                    color: #ff4c29;
+                    text-align: center;
+                    margin-bottom: 30px;
+                }
+                .button {
+                    display: inline-block;
+                    padding: 15px 25px;
+                    background-color: #ff4c29;
+                    color: #fff;
+                    font-size: 1.2em;
+                    text-align: center;
+                    border-radius: 8px;
+                    text-decoration: none;
+                    font-weight: bold;
+                    margin: 0 auto;
+                    display: block;
+                    width: fit-content;
+                }
+                .footer {
+                    text-align: center;
+                    font-size: 0.9em;
+                    color: #666;
+                    margin-top: 30px;
+                }
+                .footer p {
+                    margin: 0;
+                }
+                .footer .logo {
+                    margin-top: 10px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>Los Pollos Hermanos</h1>
+                <div class="hero">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSientdDH2E2U01fPNX8TtIw9S8Sd2gVDk_9g&s" alt="Los Pollos Hermanos Banner">
+                </div>
+                <p>Hola,</p>
+                <p>Has solicitado recuperar tu contraseña. Aquí está tu nueva contraseña:</p>
+                <div class="password">' . htmlspecialchars($password) . '</div>
+                <p>Por favor, cámbiala después de iniciar sesión.</p>
+                <a href="' . APP_FRONT . 'autentication/index" class="button">Iniciar Sesión</a>
+                <div class="footer">
+                    <p>Saludos,</p>
+                    <p>El equipo de soporte de <strong>Los Pollos Hermanos</strong></p>
+                </div>
+            </div>
+        </body>
+        </html>';
+
+        // Enviar el correo
+        $mail->send();
+    } catch (Exception $e) {
+        error_log("Error al enviar el correo: {$mail->ErrorInfo}");
     }
+}
+
 
     private function generateRandomPassword(int $minLength, int $maxLength): string
     {
         $length = rand($minLength, $maxLength);
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()-_+=<>?';
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomPassword = '';
         for ($i = 0; $i < $length; $i++) {
@@ -179,6 +253,7 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
         }
         return $randomPassword;
     }
+
 
 
     private function verificarPassword(array $object): void
@@ -220,7 +295,7 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
 
         ";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(["id"=>$cuenta]);
+        $stmt->execute(["id" => $cuenta]);
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
@@ -241,7 +316,7 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
 
         ";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(["id"=>$perfil]);
+        $stmt->execute(["id" => $perfil]);
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
@@ -302,7 +377,7 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
             throw new \Exception("El campo 'Clave' está vacío o contiene caracteres no permitidos.");
         }
 
-        if ($object->getCorreo()=="") {
+        if ($object->getCorreo() == "") {
             throw new \Exception("El campo 'Correo' no es válido.");
         }
 
@@ -440,6 +515,6 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
         $result = $stmt->fetch(\PDO::FETCH_OBJ);
 
         // Retorna true si la función existe y está vigente
-        if($result->cantidad == 0) throw  new \Exception("No existe esté perfil");
+        if ($result->cantidad == 0) throw  new \Exception("No existe esté perfil");
     }
 }

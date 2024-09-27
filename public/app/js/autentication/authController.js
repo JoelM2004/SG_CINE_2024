@@ -26,36 +26,48 @@ let authController = {
     ,
 
     forgetPassword:()=>{
-      if (!confirm("¿Quieres solicitar una nueva contraseña?")) {
-        return;
-    }
+        if (!confirm("¿Quieres solicitar una nueva contraseña?")) {
+            return;
+        }
     
-    let form=document.forms["password-reset-form"]
-
-    // Validación del apellido
-    if (form.email.value.length > 255||form.email.value.length < 5 ) {
-        alert("Introduzca un correo válido");
-        return;
-    } else {
-        authController.dataForget.correo = form.email.value;
-    }
-
-    authService.forgetPassword(authController.dataForget)
-        .then(response => {
-            if (response.error =="") {
-                alert("Contraseña recuperada con éxito, revise su correo para obtener la nueva clave");
-                console.log(response)
-                window.location.href = "autentication/index";
-            } else {
-                alert(response.error);
-            }
-        })
-        .catch(error => {
-            // Manejo de errores en caso de fallo en la llamada al servicio
-            alert("Ocurrió un error al crear la cuenta. Por favor, inténtelo de nuevo.");
-            console.error(error);
-        });
-
+        let form = document.forms["password-reset-form"];
+        
+        // Validación del correo
+        if (form.email.value.length > 255 || form.email.value.length < 5) {
+            alert("Introduzca un correo válido");
+            return;
+        } else {
+            authController.dataForget.correo = form.email.value;
+        }
+    
+        // Mostrar el spinner y deshabilitar el botón
+        document.getElementById('loading-spinner').style.display = 'block';
+        document.getElementById('btnforgetAuth').disabled = true;
+    
+        // Realizar la solicitud
+        authService.forgetPassword(authController.dataForget)
+            .then(response => {
+                // Ocultar el spinner
+                document.getElementById('loading-spinner').style.display = 'none';
+                document.getElementById('btnforgetAuth').disabled = false;
+    
+                if (response.error == "") {
+                    alert("Clave generada con éxito, revise su correo para obtener la nueva clave");
+                    console.log(response);
+                    window.location.href = "autentication/index";
+                } else {
+                    alert(response.error);
+                }
+            })
+            .catch(error => {
+                // Ocultar el spinner
+                document.getElementById('loading-spinner').style.display = 'none';
+                document.getElementById('btnforgetAuth').disabled = false;
+    
+                // Manejo de errores
+                alert("Ocurrió un error al procesar la solicitud. Por favor, inténtelo de nuevo.");
+                console.error(error);
+            });
     }
 
     ,

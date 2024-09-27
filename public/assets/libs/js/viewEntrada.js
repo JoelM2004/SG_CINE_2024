@@ -169,3 +169,4 @@ if (document.getElementById("numeroFuncion")) {
 if(document.getElementById("precio")!=null){
 document.getElementById("precio").addEventListener("input", updateTotal2);
 document.getElementById("cantidad").addEventListener("input", updateTotal2);}
+

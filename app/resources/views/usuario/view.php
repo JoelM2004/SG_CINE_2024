@@ -13,12 +13,13 @@ $datos = $dao->load($id);
 
 $daoEntrada = new EntradaDAO($conn);
 $entradas = $daoEntrada->loadByCuentaView($id);
-$entradas=array_reverse($entradas);
+$entradas = array_reverse($entradas);
 
 $daoPelicula = new PeliculaDAO($conn);
 $daoFuncion = new FuncionDAO($conn);
 
-function formatDate($date) {
+function formatDate($date)
+{
     // Verificar si el formato contiene una hora
     if (strpos($date, ' ') !== false) {
         // Separar la fecha y la hora
@@ -64,89 +65,97 @@ function formatDate($date) {
 
     <!-- Contenido de las pestañas -->
     <div class="tab-content" id="myTabContent">
-    <!-- Perfil -->
-    <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab" data-id="<?= $_SESSION["id"] ?>">
-        <div class="card border-primary mb-3">
-            <div class="card-header bg-primary text-white">
-                <h3 class="card-title mb-0">Información de la Cuenta</h3>
-            </div>
-            <div class="card-body">
-                <p><strong>Cuenta:</strong> <?= $datos->getCuenta() ?></p>
-                <p><strong>Nombre:</strong> <?= $datos->getNombres() ?></p>
-                <p><strong>Apellido:</strong> <?= $datos->getApellido() ?></p>
-                <p><strong>Tipo de Usuario:</strong> <?= $_SESSION["perfil"] ?></p>
-                <p><strong>Correo:</strong> <?= $datos->getCorreo() ?></p>
+        <!-- Perfil -->
+        <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab" data-id="<?= $_SESSION["id"] ?>">
+            <div class="card border-primary mb-3">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">Información de la Cuenta</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Cuenta:</strong> <?= $datos->getCuenta() ?></p>
+                    <p><strong>Nombre:</strong> <?= $datos->getNombres() ?></p>
+                    <p><strong>Apellido:</strong> <?= $datos->getApellido() ?></p>
+                    <p><strong>Tipo de Usuario:</strong> <?= $_SESSION["perfil"] ?></p>
+                    <p><strong>Correo:</strong> <?= $datos->getCorreo() ?></p>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Historial de Compras -->
-    <div class="tab-pane fade" id="purchase-history" role="tabpanel" aria-labelledby="purchase-history-tab">
-        <div class="card border-success mb-3">
-            <div class="card-header bg-success text-white">
-                <h3 class="card-title mb-0">Historial de Compras</h3>
-            </div>
-            <div class="card-body">
-                <ul class="list-group list-group-flush">
-                    <?php foreach ($entradas as $elemento): ?>
+        <!-- Historial de Compras -->
+        <div class="tab-pane fade" id="purchase-history" role="tabpanel" aria-labelledby="purchase-history-tab">
+            <div class="card border-success mb-3">
+                <div class="card-header bg-success text-white">
+                    <h3 class="card-title mb-0">Historial de Compras</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+
                         <?php
-                        $funcion = $elemento["numeroFuncion"];
-                        $pelicula = $elemento["nombre"];
-                        $horaFuncion = $elemento["horarioFuncion"];
-                        $horaVenta = $elemento["horarioVenta"];
-                        $numeroTicket = $elemento["numeroTicket"];
-                        $precio=$elemento["precio"];
+                        // Función para comparar las entradas según el 'horarioVenta'
+                        usort($entradas, function ($a, $b) {
+                            return strtotime($b['horarioVenta']) - strtotime($a['horarioVenta']); // Orden descendente
+                        });
                         ?>
-                        <li class="list-group-item d-flex justify-content-between align-items-start">
-                            <div>
-                                <h5 class="mb-1">Nro de Ticket: <strong><?= $numeroTicket ?></strong></h5>
-                                <p class="mb-1">Función: <strong><?= $funcion ?></strong></p>
-                                <p class="mb-1">Película: <strong><?= $pelicula ?></strong></p>
-                                <p class="mb-1">Precio: <strong><?= "$".$precio ?></strong></p>
-                                <p class="mb-1">Hora de Función: <span class="badge bg-info text-dark"><?= formatDate($horaFuncion) ?></span></p>
-                                <p class="mb-1">Hora de Venta: <span class="badge bg-success text-light"><?= formatDate($horaVenta) ?></span></p>
-                            </div>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-        </div>
-    </div>
 
-    <!-- Cambiar Contraseña -->
-    <div class="tab-pane fade" id="change-password" role="tabpanel" aria-labelledby="change-password-tab">
-        <div class="card border-warning mb-3">
-            <div class="card-header bg-warning text-dark">
-                <h3 class="card-title mb-0">Cambiar Contraseña</h3>
+                        <?php foreach ($entradas as $elemento): ?>
+                            <?php
+                            $funcion = $elemento["numeroFuncion"];
+                            $pelicula = $elemento["nombre"];
+                            $horaFuncion = $elemento["horarioFuncion"];
+                            $horaVenta = $elemento["horarioVenta"];
+                            $numeroTicket = $elemento["numeroTicket"];
+                            $precio = $elemento["precio"];
+                            ?>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h5 class="mb-1">Nro de Ticket: <strong><?= $numeroTicket ?></strong></h5>
+                                    <p class="mb-1">Función: <strong><?= $funcion ?></strong></p>
+                                    <p class="mb-1">Película: <strong><?= $pelicula ?></strong></p>
+                                    <p class="mb-1">Precio: <strong><?= "$" . $precio ?></strong></p>
+                                    <p class="mb-1">Hora de Función: <span class="badge bg-info text-dark"><?= formatDate($horaFuncion) ?></span></p>
+                                    <p class="mb-1">Hora de Venta: <span class="badge bg-success text-light"><?= formatDate($horaVenta) ?></span></p>
+                                </div>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
             </div>
-            <div class="card-body">
-                <form id="change-password-form">
-                    <div class="mb-3">
-                        <label for="claveActual" class="form-label">Contraseña Actual</label>
-                        <div class="input-group">
-                            <input type="password" class="form-control" id="claveActual" placeholder="Ingresa tu contraseña actual" required>
-                            <span class="input-group-text"><i class="fas fa-eye toggle-password" data-toggle="claveActual"></i></span>
+        </div>
+
+        <!-- Cambiar Contraseña -->
+        <div class="tab-pane fade" id="change-password" role="tabpanel" aria-labelledby="change-password-tab">
+            <div class="card border-warning mb-3">
+                <div class="card-header bg-warning text-dark">
+                    <h3 class="card-title mb-0">Cambiar Contraseña</h3>
+                </div>
+                <div class="card-body">
+                    <form id="change-password-form">
+                        <div class="mb-3">
+                            <label for="claveActual" class="form-label">Contraseña Actual</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="claveActual" placeholder="Ingresa tu contraseña actual" required>
+                                <span class="input-group-text"><i class="fas fa-eye toggle-password" data-toggle="claveActual"></i></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="claveNueva" class="form-label">Nueva Contraseña</label>
-                        <div class="input-group">
-                            <input type="password" class="form-control" id="claveNueva" placeholder="Ingresa tu nueva contraseña" required>
-                            <span class="input-group-text"><i class="fas fa-eye toggle-password" data-toggle="claveNueva"></i></span>
+                        <div class="mb-3">
+                            <label for="claveNueva" class="form-label">Nueva Contraseña</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="claveNueva" placeholder="Ingresa tu nueva contraseña" required>
+                                <span class="input-group-text"><i class="fas fa-eye toggle-password" data-toggle="claveNueva"></i></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="claveConfirmacion" class="form-label">Confirmar Nueva Contraseña</label>
-                        <div class="input-group">
-                            <input type="password" class="form-control" id="claveConfirmacion" placeholder="Confirma tu nueva contraseña" required>
-                            <span class="input-group-text"><i class="fas fa-eye toggle-password" data-toggle="claveConfirmacion"></i></span>
+                        <div class="mb-3">
+                            <label for="claveConfirmacion" class="form-label">Confirmar Nueva Contraseña</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="claveConfirmacion" placeholder="Confirma tu nueva contraseña" required>
+                                <span class="input-group-text"><i class="fas fa-eye toggle-password" data-toggle="claveConfirmacion"></i></span>
+                            </div>
                         </div>
-                    </div>
-                    <button type="button" id="btnChangePassword" class="btn btn-warning w-100">Actualizar Contraseña</button>
-                </form>
+                        <button type="button" id="btnChangePassword" class="btn btn-warning w-100">Actualizar Contraseña</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 </div>
