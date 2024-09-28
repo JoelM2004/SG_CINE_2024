@@ -257,8 +257,9 @@ $daoImagen = new ImagenDAO($conn);
     <div class="col-md-6 col-lg-3 mb-3">
         <label for="esPortada" class="form-label">Portada</label>
         <select class="form-select" id="esPortada">
-            <option value="1">Sí</option>
-            <option value="0">No</option>
+        <option value="0">No</option>    
+        <option value="1">Sí</option>
+            
         </select>
     </div>
 </div>

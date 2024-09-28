@@ -47,7 +47,7 @@
             <li><a class="dropdown-item" href="<?= APP_FRONT . 'funcion/index' ?>">Gestionar Funciones</a></li>
             <li><a class="dropdown-item" href="<?= APP_FRONT . 'entrada/index' ?>">Gestionar Entradas</a></li>
             <li><a class="dropdown-item" href="<?= APP_FRONT . 'usuario/index' ?>"<?php if (($_SESSION["perfil"]) !=="Administrador") echo 'hidden'; ?>>Gestionar Usuarios</a></li>
-            <li><a class="dropdown-item" href="<?= APP_FRONT . 'perfil/index' ?>"<?php if (($_SESSION["perfil"]) !=="Administrador") echo 'hidden'; ?>>Gestionar Perfiles</a></li>
+            <!-- <li><a class="dropdown-item" href="<?= APP_FRONT . 'perfil/index' ?>"<?php if (($_SESSION["perfil"]) !=="Administrador") echo 'hidden'; ?>>Gestionar Perfiles</a></li> -->
           </ul>
         </li>
       </ul>

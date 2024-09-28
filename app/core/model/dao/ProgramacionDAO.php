@@ -21,13 +21,11 @@ final class ProgramacionDAO extends DAO implements InterfaceDAO
     {
 
         $this->validate($object);
-
-        // $this->validateFechasUnicas($object);
+        $this->validateVigencia($object);
 
         $this->validateFechasInicio($object);
         $this->validateFechasFin($object);
 
-        $this->validateVigencia($object);
 
         $this->validateFechas($object);
 
@@ -71,6 +69,8 @@ final class ProgramacionDAO extends DAO implements InterfaceDAO
 
         $this->validateFechasInicio($object);
         $this->validateFechasFin($object);
+
+        // $this->validateFechasUnicas($object);
 
         $this->validateFechas($object);
 
@@ -232,13 +232,13 @@ final class ProgramacionDAO extends DAO implements InterfaceDAO
         // Valida que ni la fecha de inicio ni la fecha de fin sean duplicadas en otro registro
         $sql = "SELECT count(id) AS cantidad 
             FROM {$this->table} 
-            WHERE (fechaInicio = :fechaFin) 
+            WHERE (fechaFin = :fechaFin) 
             AND id != :id";
         $stmt = $this->conn->prepare($sql);
 
         $params = [
             ':id' => $object->getId(),
-            ':fechaInicio' => $object->getFechaFin(),
+            ':fechaFin' => $object->getFechaFin(),
         ];
 
         $stmt->execute($params);

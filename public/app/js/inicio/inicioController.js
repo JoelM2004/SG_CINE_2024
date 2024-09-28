@@ -1,20 +1,45 @@
 let inicioController = {
-  list: async () => {
-    
-        const data = await inicioService.list();
+    list: async () => {
+
         let carteleraContainer = document.getElementById("cartelera");
         carteleraContainer.innerHTML = ""; // Limpiar el contenedor antes de agregar nuevas tarjetas
-
+    
+        const data = await inicioService.list();
+    
+        // Si no hay resultados, mostrar una tarjeta atractiva indicando que no hay contenido disponible
+        if (!data.result || data.result.length === 0) {
+            carteleraContainer.innerHTML = `
+            <div class="container mt-5 d-flex justify-content-center flex-column align-items-center">
+    <div class="card mb-4 mt-4 shadow-lg p-4 w-75 bg-light text-center" style="border: 2px solid #dc3545; border-radius: 10px;">
+        <div class="card-body">
+            <h2 class="card-title text-danger"><i class="fas fa-exclamation-circle fa-2x"></i> ¡Oops! Sin Películas Disponibles</h2>
+            <p class="card-text mt-3" style="font-size: 1.2em;">Lo sentimos, actualmente no hay películas para mostrar.</p>
+            <p class="card-text">Estamos trabajando arduamente para traer lo mejor de la cartelera muy pronto</p>
+            <div class="mt-3">
+                <img src="../public/assets/img/logo.png" alt="logo de los pollos hermanos" class="img-fluid rounded-circle" style="border: 2px solid #dc3545;"/> <!-- Imagen opcional -->
+            </div>
+        </div>
+    </div>
+</div>
+`;
+            return;
+        }
+    
+        // Limpiar el mensaje de carga si se obtienen datos
+        carteleraContainer.innerHTML = "";
+    
+        // Recorrer y mostrar cada película
         data.result.forEach(async (pelicula) => {
-            // Crear la tarjeta de película
-
+            // Cargar la imagen de la película
             let imagen = await inicioController.loadImagen(pelicula.id);
+    
             const formatDate = (dateString) => {
                 const [year, month, day] = dateString.split("-");
                 return `${day}/${month}/${year}`;
             };
-
-            let card = `<div class="container mt-5 d-flex justify-content-center flex-column align-items-center">
+    
+            let card = `
+            <div class="container mt-5 d-flex justify-content-center flex-column align-items-center">
                 <!-- Tarjeta de Película -->
                 <div class="card mb-4 mt-4 shadow-sm w-75">
                     <div class="row g-0">
@@ -47,14 +72,14 @@ let inicioController = {
                         </div>
                     </div>
                 </div>
-                <!-- Puedes repetir esta estructura de tarjeta para mostrar más películas -->
             </div>`;
-
+    
             // Agregar la tarjeta al contenedor
             carteleraContainer.insertAdjacentHTML("beforeend", card);
         });
+    }
     
-},
+,    
 
 loadImagen: async (id) => {
     console.log("Cargando Usuario...");

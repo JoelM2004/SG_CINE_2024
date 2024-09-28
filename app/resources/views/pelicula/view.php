@@ -1,4 +1,5 @@
 <?php
+
 use app\core\model\dao\PeliculaDAO;
 use app\libs\Connection\Connection;
 use app\core\model\dao\ImagenDAO;
@@ -19,23 +20,24 @@ $daoImagen = new ImagenDAO($conn);
       <!-- Imagen de la película -->
       <div class="col-md-4">
         <img src="<?php
-                                    // Obtén la imagen desde el DAO
-                                    $img = $daoImagen->loadImagen($_GET['id']);
+                  // Obtén la imagen desde el DAO
+                  $img = $daoImagen->loadImagen($_GET['id']);
 
-                                    // Verifica si la imagen no está disponible
-                                    if (!empty($img)) {
-                                        // Si hay imagen, muestra el src adecuado
-                                        echo htmlspecialchars($img, ENT_QUOTES, 'UTF-8');
-                                    }   
-                                    ?>" class="card-img-top" alt="Imagen de la película">
+                  // Verifica si la imagen no está disponible
+                  if (!empty($img)) {
+                    // Si hay imagen, muestra el src adecuado
+                    echo htmlspecialchars($img, ENT_QUOTES, 'UTF-8');
+                  }
+                  ?>" class="card-img-top" alt="Imagen de la película">
       </div>
 
       <!-- Contenido de la tarjeta -->
-      <div class="col-md-8" data-id=<?=$id?> id="peliculaUsuario">
+      <div class="col-md-8" data-id=<?= $id ?> id="peliculaUsuario">
         <div class="card-body">
           <h5 class="card-title mb-3"><i class="fas fa-film"></i> <?= $datos['nombre'] ?></h5>
           <p class="card-text"><strong><i class="fas fa-scroll"></i> Sinopsis:</strong> <?= $datos['sinopsis'] ?></p>
           <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong><i class="fas fa-heading"></i> Título Original:</strong> <?= $datos['tituloOriginal'] ?></li>
             <li class="list-group-item"><strong><i class="fas fa-clock"></i> Duración:</strong> <?= $datos['duracion'] ?> min</li>
             <li class="list-group-item"><strong><i class="fas fa-theater-masks"></i> Género:</strong> <?= $datos['genero'] ?></li>
             <li class="list-group-item"><strong><i class="fas fa-star"></i> Calificación:</strong> <?= $datos['calificacion'] ?></li>
@@ -67,7 +69,7 @@ $daoImagen = new ImagenDAO($conn);
 
 <div id="movieCarousel" class="carousel slide mt-4">
   <div class="carousel-inner">
-    
+
   </div>
   <button class="carousel-control-prev" type="button" data-bs-target="#movieCarousel" data-bs-slide="prev">
     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -77,7 +79,7 @@ $daoImagen = new ImagenDAO($conn);
     <span class="carousel-control-next-icon" aria-hidden="true"></span>
     <span class="visually-hidden">Next</span>
   </button>
-</div> 
+</div>
 
 <!-- Modal para pantalla completa -->
 <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
@@ -91,4 +93,3 @@ $daoImagen = new ImagenDAO($conn);
     </div>
   </div>
 </div>
-

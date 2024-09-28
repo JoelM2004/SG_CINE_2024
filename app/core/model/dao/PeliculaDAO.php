@@ -48,6 +48,7 @@ final class PeliculaDAO extends DAO implements InterfaceDAO
         $sql = "SELECT 
                 p.id,
                 p.nombre,
+                p.tituloOriginal,
                 p.duracion,
                 p.fechaIngreso,
                 p.sinopsis,

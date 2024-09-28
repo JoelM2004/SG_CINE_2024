@@ -1,5 +1,4 @@
-<!-- Sección Quiénes Somos -->
-<!-- Sección Quiénes Somos -->
+
 <div class="container mt-5">
     <div class="card mb-3">
         <div class="row g-0">
@@ -20,8 +19,6 @@
     </div>
 </div>
 
-
-<!-- Mapa de Ubicación -->
 <div class="container mt-5">
     <h4 class="text-center mb-4">Nuestra Ubicación</h4>
     <div class="row justify-content-center">
@@ -32,7 +29,6 @@
     </div>
 </div>
 
-<!-- Medios de Contacto -->
 <section class="section mt-5">
     <div class="container">
         <h2 class="text-center mb-4">Contáctanos</h2>

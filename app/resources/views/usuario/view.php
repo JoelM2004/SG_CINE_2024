@@ -88,39 +88,52 @@ function formatDate($date)
                     <h3 class="card-title mb-0">Historial de Compras</h3>
                 </div>
                 <div class="card-body">
-                    <ul class="list-group list-group-flush">
+                    <?php if (empty($entradas)): ?>
+                        <!-- Mensaje cuando no hay compras -->
+                        <div class="alert alert-warning text-center" role="alert">
+                            <div class="d-flex justify-content-center align-items-center">
+                                <i class="fas fa-exclamation-circle fa-2x me-3"></i> <!-- Icono más grande -->
+                                <h5 class="mb-0">¡Hola! No hemos encontrado compras en tu historial.</h5>
+                            </div>
+                            <p class="mt-2">Parece que aún no has realizado ninguna compra. Explora nuestra cartelera y disfruta de una buena película.</p>
+                            <a href="http://localhost/SG_CINE_2024/public/cartelera" class="btn btn-success mt-3">Ir a la Cartelera</a> <!-- Botón para redirigir -->
+                        </div>
+                    <?php else: ?>
+                        <ul class="list-group list-group-flush">
 
-                        <?php
-                        // Función para comparar las entradas según el 'horarioVenta'
-                        usort($entradas, function ($a, $b) {
-                            return strtotime($b['horarioVenta']) - strtotime($a['horarioVenta']); // Orden descendente
-                        });
-                        ?>
-
-                        <?php foreach ($entradas as $elemento): ?>
                             <?php
-                            $funcion = $elemento["numeroFuncion"];
-                            $pelicula = $elemento["nombre"];
-                            $horaFuncion = $elemento["horarioFuncion"];
-                            $horaVenta = $elemento["horarioVenta"];
-                            $numeroTicket = $elemento["numeroTicket"];
-                            $precio = $elemento["precio"];
+                            // Función para comparar las entradas según el 'horarioVenta'
+                            usort($entradas, function ($a, $b) {
+                                return strtotime($b['horarioVenta']) - strtotime($a['horarioVenta']); // Orden descendente
+                            });
                             ?>
-                            <li class="list-group-item d-flex justify-content-between align-items-start">
-                                <div>
-                                    <h5 class="mb-1">Nro de Ticket: <strong><?= $numeroTicket ?></strong></h5>
-                                    <p class="mb-1">Función: <strong><?= $funcion ?></strong></p>
-                                    <p class="mb-1">Película: <strong><?= $pelicula ?></strong></p>
-                                    <p class="mb-1">Precio: <strong><?= "$" . $precio ?></strong></p>
-                                    <p class="mb-1">Hora de Función: <span class="badge bg-info text-dark"><?= formatDate($horaFuncion) ?></span></p>
-                                    <p class="mb-1">Hora de Venta: <span class="badge bg-success text-light"><?= formatDate($horaVenta) ?></span></p>
-                                </div>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
+
+                            <?php foreach ($entradas as $elemento): ?>
+                                <?php
+                                $funcion = $elemento["numeroFuncion"];
+                                $pelicula = $elemento["nombre"];
+                                $horaFuncion = $elemento["horarioFuncion"];
+                                $horaVenta = $elemento["horarioVenta"];
+                                $numeroTicket = $elemento["numeroTicket"];
+                                $precio = $elemento["precio"];
+                                ?>
+                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="mb-1">Nro de Ticket: <strong><?= $numeroTicket ?></strong></h5>
+                                        <p class="mb-1">Función: <strong><?= $funcion ?></strong></p>
+                                        <p class="mb-1">Película: <strong><?= $pelicula ?></strong></p>
+                                        <p class="mb-1">Precio: <strong><?= "$" . $precio ?></strong></p>
+                                        <p class="mb-1">Hora de Función: <span class="badge bg-info text-dark"><?= formatDate($horaFuncion) ?></span></p>
+                                        <p class="mb-1">Hora de Venta: <span class="badge bg-success text-light"><?= formatDate($horaVenta) ?></span></p>
+                                    </div>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
+
 
         <!-- Cambiar Contraseña -->
         <div class="tab-pane fade" id="change-password" role="tabpanel" aria-labelledby="change-password-tab">
