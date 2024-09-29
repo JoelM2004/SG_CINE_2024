@@ -634,9 +634,7 @@ document.addEventListener("DOMContentLoaded", () => {
       btnAltaEntrada.addEventListener("click", () => {
         if (confirm("¿Quieres guardar las entradas?")) {
           entradaController.save();
-          setTimeout(() => {
-            location.reload();
-          }, 300);
+          entradaController.list()
         }
       });
 

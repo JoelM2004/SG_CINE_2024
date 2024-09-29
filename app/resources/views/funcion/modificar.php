@@ -36,6 +36,31 @@ $datosTipo = $daoTipo->list();
         <h4 class="text-center text-secondary">Edición de Funcion</h4>
 
         <div class="mb-3">
+            <label for="fechaProgramacion" class="form-label">Fecha de Programación</label>
+            <select class="form-select" id="fechaProgramacion">
+            <?php
+                $txt = ''; // Inicializar $txt antes del bucle
+
+                function formatDate($dateString)
+                {
+                    $dateParts = explode("-", $dateString);
+                    return $dateParts[2] . '/' . $dateParts[1] . '/' . $dateParts[0];
+                }
+                // Invertir el array para que las últimas películas aparezcan primero
+                $datosProgramacionInvertido = array_reverse($datosProgramacion);
+
+                foreach ($datosProgramacionInvertido as $elemento) {
+                    $selected = $datosFuncion->getProgramacionId() == $elemento['id'] ? 'selected' : '';
+                    echo '<option value="' . $elemento['id'] . '" ' . $selected . '>' . formatDate($elemento['fechaInicio'])." a ".formatDate($elemento["fechaFin"]) . '</option>';
+                }
+
+                echo $txt;
+                ?>
+            </select>
+        </div>
+
+
+        <div class="mb-3">
             <label for="fecha" class="form-label">Fecha</label>
             <input type="date" class="form-control" id="fecha" value="<?=$datosFuncion->getFecha()?>">
         </div>
@@ -45,10 +70,7 @@ $datosTipo = $daoTipo->list();
             <input type="time" class="form-control" id="horaInicio" value="<?=$datosFuncion->getHoraInicio()?>">
         </div>
 
-        <div class="mb-3">
-            <label for="duracion" class="form-label">Duración(en minutos)</label>
-            <input type="number" class="form-control" id="duracion" value="<?=$datosFuncion->getDuracion()?>">
-        </div>
+       
 
         <div class="mb-3">
             <label for="numeroFuncion" class="form-label">Número de Función</label>
@@ -96,29 +118,13 @@ $datosTipo = $daoTipo->list();
             </select>
         </div>
 
+        
+
         <div class="mb-3">
-            <label for="fechaProgramacion" class="form-label">Fecha de Programación</label>
-            <select class="form-select" id="fechaProgramacion">
-            <?php
-                $txt = ''; // Inicializar $txt antes del bucle
-
-                function formatDate($dateString)
-                {
-                    $dateParts = explode("-", $dateString);
-                    return $dateParts[2] . '/' . $dateParts[1] . '/' . $dateParts[0];
-                }
-                // Invertir el array para que las últimas películas aparezcan primero
-                $datosProgramacionInvertido = array_reverse($datosProgramacion);
-
-                foreach ($datosProgramacionInvertido as $elemento) {
-                    $selected = $datosFuncion->getProgramacionId() == $elemento['id'] ? 'selected' : '';
-                    echo '<option value="' . $elemento['id'] . '" ' . $selected . '>' . formatDate($elemento['fechaInicio'])." a ".formatDate($elemento["fechaFin"]) . '</option>';
-                }
-
-                echo $txt;
-                ?>
-            </select>
+            <label for="duracion" class="form-label">Duración(en minutos)</label>
+            <input type="number" class="form-control" id="duracion" value="<?=$datosFuncion->getDuracion()?>">
         </div>
+
 
         <div class="mb-3">
             <label for="precio" class="form-label">Precio</label>

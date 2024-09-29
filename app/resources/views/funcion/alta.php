@@ -33,6 +33,35 @@ $datosTipo = $daoTipo->list();
         <h4 class="text-center text-secondary">Registro de Función</h4>
 
         <div class="mb-3">
+            <label for="fechaProgramacion" class="form-label">Fecha de Programación</label>
+            <select class="form-select" id="fechaProgramacion">
+                <?php
+                $txt = ''; // Inicializar $txt antes del bucle
+
+                // Función para formatear la fecha en PHP
+                function formatDate($dateString)
+                {
+                    $dateParts = explode("-", $dateString);
+                    return $dateParts[2] . '/' . $dateParts[1] . '/' . $dateParts[0];
+                }
+
+                $datosProgramacionInvertidos = array_reverse($datosProgramacion);
+
+                foreach ($datosProgramacionInvertidos as $elemento) {
+                    $fechaInicioFormateada = formatDate($elemento['fechaInicio']);
+                    $fechaFinFormateada = formatDate($elemento['fechaFin']);
+
+                    $txt .= '<option value="' . $elemento['id'] . '">' . $fechaInicioFormateada . " a " . $fechaFinFormateada . '</option>';
+                }
+
+                echo $txt;
+                ?>
+
+            </select>
+        </div>
+
+
+        <div class="mb-3">
             <label for="fecha" class="form-label">Fecha</label>
             <input type="date" class="form-control" id="fecha">
         </div>
@@ -42,10 +71,7 @@ $datosTipo = $daoTipo->list();
             <input type="time" class="form-control" id="horaInicio">
         </div>
 
-        <div class="mb-3">
-            <label for="duracion" class="form-label">Duración(en minutos)</label>
-            <input type="number" class="form-control" id="duracion">
-        </div>
+        
 
         <div class="mb-3">
             <label for="numeroFuncion" class="form-label">Número de Función</label>
@@ -84,32 +110,11 @@ $datosTipo = $daoTipo->list();
             </select>
         </div>
 
+        
+
         <div class="mb-3">
-            <label for="fechaProgramacion" class="form-label">Fecha de Programación</label>
-            <select class="form-select" id="fechaProgramacion">
-                <?php
-                $txt = ''; // Inicializar $txt antes del bucle
-
-                // Función para formatear la fecha en PHP
-                function formatDate($dateString)
-                {
-                    $dateParts = explode("-", $dateString);
-                    return $dateParts[2] . '/' . $dateParts[1] . '/' . $dateParts[0];
-                }
-
-                $datosProgramacionInvertidos = array_reverse($datosProgramacion);
-
-                foreach ($datosProgramacionInvertidos as $elemento) {
-                    $fechaInicioFormateada = formatDate($elemento['fechaInicio']);
-                    $fechaFinFormateada = formatDate($elemento['fechaFin']);
-
-                    $txt .= '<option value="' . $elemento['id'] . '">' . $fechaInicioFormateada . " a " . $fechaFinFormateada . '</option>';
-                }
-
-                echo $txt;
-                ?>
-
-            </select>
+            <label for="duracion" class="form-label">Duración(en minutos)</label>
+            <input type="number" class="form-control" id="duracion">
         </div>
 
         <div class="mb-3">

@@ -620,12 +620,17 @@ let funcionController = {
           let tipotxt = element.nombreTipo;
           let audiotxt = element.nombreAudio;
           
-          // Si la sala no está disponible, aplicar estilos grises
+          // Si la sala no está disponible, aplicar estilos grises y eliminar el enlace
           let estiloSala = element.estadoSala === 1 ? "" : "text-muted"; // Clase para texto gris
-          let mensajeSala = element.estadoSala === 1 ? "" : `<span class="badge bg-danger">Sala no se encuentra disponible</span>`;
+          let mensajeSala = element.estadoSala === 1 ? "" : `<span class="badge bg-danger">La Sala no se encuentra disponible</span>`;
+          let isClickable = element.estadoSala === 1; // Verificar si la sala está disponible
+          let enlaceInicio = isClickable 
+            ? `<a href="http://localhost/SG_CINE_2024/public/entrada/view/${element.id}" class="list-group-item list-group-item-action py-3 ${estiloSala}">`
+            : `<div class="list-group-item py-3 ${estiloSala}">`;
+          let enlaceFin = isClickable ? `</a>` : `</div>`;
   
           txt += `
-          <a href="http://localhost/SG_CINE_2024/public/entrada/view/${element.id}" class="list-group-item list-group-item-action py-3 ${estiloSala}">
+          ${enlaceInicio}
             <div class="d-flex w-100 justify-content-between">
               <h5 class="mb-1" style="font-size: 1.25rem; font-weight: bold;">
                 <i class="fas fa-film"></i> Función ${element.numeroFuncion} - ${formatDate(element.fecha)} a las ${formatHour(element.horaInicio)}
@@ -639,8 +644,8 @@ let funcionController = {
               <i class="fas fa-volume-up"></i> ${audiotxt} - 
               <i class="fas fa-dollar-sign"></i> $${element.precio}
             </p>
-            ${mensajeSala} <!-- Mostrar mensaje de sala no disponible si es necesario -->
-          </a>
+            ${mensajeSala}
+          ${enlaceFin}
           `;
         });
       }
@@ -648,6 +653,7 @@ let funcionController = {
       listaFunciones.innerHTML = txt; // Reemplaza el contenido HTML con las funciones generadas
     });
   }
+  
   
 ,  
 
