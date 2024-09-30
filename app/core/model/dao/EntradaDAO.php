@@ -208,7 +208,7 @@ final class EntradaDAO extends DAO implements InterfaceDAO
         inner join funciones f on f.id=e.funcionId
         inner join usuarios u on u.id=e.usuarioId
         inner join peliculas p on p.id=f.peliculaId
-        where u.id=:id
+        where u.id=:id and e.estado=1
         ";
         $stmt = $this->conn->prepare($sql);
 
