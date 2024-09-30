@@ -31,6 +31,15 @@
         <!-- Barra de búsqueda con selección de filtro -->
         <form class="mb-4" id="filterForm">
             <div class="d-flex flex-column flex-md-row align-items-center mb-3">
+                <label class="form-label me-2">Filtrar por:</label>
+                <select class="form-select w-auto" id="filterType" onchange="toggleFilters()">
+                    <option value="vigente">Vigente</option>
+                    <option value="fechaRango">Rango de Fecha</option>
+                </select>
+            </div>
+
+            <!-- Filtro de Programaciones Vigentes -->
+            <div id="filterVigenteDiv" class="d-flex flex-column flex-md-row align-items-center mb-3">
                 <label class="form-label me-2">Mostrar solo programaciones vigentes:</label>
                 <select class="form-select w-auto" id="filterVigente">
                     <option value="1">Sí</option>
@@ -38,13 +47,21 @@
                 </select>
             </div>
 
+            <!-- Filtro por Rango de Fechas (Oculto por defecto) -->
+            <div id="filterFechaRangoDiv" class="d-flex flex-column flex-md-row align-items-center mb-3 d-none">
+                <label class="form-label me-2">Desde:</label>
+                <input type="date" class="form-control w-auto" id="fechaInicioFilter">
+                <label class="form-label me-2 ms-3">Hasta:</label>
+                <input type="date" class="form-control w-auto" id="fechaFinFilter">
+            </div>
+
             <div class="d-flex justify-content-end">
                 <button id="btnBuscarProgramacion" type="button" class="btn btn-primary me-2">Buscar</button>
                 <button id="btnListarProgramacion" type="button" class="btn btn-primary me-2">Listar</button>
                 <button id="btnPDFProgramacion" type="button" class="btn btn-success">PDF</button>
-                
             </div>
         </form>
+
 
         <table id="tablaProgramacion" class="table table-light">
             <thead>

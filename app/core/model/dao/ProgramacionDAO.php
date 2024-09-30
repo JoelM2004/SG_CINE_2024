@@ -101,6 +101,34 @@ final class ProgramacionDAO extends DAO implements InterfaceDAO
         return $Programaciones;
     }
 
+    public function loadByFecha($fechaInicio, $fechaFin): array
+    {
+        // Selecciona las programaciones cuyo inicio está dentro del rango de fechas
+        $sql = "SELECT id, fechaInicio, fechaFin, vigente 
+            FROM {$this->table} 
+            WHERE fechaInicio >= :fechaInicio 
+            AND fechaFin <= :fechaFin"; // Incluimos la condición de fechaFin
+
+        // Prepara la consulta
+        $stmt = $this->conn->prepare($sql);
+
+        // Ejecuta la consulta con los valores de fechaInicio y fechaFin
+        $stmt->execute([
+            "fechaInicio" => $fechaInicio,
+            "fechaFin" => $fechaFin
+        ]);
+
+        // Recuperar todos los resultados y convertirlos a objetos ProgramacionDTO
+        $Programaciones = [];
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $Programaciones[] = new ProgramacionDTO($row);
+        }
+
+        return $Programaciones;
+    }
+
+
+
     public function listVigente(): ProgramacionDTO
     {
 
@@ -223,7 +251,7 @@ final class ProgramacionDAO extends DAO implements InterfaceDAO
         $result = $stmt->fetch(\PDO::FETCH_OBJ);
 
         if ($result->cantidad > 0) {
-            throw new \Exception("Ya existe una cartelera que inicia este día ".$object->getFechaInicio());
+            throw new \Exception("Ya existe una cartelera que inicia este día " . $object->getFechaInicio());
         }
     }
 
@@ -245,7 +273,7 @@ final class ProgramacionDAO extends DAO implements InterfaceDAO
         $result = $stmt->fetch(\PDO::FETCH_OBJ);
 
         if ($result->cantidad > 0) {
-            throw new \Exception("Ya existe una cartelera que finaliza este día ".$object->getFechaFin());
+            throw new \Exception("Ya existe una cartelera que finaliza este día " . $object->getFechaFin());
         }
     }
 
@@ -286,5 +314,4 @@ final class ProgramacionDAO extends DAO implements InterfaceDAO
             throw new \Exception("Existe una función que está utilizando está programación, elimine la función/funciones para poder eliminar ésta programación");
         }
     }
-
 }

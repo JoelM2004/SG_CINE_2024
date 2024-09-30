@@ -120,6 +120,24 @@ final class ProgramacionController extends Controller implements InterfaceContro
 
     }
 
+    public function loadByFecha(Request $request, Response $response):void{
+
+        $service = new ProgramacionService();
+        $fechaInicio = $request->getParam('fechaInicio');
+        $fechaFin = $request->getParam('fechaFin');
+
+        $programaciones = $service->loadByFecha($fechaInicio,$fechaFin);
+
+        $programacionesArray = array_map(function($programacion) {
+        return $programacion->toArray(); // Convierte el objeto UsuarioDTO a un array
+        }, $programaciones);
+
+        $response->setResult($programacionesArray);
+        $response->setMessage("La/las programaciones se listaron correctamente");
+        $response->send();
+
+    }
+
 
     /*
     Gestiona los servicios correspondientes, para la eliminación fisica de la entidad

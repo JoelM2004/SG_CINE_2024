@@ -196,6 +196,71 @@ let programacionController = {
             });
     },
 
+    loadByFecha: () => {
+      let index = 0;
+    
+      console.log("Listando Programaciones...");
+    
+      // Obtener los valores de las fechas de inicio y fin
+      let fechaInicio = document.getElementById("fechaInicioFilter").value;
+      let fechaFin = document.getElementById("fechaFinFilter").value;
+      
+      if(fechaFin=="" || fechaInicio==""){
+        alert("Ingrese valores en los calendarios")
+        return
+      }
+
+      // Validar que la fecha de inicio no sea superior a la de fin
+      if (fechaInicio > fechaFin) {
+          alert("La fecha de inicio no puede ser superior a la fecha de fin");
+          return;
+      }
+      
+      // Llamada al servicio para cargar las programaciones por fecha
+      programacionService
+          .loadByFecha(fechaInicio, fechaFin)
+          .then((data) => {
+              console.log("Programaciones listadas:", data);
+    
+              // Obtener la tabla donde se mostrará el resultado
+              let tabla = document.getElementById("tbodyProgramacion");
+              let txt = "";
+    
+              // Verificar si se encontraron programaciones
+              if (data.result.length > 0) {
+                  data.result.forEach((element) => {
+                      txt += "<tr>";
+                      txt += "<th>" + (++index) + "</th>"; // Incrementar el índice en cada iteración
+                      txt += "<td>" + formatDate(element.fechaInicio) + "</td>";
+                      txt += "<td>" + formatDate(element.fechaFin) + "</td>";
+    
+                      // Mostrar si la programación está vigente o no
+                      if (element.vigente == 1) {
+                          txt += "<td><i class='fas fa-circle text-success' title='Activo'></i></td>";
+                      } else {
+                          txt += "<td><i class='fas fa-circle text-danger' title='Desactivado'></i></td>";
+                      }
+    
+                      // Agregar botón de edición
+                      txt += '<td><a href="http://localhost/SG_CINE_2024/public/programacion/edit/' +
+                          element.id +
+                          '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
+                      txt += "</tr>";
+                  });
+              } else {
+                  // Mostrar mensaje si no hay programaciones
+                  txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron programaciones.</td></tr>";
+              }
+    
+              // Actualizar el contenido de la tabla
+              tabla.innerHTML = txt;
+          })
+          .catch((error) => {
+              console.error("Error al listar programaciones:", error);
+          });
+  }
+,  
+
     print:()=> {
       const $elementoParaConvertir = document.getElementById("tablaProgramacion"); // <-- Aquí puedes elegir cualquier elemento del DOM
     
@@ -306,7 +371,16 @@ let programacionController = {
   
       btnPDFProgramacion.onclick=programacionController.print
       btnListarProgramacion.onclick = programacionController.list;
-      btnBuscarProgramacion.onclick=programacionController.loadByVigencia;
+
+      btnBuscarProgramacion.addEventListener("click", function () {
+        if (document.getElementById("filterType").value == "vigente") {
+          programacionController.loadByVigencia();
+        } else if (
+          document.getElementById("filterType").value == "fechaRango"
+        ) {
+          programacionController.loadByFecha();
+        } 
+      });
 
     } else if(btnEliminarProgramacion!=null) {
         btnEliminarProgramacion.onclick=programacionController.delete;

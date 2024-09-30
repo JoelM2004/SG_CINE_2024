@@ -291,11 +291,11 @@ final class UsuarioDAO extends DAO implements InterfaceDAO
         FROM {$this->table} u
         inner join perfiles p on u.perfilId=p.id
             
-        where u.cuenta = :id
+        where u.cuenta like :id
 
         ";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(["id" => $cuenta]);
+        $stmt->execute(["id" => $cuenta."%"]);
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 

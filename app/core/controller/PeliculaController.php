@@ -154,6 +154,26 @@ final class PeliculaController extends Controller implements InterfaceController
         $response->send();
     }
 
+    public function loadByEstreno(Request $request, Response $response): void {
+        $service = new PeliculaService();
+        $estreno = $request->getParam('estreno'); 
+        $Pelicula = $service->loadByEstreno($estreno);
+
+        $response->setResult($Pelicula); // Convierte el objeto PerfilDTO a un array
+        $response->setMessage("Pelicula cargado correctamente");
+        $response->send();
+    }
+
+    public function loadByActor(Request $request, Response $response): void {
+        $service = new PeliculaService();
+        $actor = $request->getParam('actor'); 
+        $Pelicula = $service->loadByActor($actor);
+
+        $response->setResult($Pelicula); // Convierte el objeto PerfilDTO a un array
+        $response->setMessage("Pelicula cargado correctamente");
+        $response->send();
+    }
+
     public function loadByGenero(Request $request, Response $response):void{
 
         $service = new PeliculaService();

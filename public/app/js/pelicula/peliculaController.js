@@ -578,6 +578,67 @@ let peliculaController = {
       })
   },
 
+  loadByEstreno:  () => {
+    console.log("Listando Películas...");
+    index = 0;
+    if(document.getElementById("filterEstrenoInput").value<0){
+      alert("Ingrese un valor positivo")
+      return
+    }
+
+
+    peliculaService
+      .loadByEstreno(parseInt(document.getElementById("filterEstrenoInput").value))
+      .then((data) => {
+        console.log("Películas listados:", data);
+        let tabla = document.getElementById("tbodyPelicula");
+        let txt = "";
+
+        if(data.result.length>0){
+        data.result.forEach((element) => {
+          txt += "<tr>";
+          txt += "<th>" + (index = index + 1) + "</th>";
+          txt += "<td>" + element.nombrePelicula + "</td>";
+          txt += "<td>" + element.duracion + "</td>";
+          txt += "<td>" + element.anoEstreno + "</td>";
+
+          if (element.disponibilidad === 1) {
+            txt +=
+              "<td> <i class='fas fa-circle text-success' title='Activo'></i> </td>";
+          } else {
+            txt +=
+              "<td> <i class='fas fa-circle text-danger' title='Desactivado'></i> </td>";
+          }
+
+          txt += "<td>" + formatDate(element.fechaIngreso) + "</td>";
+
+          txt += "<td>" + element.genero + "</td>";
+          
+          txt += "<td>" + element.pais + "</td>";
+          
+          txt += "<td>" + element.idioma + "</td>";
+
+          txt += "<td>" + element.calificacion + "</td>";
+          
+          txt += "<td>" + element.tipo + "</td>";
+
+          txt += "<td>" + element.audio + "</td>";
+          
+
+          txt +=
+            '<td><a href="http://localhost/SG_CINE_2024/public/pelicula/edit/' +
+            element.id +
+            '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
+          txt += "</tr>";
+        })
+      } else{ txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron películas.</td></tr>";}
+        tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
+      })
+      .catch((error) => {
+        console.error("Error al listar Usuarios:", error);
+      })
+  },
+
   loadByNombrePelicula:  () => {
  
     if(document.getElementById("filterTituloInput").value.length<=0){
@@ -588,6 +649,66 @@ let peliculaController = {
     index = 0;
      peliculaService
       .loadByNombrePelicula(document.getElementById("filterTituloInput").value)
+      .then((data) => {
+        console.log("Películas listados:", data);
+        let tabla = document.getElementById("tbodyPelicula");
+        let txt = "";
+
+        if(data.result.length>0){
+        data.result.forEach((element) => {
+          txt += "<tr>";
+          txt += "<th>" + (index = index + 1) + "</th>";
+          txt += "<td>" + element.nombrePelicula + "</td>";
+          txt += "<td>" + element.duracion + "</td>";
+          txt += "<td>" + element.anoEstreno + "</td>";
+
+          if (element.disponibilidad === 1) {
+            txt +=
+              "<td> <i class='fas fa-circle text-success' title='Activo'></i> </td>";
+          } else {
+            txt +=
+              "<td> <i class='fas fa-circle text-danger' title='Desactivado'></i> </td>";
+          }
+
+          txt += "<td>" + formatDate(element.fechaIngreso) + "</td>";
+
+          txt += "<td>" + element.genero + "</td>";
+          
+          txt += "<td>" + element.pais + "</td>";
+          
+          txt += "<td>" + element.idioma + "</td>";
+
+          txt += "<td>" + element.calificacion + "</td>";
+          
+          txt += "<td>" + element.tipo + "</td>";
+
+          txt += "<td>" + element.audio + "</td>";
+          
+
+          txt +=
+            '<td><a href="http://localhost/SG_CINE_2024/public/pelicula/edit/' +
+            element.id +
+            '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
+          txt += "</tr>";
+        })
+      } else{ txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron películas.</td></tr>";}
+        tabla.innerHTML = txt; // Reemplaza el contenido HTML de la tabla con las filas generadas
+      })
+      .catch((error) => {
+        console.error("Error al listar Usuarios:", error);
+      })
+  },
+
+  loadByActor:  () => {
+ 
+    if(document.getElementById("filterActoresInput").value.length<=0){
+      alert("Inserte un título válido")
+      return
+    }
+
+    index = 0;
+     peliculaService
+      .loadByActor(document.getElementById("filterActoresInput").value)
       .then((data) => {
         console.log("Películas listados:", data);
         let tabla = document.getElementById("tbodyPelicula");
@@ -856,6 +977,17 @@ document.addEventListener("DOMContentLoaded", () => {
       else if(document.getElementById("filterType").value=="calificacion"){
 
         peliculaController.loadByCalificacion()
+
+      }
+      else if(document.getElementById("filterType").value=="estreno"){
+
+        peliculaController.loadByEstreno()
+
+      }
+
+      else if(document.getElementById("filterType").value=="actor"){
+
+        peliculaController.loadByActor()
 
       }
     })

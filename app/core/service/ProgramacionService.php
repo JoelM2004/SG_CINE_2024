@@ -33,6 +33,11 @@ final class ProgramacionService  extends Service implements InterfaceService {
         return $dao->loadByVigencia($vigencia);
     }
 
+    public function loadByFecha($fechaInicio,$fechaFin):array{
+        $conn= Connection::get();
+        $dao= new ProgramacionDAO($conn);
+        return $dao->loadByFecha($fechaInicio,$fechaFin);
+    }
     
     public function update(array $object):void{
         $conn= Connection::get();

@@ -267,7 +267,8 @@ final class FuncionDAO extends DAO implements InterfaceDAO
     WHERE 
         p.vigente = 1 AND
         f.fecha >= CURDATE() AND
-        pf.id = :id
+        pf.id = :id AND
+        f.fecha between p.fechaInicio and p.fechaFin
     ";
 
     $stmt = $this->conn->prepare($sql);
@@ -469,7 +470,8 @@ public function existeCartelera($id): bool{
     $sql = "SELECT count(f.id) AS cantidad FROM {$this->table} f
     inner join programaciones p on p.id=f.programacionId
     inner join salas s on s.id=f.salaId
-    WHERE f.id = :id AND p.vigente=1 AND f.fecha >= CURDATE() AND s.estado=1 ";
+    WHERE f.id = :id AND p.vigente=1 AND f.fecha >= CURDATE() AND s.estado=1 
+    AND f.fecha between p.fechaInicio and p.fechaFin";
     $stmt = $this->conn->prepare($sql);
 
     // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'

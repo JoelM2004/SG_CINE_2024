@@ -230,10 +230,10 @@ final class PeliculaDAO extends DAO implements InterfaceDAO
         inner join tipos t on p.tipoId=t.id
         inner join audios a on p.audioId=a.id
 
-        where p.nombre= :id
+        where p.nombre like :id
         ";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(["id"=>$nombre]);
+        $stmt->execute(["id"=>$nombre . '%']);
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
@@ -332,6 +332,72 @@ final class PeliculaDAO extends DAO implements InterfaceDAO
         $stmt->execute(["id"=>$idioma]);
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
+
+    public function loadByEstreno($estreno): array
+    {
+        $sql = "SELECT 
+        p.id,
+        p.nombre as nombrePelicula,
+        p.duracion,
+        p.anoEstreno,
+        p.disponibilidad,
+        p.fechaIngreso,
+        g.nombre as genero,
+        pa.nombre as pais,
+        i.nombre as idioma,
+        c.nombre as calificacion,
+        t.nombre as tipo,
+        a.nombre as audio
+
+        FROM {$this->table} p
+
+        inner join generos g on p.generoId=g.id
+        inner join paises pa on p.paisId=pa.id
+        inner join idiomas i on p.idiomaId=i.id
+        inner join calificaciones c on p.calificacionId=c.id
+        inner join tipos t on p.tipoId=t.id
+        inner join audios a on p.audioId=a.id
+
+        where p.anoEstreno= :estreno
+        ";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(["estreno"=>$estreno]);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function loadByActor($actor): array
+{
+    $sql = "SELECT 
+        p.id,
+        p.nombre AS nombrePelicula,
+        p.duracion,
+        p.anoEstreno,
+        p.disponibilidad,
+        p.fechaIngreso,
+        g.nombre AS genero,
+        pa.nombre AS pais,
+        i.nombre AS idioma,
+        c.nombre AS calificacion,
+        t.nombre AS tipo,
+        a.nombre AS audio
+    FROM {$this->table} p
+    INNER JOIN generos g ON p.generoId = g.id
+    INNER JOIN paises pa ON p.paisId = pa.id
+    INNER JOIN idiomas i ON p.idiomaId = i.id
+    INNER JOIN calificaciones c ON p.calificacionId = c.id
+    INNER JOIN tipos t ON p.tipoId = t.id
+    INNER JOIN audios a ON p.audioId = a.id
+    WHERE p.actores LIKE :actor"; // Cambiado a LIKE
+
+    $stmt = $this->conn->prepare($sql);
+    
+    // Utiliza el operador '%' para buscar coincidencias en cualquier parte de la cadena
+    $stmt->execute(["actor" => '%' . $actor . '%']); // Añadido '%' para búsqueda de subcadenas
+    
+    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+}
+
+
 
     public function loadByCalificacion($calificacion): array
     {

@@ -59,6 +59,18 @@ final class PeliculaService  extends Service implements InterfaceService {
         return $dao->loadByNombrePelicula($nombre);
     }
 
+    public function loadByEstreno($estreno):array{
+        $conn= Connection::get();
+        $dao= new PeliculaDAO($conn);
+        return $dao->loadByEstreno($estreno);
+    }
+
+    public function loadByActor($actor):array{
+        $conn= Connection::get();
+        $dao= new PeliculaDAO($conn);
+        return $dao->loadByActor($actor);
+    }
+
     public function loadByGenero($generoId):array{
         $conn= Connection::get();
         $dao= new PeliculaDAO($conn);

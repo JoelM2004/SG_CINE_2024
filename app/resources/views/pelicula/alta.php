@@ -193,6 +193,9 @@ $datosIdioma = $daoIdioma->list();
                     <option value="idioma">Idioma</option>
                     <option value="calificacion">Calificación</option>
                     <option value="titulo">Título</option>
+                    <option value="estreno">Año de Estreno</option>
+                    <option value="actor">Actor</option>
+                    
                 </select>
             </div>
 
@@ -260,6 +263,16 @@ $datosIdioma = $daoIdioma->list();
             <div class="mb-3 d-none" id="filterTitulo">
                 <label class="form-label">Título de la Película</label>
                 <input type="text" class="form-control" id="filterTituloInput">
+            </div>
+
+            <div class="mb-3 d-none" id="filterEstreno">
+                <label class="form-label">Año de Estreno</label>
+                <input type="number" class="form-control" id="filterEstrenoInput">
+            </div>
+
+            <div class="mb-3 d-none" id="filterActores">
+                <label class="form-label">Actores</label>
+                <input type="text" class="form-control" id="filterActoresInput">
             </div>
 
             <div class="d-flex justify-content-end">

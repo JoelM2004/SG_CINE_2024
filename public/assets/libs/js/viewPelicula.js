@@ -6,7 +6,8 @@ document.getElementById('filterType').addEventListener('change', function() {
     document.getElementById('filterIdioma').classList.add('d-none');
     document.getElementById('filterCalificacion').classList.add('d-none');
     document.getElementById('filterTitulo').classList.add('d-none');
-
+    document.getElementById('filterEstreno').classList.add('d-none');
+    document.getElementById('filterActores').classList.add('d-none');
     // Mostrar el filtro seleccionado
     const selectedFilter = this.value;
     if (selectedFilter === 'genero') {
@@ -19,6 +20,12 @@ document.getElementById('filterType').addEventListener('change', function() {
         document.getElementById('filterCalificacion').classList.remove('d-none');
     } else if (selectedFilter === 'titulo') {
         document.getElementById('filterTitulo').classList.remove('d-none');
+    }
+    else if (selectedFilter === 'estreno') {
+        document.getElementById('filterEstreno').classList.remove('d-none');
+    }
+    else if (selectedFilter === 'actor') {
+        document.getElementById('filterActores').classList.remove('d-none');
     }
 });
 }
@@ -44,6 +51,13 @@ document.getElementById('filterForm').addEventListener('submit', function(e) {
     } else if (filterType === 'titulo') {
         filterValue = document.getElementById('filterTituloInput').value;
         // Lógica para filtrar la tabla según el título de la película
+    }else if (filterType === 'estreno') {
+        filterValue = document.getElementById('filterEstrenoInput').value;
+        // Lógica para filtrar la tabla según el ESTRENO de la película
+    }
+    else if (filterType === 'actor') {
+        filterValue = document.getElementById('filterActoresInput').value;
+        // Lógica para filtrar la tabla según el ACTOR de la película
     }
 
     // Aquí puedes agregar la lógica para realizar el filtrado en la tabla
