@@ -5,6 +5,8 @@ use app\core\model\base\InterfaceDAO;
 use app\core\model\base\InterfaceDTO;
 use app\core\model\dto\ImagenDTO;
 
+use app\core\model\validation\ImagenValidation;
+
 final class ImagenDAO extends DAO implements InterfaceDAO
 {
     public function __construct($conn)
@@ -14,8 +16,10 @@ final class ImagenDAO extends DAO implements InterfaceDAO
 
     public function save(InterfaceDTO $object): void
     {
-        $this->validate($object);
-        $this->validateEstado($object);
+        $validation= new ImagenValidation($this->conn);
+
+        $validation->validate($object);
+        $validation->validateEstado($object);
         
         $sql = "INSERT INTO {$this->table} (id, peliculaId, imagen, estado,tipo) VALUES (DEFAULT, :peliculaId, :imagen, :estado,:tipo)";
 
@@ -43,28 +47,6 @@ final class ImagenDAO extends DAO implements InterfaceDAO
         
         $object->setId((int)$this->conn->lastInsertId());
     }
-
-
-    private function validateEstado(ImagenDTO $object): void
-    {
-        // Consultar si ya existe una programación vigente (vigente = 1), excluyendo el id actual
-        $sql = "SELECT COUNT(id) AS cantidad 
-            FROM {$this->table} 
-            WHERE estado = 1 AND peliculaId = :peliculaId";
-        $stmt = $this->conn->prepare($sql);
-
-        $params = [
-            ':peliculaId' => $object->getPeliculaId()
-        ];
-
-        $stmt->execute($params);
-        $result = $stmt->fetch(\PDO::FETCH_OBJ);
-
-        if (($object->getEstado()==1) && ($result->cantidad > 0)) {
-            throw new \Exception("Ya hay una imagen determinada como portada");
-        }
-    } 
-
 
     public function load($id): ImagenDTO
     {
@@ -121,17 +103,12 @@ public function listImagenes($id): array
 
 public function update(InterfaceDTO $object): void
 {
-    // $this->validate($object);
-    // $this->validateEstado($object);
-
-    // Primero, establece estado = 0 para todas las imágenes de la misma película
     $sqlReset = "UPDATE {$this->table} SET estado = 0 WHERE peliculaId = :peliculaId";
     $stmtReset = $this->conn->prepare($sqlReset);
     $stmtReset->execute([
         ':peliculaId' => $object->getPeliculaId()
     ]);
 
-    // Luego, establece estado = 1 para la imagen seleccionada
     $sqlUpdate = "UPDATE {$this->table} SET estado = 1 WHERE id = :id";
     $stmtUpdate = $this->conn->prepare($sqlUpdate);
     $stmtUpdate->execute([
@@ -155,27 +132,4 @@ public function update(InterfaceDTO $object): void
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    private function validate(ImagenDTO $object): void
-    {
-        // Validar el ID (opcional para nuevos registros)
-        if ($object->getId() < 0) {
-            throw new \Exception("El ID debe ser un número entero positivo.");
-        }
-
-        // Validar el ID de la película
-        if ($object->getPeliculaId() <= 0) {
-            throw new \Exception("El ID de la película debe ser un número entero positivo y mayor que cero.");
-        }
-
-        // Validar la imagen
-        if (empty($object->getImagen()) || !is_string($object->getImagen())) {
-            throw new \Exception("La imagen no puede estar vacía y debe ser una cadena válida.");
-        }
-
-        if (empty($object->getTipo()) || !is_string($object->getTipo())) {
-            throw new \Exception("El tipo de imagen no puede estar vacía y debe ser una cadena válida.");
-        }
-
-        
-    }
 }

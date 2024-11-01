@@ -2,7 +2,7 @@
 namespace app\core\model\dao;
 
 use app\core\model\base\DAO;
-
+use app\core\model\validation\SalaValidation;
 use app\core\model\base\InterfaceDAO;
 use app\core\model\base\InterfaceDTO;
 use app\core\model\dto\SalaDTO;
@@ -15,11 +15,12 @@ final class SalaDAO extends DAO implements InterfaceDAO
         parent::__construct($conn, "salas");
     }
 
-
     public function save(InterfaceDTO $object): void
     {
-        $this->validate($object);
-        $this->validateNumeroSala($object);
+
+        $validation= new SalaValidation($this->conn);
+        $validation->validate($object);
+        $validation->validateNumeroSala($object);
 
         $sql = "INSERT INTO {$this->table} VALUES(DEFAULT,:capacidad,:estado,:numeroSala)";
         $stmt = $this->conn->prepare($sql);
@@ -48,8 +49,10 @@ final class SalaDAO extends DAO implements InterfaceDAO
 
     public function update(InterfaceDTO $object): void
     {
-        $this->validate($object);
-        $this->validateNumeroSala($object);
+
+        $validation= new SalaValidation($this->conn);
+        $validation->validate($object);
+        $validation->validateNumeroSala($object);
 
         $sql = "UPDATE {$this->table} 
                 SET capacidad = :capacidad, 
@@ -63,7 +66,6 @@ final class SalaDAO extends DAO implements InterfaceDAO
 
     // Ejecutar la consulta con los datos del objeto
         $stmt->execute($data);
-
     }
 
     public function loadByEstado($estado): array {
@@ -97,7 +99,8 @@ final class SalaDAO extends DAO implements InterfaceDAO
 
 
 
-    public function loadByNumeroSala($numeroSala):SalaDTO{
+    
+     public function loadByNumeroSala($numeroSala):SalaDTO{
         $sql = "SELECT * FROM {$this->table} WHERE numeroSala = :numeroSala";
        $stmt = $this->conn->prepare($sql);
 
@@ -110,15 +113,12 @@ final class SalaDAO extends DAO implements InterfaceDAO
 
       return new SalaDTO($stmt->fetch(\PDO::FETCH_ASSOC));
 
-  }
-
-
-
-
+    }
 
     public function delete($id): void
     {
-        $this->validatefunciones($id);
+        $validation= new SalaValidation($this->conn);
+        $validation->validatefunciones($id);
         $sql = "DELETE FROM {$this->table} WHERE id= :id";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([
@@ -132,51 +132,6 @@ final class SalaDAO extends DAO implements InterfaceDAO
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    }
-
-    private function validate(SalaDTO $object): void
-{
-    // Lista de métodos a verificar y sus mensajes de error
-    $atributos = [
-        'getCapacidad' => 'Capacidad',
-        'getEstado' => 'Estado',
-        'getNumeroSala' => 'Número de Sala'
-    ];
-
-    foreach ($atributos as $metodo => $nombre) {
-        if (method_exists($object, $metodo)) {
-            $valor = $object->{$metodo}();
-
-            // Validar que el valor no esté vacío y sea entero
-            if (!is_int($valor) || $valor < 0) {
-                throw new \Exception("El valor de {$nombre} debe ser un número entero positivo.");
-            }
-
-            // Validar que 'estado' solo pueda ser 0 o 1
-            if ($metodo === 'getEstado' && !in_array($valor, [0, 1], true)) {
-                throw new \Exception("El valor de {$nombre} debe ser 0 o 1.");
-            }
-        }
-    }
-}
-
-    private function validateNumeroSala(SalaDTO $object): void
-    {
-        $sql = "SELECT count(id) AS cantidad FROM {$this->table} WHERE numeroSala = :numeroSala AND id != :id";
-        $stmt = $this->conn->prepare($sql);
-
-        // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
-        $params = [
-            ':numeroSala' => $object->getNumeroSala(),
-            ':id' => $object->getId()
-        ];
-
-        $stmt->execute($params);
-        $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
-
-        if ($result->cantidad > 0) {
-            throw new \Exception("El dato Número de sala ({$object->getNumeroSala()}) ya existe en la base de datos");
-        }
     }
 
     public function existe($id): bool{
@@ -195,23 +150,5 @@ final class SalaDAO extends DAO implements InterfaceDAO
             return true;
        } else return false;
     } 
-
-    private function validatefunciones($id): void
-    {
-        $sql = "SELECT count(f.id) AS cantidad FROM funciones f WHERE f.salaId =:id";
-        $stmt = $this->conn->prepare($sql);
-
-        // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
-        $params = [
-            ':id' => $id
-        ];
-
-        $stmt->execute($params);
-        $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
-
-        if ($result->cantidad > 0) {
-            throw new \Exception("Existe una función que está utilizando está sala, elimine la función/funciones para poder eliminar ésta sala");
-        }
-    }
 
 }

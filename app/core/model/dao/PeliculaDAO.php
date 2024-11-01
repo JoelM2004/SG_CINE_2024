@@ -7,6 +7,7 @@ use app\core\model\base\DAO;
 use app\core\model\base\InterfaceDAO;
 use app\core\model\base\InterfaceDTO;
 use app\core\model\dto\PeliculaDTO;
+use app\core\model\validation\PeliculaValidation;
 
 final class PeliculaDAO extends DAO implements InterfaceDAO
 {
@@ -17,8 +18,8 @@ final class PeliculaDAO extends DAO implements InterfaceDAO
 
     public function save(InterfaceDTO $object): void
     {
-
-        $this->validate($object);
+        $validation= new PeliculaValidation($this->conn);
+        $validation->validate($object);
 
         $sql = "INSERT INTO {$this->table} VALUES(DEFAULT,:nombre,:tituloOriginal,:duracion,:anoEstreno,:disponibilidad,:fechaIngreso,:sitioWebOficial,:sinopsis,:actores,:generoId,:paisId,:idiomaId,:calificacionId,:tipoId,:audioId)";
         $stmt = $this->conn->prepare($sql);
@@ -127,7 +128,8 @@ final class PeliculaDAO extends DAO implements InterfaceDAO
 
     public function update(InterfaceDTO $object): void
     {
-        $this->validate($object);
+        $validation= new PeliculaValidation($this->conn);
+        $validation->validate($object);
 
         $sql = "UPDATE {$this->table} SET 
         
@@ -153,9 +155,10 @@ final class PeliculaDAO extends DAO implements InterfaceDAO
     }
     public function delete($id): void
     {
-        $this->validatefunciones($id);
-        $this->validatecomentarios($id);
-        $this->validateimagenes($id);
+        $validation= new PeliculaValidation($this->conn);
+        $validation->validatefunciones($id);
+        $validation->validatecomentarios($id);
+        $validation->validateimagenes($id);
         $sql = "DELETE FROM {$this->table} WHERE id= :id";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([
@@ -202,10 +205,11 @@ final class PeliculaDAO extends DAO implements InterfaceDAO
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-
     public function loadByNombrePelicula($nombre): array
-    {   
-        $this->existep($nombre);
+    {      
+        $validation= new PeliculaValidation($this->conn);
+
+        $validation->existep($nombre);
 
         $sql = "SELECT 
         p.id,
@@ -397,8 +401,6 @@ final class PeliculaDAO extends DAO implements InterfaceDAO
     return $stmt->fetchAll(\PDO::FETCH_ASSOC);
 }
 
-
-
     public function loadByCalificacion($calificacion): array
     {
         $sql = "SELECT 
@@ -431,69 +433,6 @@ final class PeliculaDAO extends DAO implements InterfaceDAO
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    private function validate(PeliculaDTO $object): void
-    {
-        if ($object->getNombre() == "") {
-            throw new \Exception("El campo 'Nombre' está vacío, o contiene caracteres no permitidos.");
-        }
-
-        if ($object->getTituloOriginal() == "") {
-            throw new \Exception("El campo 'Título Original' está vacío o supera el límite permitido.");
-        }
-
-        if ($object->getDuracion() <= 0) {
-            throw new \Exception("El campo 'Duración' debe ser un número mayor que cero.");
-        }
-
-        if ($object->getAnoEstreno() <= 0) {
-            throw new \Exception("El campo 'Año de Estreno' debe ser un número mayor que cero.");
-        }
-
-        if (($object->getDisponibilidad() != 0) && ($object->getDisponibilidad() != 1)) {
-            throw new \Exception("El campo 'Disponibilidad' debe ser un número igual a 0 o 1.");
-        }
-
-        if ($object->getFechaIngreso() == "") {
-            throw new \Exception("El campo 'Fecha de Ingreso' está vacío o no cumple con el formato de fecha 'YYYY-MM-DD'.");
-        }
-
-        if ($object->getSitioWebOficial() == "") {
-            throw new \Exception("El campo 'Sitio Web Oficial' está vacío o supera el límite permitido.");
-        }
-
-        if ($object->getSinopsis() == "") {
-            throw new \Exception("El campo 'Sinopsis' está vacío o supera el límite permitido.");
-        }
-
-        if ($object->getActores() == "") {
-            throw new \Exception("El campo 'Actores' está vacío o supera el límite permitido.");
-        }
-
-        if ($object->getGeneroId() <= 0) {
-            throw new \Exception("El campo 'Género ID' debe ser un número mayor que cero.");
-        }
-
-        if ($object->getPaisId() <= 0) {
-            throw new \Exception("El campo 'País ID' debe ser un número mayor que cero.");
-        }
-
-        if ($object->getIdiomaId() <= 0) {
-            throw new \Exception("El campo 'Idioma ID' debe ser un número mayor que cero.");
-        }
-
-        if ($object->getCalificacionId() <= 0) {
-            throw new \Exception("El campo 'Calificación ID' debe ser un número mayor que cero.");
-        }
-
-        if ($object->getTipoId() <= 0) {
-            throw new \Exception("El campo 'Tipo ID' debe ser un número mayor que cero.");
-        }
-
-        if ($object->getAudioId() <= 0) {
-            throw new \Exception("El campo 'Audio ID' debe ser un número mayor que cero.");
-        }
-    }
-
     public function existe($id): bool{
         $sql = "SELECT count(id) AS cantidad FROM {$this->table} WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
@@ -510,8 +449,6 @@ final class PeliculaDAO extends DAO implements InterfaceDAO
             return true;
        } else return false;
     } 
-
-
 
     public function existeCartelera($id): bool{
         $sql = "SELECT count(p.id) AS cantidad FROM {$this->table} p
@@ -533,76 +470,4 @@ final class PeliculaDAO extends DAO implements InterfaceDAO
        } else return false;
     } 
 
-    private function validatefunciones($id): void
-    {
-        $sql = "SELECT count(f.id) AS cantidad FROM funciones f WHERE f.peliculaId =:id";
-        $stmt = $this->conn->prepare($sql);
-
-        // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
-        $params = [
-            ':id' => $id
-        ];
-
-        $stmt->execute($params);
-        $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
-
-        if ($result->cantidad > 0) {
-            throw new \Exception("Existe una función que está utilizando está película, elimine la función/funciones para poder eliminar ésta película");
-        }
-    }
-
-    private function validatecomentarios($id): void
-    {
-        $sql = "SELECT count(f.id) AS cantidad FROM comentarios f WHERE f.peliculaId =:id";
-        $stmt = $this->conn->prepare($sql);
-
-        // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
-        $params = [
-            ':id' => $id
-        ];
-
-        $stmt->execute($params);
-        $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
-
-        if ($result->cantidad > 0) {
-            throw new \Exception("Existe un comentario que está utilizando está película, elimine el comentario/comentarios para poder eliminar ésta película");
-        }
-    }
-
-    private function validateimagenes($id): void
-    {
-        $sql = "SELECT count(f.id) AS cantidad FROM imagenes f WHERE f.peliculaId =:id";
-        $stmt = $this->conn->prepare($sql);
-
-        // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
-        $params = [
-            ':id' => $id
-        ];
-
-        $stmt->execute($params);
-        $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
-
-        if ($result->cantidad > 0) {
-            throw new \Exception("Existe una imagen que está utilizando está película, elimine la/las imágenes para poder eliminar ésta película");
-        }
-    }
-
-    private function existep ($nombre):void{
-
-        $sql = "SELECT count(id) AS cantidad FROM {$this->table} WHERE nombre =:id";
-        $stmt = $this->conn->prepare($sql);
-
-        // Asumiendo que el método toArray() del objeto ClienteDTO devuelve un array asociativo con las claves 'correo' e 'id'
-        $params = [
-            ':id' => $nombre
-        ];
-
-        $stmt->execute($params);
-        $result = $stmt->fetch(\PDO::FETCH_OBJ); // lo trae como un objeto a lo de arriba
-
-        if ($result->cantidad = 0) {
-            throw new \Exception("No existe está película");
-        }
-
-    }
 }

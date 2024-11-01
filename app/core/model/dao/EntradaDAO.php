@@ -4,10 +4,11 @@ namespace app\core\model\dao;
 
 use app\core\model\base\DAO;
 
-
 use app\core\model\base\InterfaceDAO;
 use app\core\model\base\InterfaceDTO;
 use app\core\model\dto\EntradaDTO;
+
+use app\core\model\validation\EntradaValidation;
 
 
 final class EntradaDAO extends DAO implements InterfaceDAO
@@ -23,11 +24,13 @@ final class EntradaDAO extends DAO implements InterfaceDAO
     {
         $data = $object->toArray();
 
-        if (!$this->existeUsuario($data["usuarioId"])) {
+        $validation= new EntradaValidation($this->conn);
+
+        if (!$validation->existeUsuario($data["usuarioId"])) {
             throw new \Exception("No existe este usuario.");
         }
 
-        if (!$this->existeFuncion($data["funcionId"])) {
+        if (!$validation->existeFuncion($data["funcionId"])) {
             throw new \Exception("No existe esta función o no se encuentra disponible.");
         }
 
@@ -56,13 +59,15 @@ final class EntradaDAO extends DAO implements InterfaceDAO
     {
         $data = $object->toArray();
 
+        $validation= new EntradaValidation($this->conn);
+
         $data["usuarioId"]=$_SESSION["id"];
 
-        if (!$this->existeUsuario($data["usuarioId"])) {
+        if (!$validation->existeUsuario($data["usuarioId"])) {
             throw new \Exception("No existe este usuario.");
         }
 
-        if (!$this->existeFuncion($data["funcionId"])) {
+        if (!$validation->existeFuncion($data["funcionId"])) {
             throw new \Exception("No existe esta función o no se encuentra disponible.");
         }
 
@@ -383,48 +388,6 @@ final class EntradaDAO extends DAO implements InterfaceDAO
         if ($result->cantidad > 0) {
             return true;
         } else return false;
-    }
-
-    private function existeUsuario($id): bool
-    {
-        $sql = "SELECT count(id) AS cantidad FROM usuarios WHERE id = :id";
-        $stmt = $this->conn->prepare($sql);
-
-        // Parámetro id
-        $params = [
-            ':id' => $id
-        ];
-
-        $stmt->execute($params);
-        $result = $stmt->fetch(\PDO::FETCH_OBJ);
-
-        // Comparación corregida
-        if ($result->cantidad == 0) {
-            return false;  // El usuario no existe
-        }
-
-        return true;  // El usuario existe
-    }
-
-    private function existeFuncion($id): bool
-    {
-        $sql = "SELECT count(f.id) AS cantidad 
-            FROM funciones f
-            INNER JOIN programaciones p ON f.programacionId = p.id
-            WHERE f.id = :id AND p.vigente = 1";
-
-        $stmt = $this->conn->prepare($sql);
-
-        // Parámetro id
-        $params = [
-            ':id' => $id
-        ];
-
-        $stmt->execute($params);
-        $result = $stmt->fetch(\PDO::FETCH_OBJ);
-
-        // Retorna true si la función existe y está vigente
-        return $result->cantidad > 0;
     }
 
     private function obtenerHorario($id)
