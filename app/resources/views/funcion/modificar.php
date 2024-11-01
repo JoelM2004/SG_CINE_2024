@@ -77,6 +77,12 @@ $datosTipo = $daoTipo->list();
             <input type="number" class="form-control" id="numeroFuncion" value="<?=$datosFuncion->getNumeroFuncion()?>">
         </div>
 
+
+        <div class="mb-3">
+            <label for="filterPelMOD" class="form-label">Filtrar Número de Función o Nombre de Película</label>
+            <input type="text" class="form-control" id="filterPelMOD" placeholder="Escribe para filtrar...">
+        </div>
+
         <div class="mb-3">
             <label for="nombrePelicula" class="form-label">Nombre de la Película</label>
             <select class="form-select" id="nombrePelicula">

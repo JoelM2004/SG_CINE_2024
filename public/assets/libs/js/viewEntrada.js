@@ -68,13 +68,13 @@ function showConfirmation() {
 function confirmPurchase() {
   const termsAccepted = document.getElementById("termsCheck").checked;
   if (termsAccepted) {
-      alert("Compra confirmada. ¡Gracias por tu compra!");
-      // Retornar true si los términos han sido aceptados
-      return true;
+    alert("Compra confirmada. ¡Gracias por tu compra!");
+    // Retornar true si los términos han sido aceptados
+    return true;
   } else {
-      alert("Debes aceptar los términos y condiciones para continuar.");
-      // Retornar false si los términos no han sido aceptados
-      return false;
+    alert("Debes aceptar los términos y condiciones para continuar.");
+    // Retornar false si los términos no han sido aceptados
+    return false;
   }
 }
 
@@ -120,32 +120,40 @@ function updateTotal2() {
 // Manejo de filtros si es necesario
 if (document.getElementById("filterType") != null) {
   document.getElementById("filterType").addEventListener("change", function () {
-      // Ocultar todos los filtros específicos
-      document.getElementById("filterNumeroTicket").classList.add("d-none");
-      document.getElementById("filterNumeroFuncion").classList.add("d-none");
-      document.getElementById("filterCuentaCliente").classList.add("d-none");
-      document.getElementById("filterPelicula").classList.add("d-none");
-      document.getElementById("filterProgramacion").classList.add("d-none");
+    // Ocultar todos los filtros específicos
+    document.getElementById("filterNumeroTicket").classList.add("d-none");
+    
+    document.getElementById("filterNumFunDIV").classList.add("d-none");
+    document.getElementById("filterNumeroFuncion").classList.add("d-none");
 
-      // Obtener el valor seleccionado
-      const selectedFilter = this.value;
+    document.getElementById("filterCuentaCliente").classList.add("d-none");
+    document.getElementById("filterCuentaClienteDIV").classList.add("d-none");
 
-      // Mostrar el filtro correspondiente según el valor seleccionado
-      if (selectedFilter === "numeroTicket") {
-          document.getElementById("filterNumeroTicket").classList.remove("d-none");
-      } else if (selectedFilter === "numeroFuncion") {
-          document.getElementById("filterNumeroFuncion").classList.remove("d-none");
-      } else if (selectedFilter === "cuentaCliente") {
-          document.getElementById("filterCuentaCliente").classList.remove("d-none");
-      } else if (selectedFilter === "pelicula") {
-          document.getElementById("filterPelicula").classList.remove("d-none");
-      } else if (selectedFilter === "programacion") {
-          document.getElementById("filterProgramacion").classList.remove("d-none");
-      }
+    document.getElementById("filterPelicula").classList.add("d-none");
+    document.getElementById("filterPeliculaDIV").classList.add("d-none");
+
+    document.getElementById("filterProgramacion").classList.add("d-none");
+
+    // Obtener el valor seleccionado
+    const selectedFilter = this.value;
+
+    // Mostrar el filtro correspondiente según el valor seleccionado
+    if (selectedFilter === "numeroTicket") {
+      document.getElementById("filterNumeroTicket").classList.remove("d-none");
+    } else if (selectedFilter === "numeroFuncion") {
+      document.getElementById("filterNumFunDIV").classList.remove("d-none");
+      document.getElementById("filterNumeroFuncion").classList.remove("d-none");
+    } else if (selectedFilter === "cuentaCliente") {
+      document.getElementById("filterCuentaClienteDIV").classList.remove("d-none");
+      document.getElementById("filterCuentaCliente").classList.remove("d-none");
+    } else if (selectedFilter === "pelicula") {
+      document.getElementById("filterPeliculaDIV").classList.remove("d-none");
+      document.getElementById("filterPelicula").classList.remove("d-none");
+    } else if (selectedFilter === "programacion") {
+      document.getElementById("filterProgramacion").classList.remove("d-none");
+    }
   });
-}
-
-else if (document.getElementById("btnToggleEntrada") != null) {
+} else if (document.getElementById("btnToggleEntrada") != null) {
   document
     .getElementById("btnToggleEntrada")
     .addEventListener("click", function () {
@@ -161,12 +169,74 @@ else if (document.getElementById("btnToggleEntrada") != null) {
       // }
     });
 }
+
 if (document.getElementById("numeroFuncion")) {
   document.getElementById("numeroFuncion").onchange = toggleInputs;
 }
 
+if (document.getElementById("precio") != null) {
+  document.getElementById("precio").addEventListener("input", updateTotal2);
+  document.getElementById("cantidad").addEventListener("input", updateTotal2);
+}
 
-if(document.getElementById("precio")!=null){
-document.getElementById("precio").addEventListener("input", updateTotal2);
-document.getElementById("cantidad").addEventListener("input", updateTotal2);}
+if (document.getElementById("filterCuentaClienteCREATE") != null) {
+  document
+    .getElementById("filterCuentaClienteCREATE")
+    .addEventListener("input", function () {
+      const filter = this.value.toLowerCase();
+      const select = document.getElementById("cuentaCliente");
 
+      Array.from(select.options).forEach((option) => {
+        const text = option.text.toLowerCase();
+        option.style.display = text.includes(filter) ? "" : "none";
+      });
+    });
+}
+
+if (document.getElementById("filterNumeroFuncionCREATE") != null){
+document.getElementById('filterNumeroFuncionCREATE').addEventListener('input', function() {
+  const filter = this.value.toLowerCase();
+  const select = document.getElementById('numeroFuncion');
+  
+  Array.from(select.options).forEach(option => {
+      const text = option.text.toLowerCase();
+      option.style.display = text.includes(filter) ? '' : 'none';
+  });
+})}
+;
+
+if (document.getElementById("filterCuentaClienteText") != null){
+document.getElementById('filterCuentaClienteText').addEventListener('input', function() {
+  const filter = this.value.toLowerCase();
+  const select = document.getElementById('filterCuentaClienteInput');
+  
+  Array.from(select.options).forEach(option => {
+      const text = option.text.toLowerCase();
+      option.style.display = text.includes(filter) ? '' : 'none';
+  });
+})}
+;
+
+if (document.getElementById("filterNumFunText") != null){
+  document.getElementById('filterNumFunText').addEventListener('input', function() {
+    const filter = this.value.toLowerCase();
+    const select = document.getElementById('filterNumeroFuncionInput');
+    
+    Array.from(select.options).forEach(option => {
+        const text = option.text.toLowerCase();
+        option.style.display = text.includes(filter) ? '' : 'none';
+    });
+  })}
+  ;
+
+  if (document.getElementById("filterPeliculaText") != null){
+    document.getElementById('filterPeliculaText').addEventListener('input', function() {
+      const filter = this.value.toLowerCase();
+      const select = document.getElementById('filterPeliculaInput');
+      
+      Array.from(select.options).forEach(option => {
+          const text = option.text.toLowerCase();
+          option.style.display = text.includes(filter) ? '' : 'none';
+      });
+    })}
+    ;

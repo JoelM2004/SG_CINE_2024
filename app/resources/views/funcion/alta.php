@@ -79,6 +79,11 @@ $datosTipo = $daoTipo->list();
         </div>
 
         <div class="mb-3">
+            <label for="filterPel" class="form-label">Filtrar Número de Función o Nombre de Película</label>
+            <input type="text" class="form-control" id="filterPel" placeholder="Escribe para filtrar...">
+        </div>
+
+        <div class="mb-3">
             <label for="nombrePelicula" class="form-label">Nombre de la Película</label>
             <select class="form-select" id="nombrePelicula">
                 <?php
@@ -157,6 +162,11 @@ $datosTipo = $daoTipo->list();
                     ?>
                 </select>
 
+            </div>
+
+            <div class="mb-3 d-none" id="filterPeliculaDIV">
+                <label for="filterPeliculaText" class="form-label">Filtrar Nombre de Película</label>
+                <input type="text" class="form-control" id="filterPeliculaText" placeholder="Escribe para filtrar...">
             </div>
 
             <div class="mb-3 d-none" id="filterNombrePelicula">
