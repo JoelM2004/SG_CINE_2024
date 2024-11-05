@@ -83,61 +83,110 @@ function formatDate($date)
 
         <!-- Historial de Compras -->
         <div class="tab-pane fade" id="purchase-history" role="tabpanel" aria-labelledby="purchase-history-tab">
-    <div class="card border-success mb-3">
-        <div class="card-header bg-success text-white">
-            <h3 class="card-title mb-0">Historial de Compras</h3>
-        </div>
-        <div class="card-body">
-            <?php if (empty($entradas)): ?>
-                <!-- Mensaje cuando no hay compras -->
-                <div class="alert alert-warning text-center" role="alert">
-                    <div class="d-flex justify-content-center align-items-center">
-                        <i class="fas fa-exclamation-circle fa-2x me-3"></i> <!-- Icono más grande -->
-                        <h5 class="mb-0">¡Hola! No hemos encontrado compras en tu historial.</h5>
-                    </div>
-                    <p class="mt-2">Parece que aún no has realizado ninguna compra. Explora nuestra cartelera y disfruta de una buena película.</p>
-                    <a href="http://localhost/SG_CINE_2024/public/cartelera" class="btn btn-success mt-3">Ir a la Cartelera</a> <!-- Botón para redirigir -->
+            <div class="card border-success mb-3">
+                <div class="card-header bg-success text-white">
+                    <h3 class="card-title mb-0">Historial de Compras</h3>
                 </div>
-            <?php else: ?>
-                <div class="row">
-                    <?php
-                    // Función para comparar las entradas según el 'horarioVenta'
-                    usort($entradas, function ($a, $b) {
-                        return strtotime($b['horarioVenta']) - strtotime($a['horarioVenta']); // Orden descendente
-                    });
-                    ?>
+                <div class="card-body">
 
-                    <?php foreach ($entradas as $elemento): ?>
-                        <?php
-                        $funcion = $elemento["numeroFuncion"];
-                        $pelicula = $elemento["nombre"];
-                        $horaFuncion = $elemento["horarioFuncion"];
-                        $horaVenta = $elemento["horarioVenta"];
-                        $numeroTicket = $elemento["numeroTicket"];
-                        $precio = $elemento["precio"];
-                        ?>
-                        <div class="col-md-6">
-                            <div class="card mb-4 shadow-sm border border-dark rounded">
-                                <div class="card-body">
-                                    <h5 class="card-title mb-3">Nro de Ticket: <strong><?= $numeroTicket ?></strong></h5>
-                                    <p class="card-text">
-                                        <strong>Función:</strong> <?= $funcion ?><br>
-                                        <strong>Película:</strong> <?= $pelicula ?><br>
-                                        <strong>Precio:</strong> <?= "$" . $precio ?><br>
-                                        <strong>Hora de Función:</strong> <span class="badge bg-info text-dark"><?= formatDate($horaFuncion) ?></span><br>
-                                        <strong>Hora de Venta:</strong> <span class="badge bg-success text-light"><?= formatDate($horaVenta) ?></span>
-                                    </p>
+                    <div class="mb-4">
+                        <h5 class="text-center">Filtros de Búsqueda</h5>
+                        <form id="filterForm" method="GET" class="p-4 border rounded shadow bg-light">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-md-3">
+                                    <label for="filterOption" class="form-label">Buscar por</label>
+                                    <select class="form-select" id="filterOption" name="filterOption" onchange="toggleFilterField()">
+                                        <option value="numeroTicket" <?= (isset($_GET['filterOption']) && $_GET['filterOption'] === 'numeroTicket') ? 'selected' : '' ?>>Número de Ticket</option>
+                                        <option value="pelicula" <?= (isset($_GET['filterOption']) && $_GET['filterOption'] === 'pelicula') ? 'selected' : '' ?>>Película</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3" id="filterNumeroTicketField" <?= (isset($_GET['filterOption']) && $_GET['filterOption'] === 'pelicula') ? 'style="display:none;"' : '' ?>>
+                                    <label for="filterNumeroTicket" class="form-label">Número de Ticket</label>
+                                    <input type="text" class="form-control" id="filterNumeroTicket" name="numeroTicket" placeholder="Ingrese número de ticket" value="<?= $_GET['numeroTicket'] ?? '' ?>">
+                                </div>
+                                <div class="col-md-3" id="filterPeliculaField" <?= (isset($_GET['filterOption']) && $_GET['filterOption'] === 'numeroTicket') ? 'style="display:none;"' : '' ?>>
+                                    <label for="filterPelicula" class="form-label">Película</label>
+                                    <input type="text" class="form-control" id="filterPelicula" name="pelicula" placeholder="Nombre de la película" value="<?= $_GET['pelicula'] ?? '' ?>">
+                                </div>
+                                <div class="col-md-3 mt-3 d-flex justify-content-start">
+                                    <button type="button" class="btn btn-success me-2" id="btnFilter">
+                                        <i class="fas fa-filter"></i> Aplicar Filtros
+                                    </button>
+                                    <button type="button" class="btn btn-info" id="btnListar">
+                                        <i class="fas fa-list"></i> Listar Todas las Entradas
+                                    </button>
                                 </div>
                             </div>
-                        </div>
-                    <?php endforeach; ?>
+                        </form>
+                    </div>
+
+
+
+                    <div id="filteredDataContainer" class="row">
+                        <?php if (empty($entradas)): ?>
+                            <!-- Mensaje cuando no hay compras -->
+                            <div class="alert alert-warning text-center" role="alert">
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <i class="fas fa-exclamation-circle fa-2x me-3"></i>
+                                    <h5 class="mb-0">¡Hola! No hemos encontrado compras en tu historial.</h5>
+                                </div>
+                                <p class="mt-2">Parece que aún no has realizado ninguna compra. Explora nuestra cartelera y disfruta de una buena película.</p>
+                                <a href="http://localhost/SG_CINE_2024/public/cartelera" class="btn btn-success mt-3">Ir a la Cartelera</a>
+                            </div>
+                        <?php else: ?>
+                            <div class="row" id="filteredEntries">
+                                <?php
+                                // Filtrar las entradas según los filtros seleccionados
+                                $filteredEntradas = array_filter($entradas, function ($elemento) {
+                                    $filterOption = $_GET['filterOption'] ?? '';
+                                    $numeroTicket = $_GET['numeroTicket'] ?? '';
+                                    $pelicula = $_GET['pelicula'] ?? '';
+
+                                    if ($filterOption === 'numeroTicket') {
+                                        return !$numeroTicket || strpos($elemento['numeroTicket'], $numeroTicket) !== false;
+                                    } elseif ($filterOption === 'pelicula') {
+                                        return !$pelicula || stripos($elemento['nombre'], $pelicula) !== false;
+                                    }
+                                    return true;
+                                });
+
+                                // Ordenar las entradas filtradas por fecha de venta
+                                usort($filteredEntradas, function ($a, $b) {
+                                    return strtotime($b['horarioVenta']) - strtotime($a['horarioVenta']);
+                                });
+                                ?>
+
+                                <?php foreach ($filteredEntradas as $elemento): ?>
+                                    <?php
+                                    $funcion = $elemento["numeroFuncion"];
+                                    $pelicula = $elemento["nombre"];
+                                    $horaFuncion = $elemento["horarioFuncion"];
+                                    $horaVenta = $elemento["horarioVenta"];
+                                    $numeroTicket = $elemento["numeroTicket"];
+                                    $precio = $elemento["precio"];
+                                    ?>
+                                    <div class="col-md-6">
+                                        <div class="card mb-4 shadow-sm border border-dark rounded">
+                                            <div class="card-body">
+                                                <h5 class="card-title mb-3">Nro de Ticket: <strong><?= $numeroTicket ?></strong></h5>
+                                                <p class="card-text">
+                                                    <strong>Función:</strong> <?= $funcion ?><br>
+                                                    <strong>Película:</strong> <?= $pelicula ?><br>
+                                                    <strong>Precio:</strong> <?= "$" . $precio ?><br>
+                                                    <strong>Hora de Función:</strong> <span class="badge bg-info text-dark"><?= formatDate($horaFuncion) ?></span><br>
+                                                    <strong>Hora de Venta:</strong> <span class="badge bg-success text-light"><?= formatDate($horaVenta) ?></span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
                 </div>
-            <?php endif; ?>
+            </div>
         </div>
-    </div>
-</div>
-
-
 
         <!-- Cambiar Contraseña -->
         <div class="tab-pane fade" id="change-password" role="tabpanel" aria-labelledby="change-password-tab">

@@ -209,6 +209,33 @@ final class EntradaController extends Controller implements InterfaceController,
         $response->send();
 
     }
+
+    public function loadEntradaPelicula(Request $request, Response $response):void{
+
+        $service = new EntradaService();
+        $pelicula = $request->getParam('pelicula');
+
+        $entradas = $service->loadEntradaPelicula($pelicula);
+
+        $response->setResult($entradas);
+        $response->setMessage("El/los entradas se listaron correctamente");
+        $response->send();
+
+    }
+
+    public function loadEntradaNumero(Request $request, Response $response):void{
+
+        $service = new EntradaService();
+        $pelicula = $request->getParam('numero');
+
+        $entradas = $service->loadEntradaNumero($pelicula);
+
+        $response->setResult($entradas);
+        $response->setMessage("El/los entradas se listaron correctamente");
+        $response->send();
+
+    }
+
     /*
     Gestiona los servicios correspondientes, para listar todas las entidades
     */

@@ -80,6 +80,21 @@ final class EntradaService  extends Service implements InterfaceService
         return $dao->loadByPelicula($pelicula);
     }
 
+    public function loadEntradaPelicula($pelicula): array
+    {
+        $conn = Connection::get();
+        $dao = new EntradaDAO($conn);
+        return $dao->loadEntradaPelicula($pelicula);
+    }
+
+    public function loadEntradaNumero($pelicula): array
+    {
+        $conn = Connection::get();
+        $dao = new EntradaDAO($conn);
+        return $dao->loadEntradaNumero($pelicula);
+    }
+
+
     public function update(array $object): void
     {
         $conn = Connection::get();

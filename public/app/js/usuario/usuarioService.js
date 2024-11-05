@@ -195,6 +195,53 @@ let userService = {
     });
 },
 
+loadEntradaPelicula: (pelicula) => {
+  return fetch(`entrada/loadEntradaPelicula`, {
+      method: "POST", // Cambié el método a POST
+      headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+      },
+      body: JSON.stringify({ pelicula }), // Envío el parámetro en el cuerpo de la solicitud
+  })
+  .then((response) => {
+      if (!response.ok) {
+          throw new Error(response.status);
+      }
+      return response.json();
+  })
+  .then((data) => {
+      return data;
+  })
+  .catch((error) => {
+      console.error("Error en la petición: ", error);
+      throw error;
+  });
+},
+
+loadEntradaNumero: (numero) => {
+  return fetch(`entrada/loadEntradaNumero`, {
+      method: "POST", // Cambié el método a POST
+      headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+      },
+      body: JSON.stringify({ numero }), // Envío el parámetro en el cuerpo de la solicitud
+  })
+  .then((response) => {
+      if (!response.ok) {
+          throw new Error(response.status);
+      }
+      return response.json();
+  })
+  .then((data) => {
+      return data;
+  })
+  .catch((error) => {
+      console.error("Error en la petición: ", error);
+      throw error;
+  });
+},
 
 
   };

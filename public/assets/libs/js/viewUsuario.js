@@ -31,3 +31,17 @@ document.querySelectorAll('.toggle-password').forEach(item => {
         }
     });
 })}
+
+function toggleFilterField() {
+    var filterOption = document.getElementById("filterOption").value;
+    document.getElementById("filterNumeroTicketField").style.display = filterOption === 'numeroTicket' ? 'block' : 'none';
+    document.getElementById("filterPeliculaField").style.display = filterOption === 'pelicula' ? 'block' : 'none';
+}
+
+function resetFilters() {
+    document.getElementById("filterForm").reset();
+    document.getElementById("filterForm").submit(); // Recarga la página con filtros limpios
+}
+
+// Llama a la función al cargar la página para ajustar los campos de filtro según el valor actual del select
+toggleFilterField();

@@ -24,7 +24,7 @@ final class EntradaDAO extends DAO implements InterfaceDAO
     {
         $data = $object->toArray();
 
-        $validation= new EntradaValidation($this->conn);
+        $validation = new EntradaValidation($this->conn);
 
         if (!$validation->existeUsuario($data["usuarioId"])) {
             throw new \Exception("No existe este usuario.");
@@ -59,9 +59,9 @@ final class EntradaDAO extends DAO implements InterfaceDAO
     {
         $data = $object->toArray();
 
-        $validation= new EntradaValidation($this->conn);
+        $validation = new EntradaValidation($this->conn);
 
-        $data["usuarioId"]=$_SESSION["id"];
+        $data["usuarioId"] = $_SESSION["id"];
 
         if (!$validation->existeUsuario($data["usuarioId"])) {
             throw new \Exception("No existe este usuario.");
@@ -71,7 +71,7 @@ final class EntradaDAO extends DAO implements InterfaceDAO
             throw new \Exception("No existe esta función o no se encuentra disponible.");
         }
 
-        $data["horarioFuncion"]=$this->obtenerHorario($data["funcionId"]);
+        $data["horarioFuncion"] = $this->obtenerHorario($data["funcionId"]);
 
         $capacidadDisponible = $this->cantidadEntradasDisponibles($data["funcionId"]);
         if ($capacidadDisponible <= 0) {
@@ -317,6 +317,65 @@ final class EntradaDAO extends DAO implements InterfaceDAO
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    public function loadEntradaPelicula($nombrePelicula): array
+    {
+        $id = $_SESSION["id"];
+        $sql = "SELECT 
+                    e.id,
+                    f.numeroFuncion,
+                    e.horarioFuncion,
+                    e.horarioVenta,
+                    e.precio,
+                    e.numeroTicket,
+                    p.nombre as nombre_pelicula
+                FROM {$this->table} e
+                INNER JOIN funciones f ON f.id = e.funcionId
+                INNER JOIN usuarios u ON u.id = e.usuarioId
+                INNER JOIN peliculas p ON p.id = f.peliculaId
+                WHERE u.id = :usuarioId AND e.estado = 1 AND p.nombre LIKE :nombrePelicula";
+
+        $stmt = $this->conn->prepare($sql);
+
+        // Agrega los comodines para que la búsqueda sea flexible
+        $stmt->execute([
+            "usuarioId" => $id,
+            "nombrePelicula" => "%" . $nombrePelicula . "%"
+        ]);
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function loadEntradaNumero($ticket): array
+    {
+        $id = $_SESSION["id"];
+        $sql = "SELECT 
+                    e.id,
+                    f.numeroFuncion,
+                    e.horarioFuncion,
+                    e.horarioVenta,
+                    e.precio,
+                    e.numeroTicket,
+                    p.nombre as nombre_pelicula
+                FROM {$this->table} e
+                INNER JOIN funciones f ON f.id = e.funcionId
+                INNER JOIN usuarios u ON u.id = e.usuarioId
+                INNER JOIN peliculas p ON p.id = f.peliculaId
+                WHERE u.id = :usuarioId AND e.estado = 1 AND e.numeroTicket LIKE :ticket";
+
+        $stmt = $this->conn->prepare($sql);
+
+        // Agrega los comodines para que la búsqueda sea flexible
+        $stmt->execute([
+            "usuarioId" => $id,
+            "ticket" => $ticket."%" 
+        ]);
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+
+
+
     public function delete($id): void
     {
         $sql = "DELETE FROM {$this->table} WHERE id= :id";
@@ -391,28 +450,27 @@ final class EntradaDAO extends DAO implements InterfaceDAO
     }
 
     private function obtenerHorario($id)
-{
-    $sql = "SELECT f.horaInicio as hora, f.fecha as fecha
+    {
+        $sql = "SELECT f.horaInicio as hora, f.fecha as fecha
             FROM funciones f
             WHERE f.id = :id";
 
-    $stmt = $this->conn->prepare($sql);
+        $stmt = $this->conn->prepare($sql);
 
-    // Parámetro id
-    $params = [
-        ':id' => $id
-    ];
+        // Parámetro id
+        $params = [
+            ':id' => $id
+        ];
 
-    $stmt->execute($params);
-    $result = $stmt->fetch(\PDO::FETCH_OBJ);
+        $stmt->execute($params);
+        $result = $stmt->fetch(\PDO::FETCH_OBJ);
 
-    // Retorna false si no se encuentra la función
-    if (!$result) {
-        return false;
+        // Retorna false si no se encuentra la función
+        if (!$result) {
+            return false;
+        }
+
+        // Retorna la fecha y hora concatenada
+        return $result->fecha . " " . $result->hora;
     }
-
-    // Retorna la fecha y hora concatenada
-    return $result->fecha . " " . $result->hora;
-}
-
 }

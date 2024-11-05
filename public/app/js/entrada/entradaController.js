@@ -508,6 +508,9 @@ let entradaController = {
         console.log(error);
       });
   },
+
+  // Helper function to format date (assuming formatDate is defined in your utils)
+
   print: () => {
     //lista
     const $elementoParaConvertir = document.getElementById("tablaEntradas"); // <-- Aquí puedes elegir cualquier elemento del DOM

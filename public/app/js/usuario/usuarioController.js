@@ -13,22 +13,38 @@ let userController = {
     if (confirm("¿Seguro que lo quieres guardar?")) {
       let form = document.forms["formUsuario"];
 
-      if (form.apellidoUsuario.value.length > 45 ||form.apellidoUsuario.value.length <=0) {
-        alert("Supero el limite de caracteres con su apellido o el campo se encuentra vacío");
-        return
+      if (
+        form.apellidoUsuario.value.length > 45 ||
+        form.apellidoUsuario.value.length <= 0
+      ) {
+        alert(
+          "Supero el limite de caracteres con su apellido o el campo se encuentra vacío"
+        );
+        return;
       } else {
         userController.data.apellido = form.apellidoUsuario.value;
       }
 
-      if (form.nombreUsuario.value.length > 45||form.nombreUsuario.value.length <=0) {
-        alert("Supero el limite de caracteres con su nombre o el campo se encuentra vacío")
-        return
+      if (
+        form.nombreUsuario.value.length > 45 ||
+        form.nombreUsuario.value.length <= 0
+      ) {
+        alert(
+          "Supero el limite de caracteres con su nombre o el campo se encuentra vacío"
+        );
+        return;
       } else {
         userController.data.nombres = form.nombreUsuario.value;
       }
 
-      if (form.cuentaUsuario.value.length > 45 ||form.cuentaUsuario.value.length <=0) {
-        alert("Supero el limite de caracteres con su cuenta o el campo se encuentra vacío");return
+      if (
+        form.cuentaUsuario.value.length > 45 ||
+        form.cuentaUsuario.value.length <= 0
+      ) {
+        alert(
+          "Supero el limite de caracteres con su cuenta o el campo se encuentra vacío"
+        );
+        return;
       } else {
         userController.data.cuenta = form.cuentaUsuario.value;
       }
@@ -39,11 +55,16 @@ let userController = {
       ) {
         userController.data.clave = form.claveUsuario.value;
       } else {
-        alert("Su clave es demasiado corta o muy largo (7 a 44 caracteres)");return
+        alert("Su clave es demasiado corta o muy largo (7 a 44 caracteres)");
+        return;
       }
 
-      if (form.correoUsuario.value.length > 255 ||form.correoUsuario.value.length <=0) {
-        alert("El correo es muy largo o el campo se encuentra vacío");return
+      if (
+        form.correoUsuario.value.length > 255 ||
+        form.correoUsuario.value.length <= 0
+      ) {
+        alert("El correo es muy largo o el campo se encuentra vacío");
+        return;
       } else {
         userController.data.correo = form.correoUsuario.value;
       }
@@ -74,9 +95,9 @@ let userController = {
 
   delete: () => {
     if (confirm("¿Seguro que quieres eliminar al Usuario?")) {
-      userController.data.id = parseInt(document.getElementById(
-        "filaModificarUsuario"
-      ).dataset.id);
+      userController.data.id = parseInt(
+        document.getElementById("filaModificarUsuario").dataset.id
+      );
 
       userService
         .delete(userController.data)
@@ -84,13 +105,14 @@ let userController = {
           alert(data.mensaje);
           setTimeout(() => {
             location.reload();
-        }, 300);
+          }, 300);
         })
         .catch((error) => {
           // Maneja cualquier error que ocurra durante el cambio de contraseña
-          console.error("Error al eliminar el Usuario:",error);
+          console.error("Error al eliminar el Usuario:", error);
           alert(
-            "Hubo un problema al eliminar el Usuario. Por favor, inténtelo de nuevo más tarde."+ error
+            "Hubo un problema al eliminar el Usuario. Por favor, inténtelo de nuevo más tarde." +
+              error
           );
         });
     }
@@ -105,47 +127,47 @@ let userController = {
     let tabla = document.getElementById("tbodyUsuario");
 
     userService
-        .loadByNameAccount(nombre)
-        .then((data) => {
-            // Verificar si no se encontraron usuarios
-            if (data.result.length === 0) {
-                txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron Usuarios.</td></tr>";
-                tabla.innerHTML = txt;
-                return;
-            }
+      .loadByNameAccount(nombre)
+      .then((data) => {
+        // Verificar si no se encontraron usuarios
+        if (data.result.length === 0) {
+          txt =
+            "<tr><td colspan='15' style='text-align: center;'>No se encontraron Usuarios.</td></tr>";
+          tabla.innerHTML = txt;
+          return;
+        }
 
-            // Si no hay error y se encontraron usuarios
-            if (data.error === "") {
-                console.log("Usuario encontrado:", data);
+        // Si no hay error y se encontraron usuarios
+        if (data.error === "") {
+          console.log("Usuario encontrado:", data);
 
-                data.result.forEach((element) => {
-                    txt += "<tr>";
-                    txt += "<th>" + (++index) + "</th>"; // Incrementa el índice correctamente
-                    txt += "<td>" + element.cuenta + "</td>";
-                    txt += "<td>" + element.nombres + "</td>";
-                    txt += "<td>" + element.apellido + "</td>";
-                    txt += "<td>" + element.correo + "</td>";
+          data.result.forEach((element) => {
+            txt += "<tr>";
+            txt += "<th>" + ++index + "</th>"; // Incrementa el índice correctamente
+            txt += "<td>" + element.cuenta + "</td>";
+            txt += "<td>" + element.nombres + "</td>";
+            txt += "<td>" + element.apellido + "</td>";
+            txt += "<td>" + element.correo + "</td>";
 
-                    let perfil = element.perfil; // Utiliza directamente el perfil
-                    txt += "<td>" + perfil + "</td>";
+            let perfil = element.perfil; // Utiliza directamente el perfil
+            txt += "<td>" + perfil + "</td>";
 
-                    // Botón de edición
-                    txt +=
-                        '<td><a href="http://localhost/SG_CINE_2024/public/usuario/edit/' +
-                        element.id +
-                        '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
-                    txt += "</tr>";
-                });
+            // Botón de edición
+            txt +=
+              '<td><a href="http://localhost/SG_CINE_2024/public/usuario/edit/' +
+              element.id +
+              '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
+            txt += "</tr>";
+          });
 
-                // Actualiza el contenido HTML de la tabla
-                tabla.innerHTML = txt;
-            }
-        })
-        .catch((error) => {
-            console.error("Error al listar Usuarios:", error);
-        });
-},
-
+          // Actualiza el contenido HTML de la tabla
+          tabla.innerHTML = txt;
+        }
+      })
+      .catch((error) => {
+        console.error("Error al listar Usuarios:", error);
+      });
+  },
 
   update: () => {
     if (confirm("¿Seguro que lo quieres actualizar?")) {
@@ -160,27 +182,48 @@ let userController = {
       userController.data.cuenta = form.cuentaUsuarioM.value;
       userController.data.correo = form.correoUsuarioM.value;
 
-      if (form.apellidoUsuarioM.value.length > 45||form.apellidoUsuarioM.value.length <=0 ) {
-        alert("Supero el limite de caracteres con su apellido o el campo se encuentra vacío");
-        return
+      if (
+        form.apellidoUsuarioM.value.length > 45 ||
+        form.apellidoUsuarioM.value.length <= 0
+      ) {
+        alert(
+          "Supero el limite de caracteres con su apellido o el campo se encuentra vacío"
+        );
+        return;
       } else {
         userController.data.apellido = form.apellidoUsuarioM.value;
       }
 
-      if (form.nombreUsuarioM.value.length > 45 ||form.nombreUsuarioM.value.length <=0 ) {
-        alert("Supero el limite de caracteres con su nombre o el campo se encuentra vacío");return
+      if (
+        form.nombreUsuarioM.value.length > 45 ||
+        form.nombreUsuarioM.value.length <= 0
+      ) {
+        alert(
+          "Supero el limite de caracteres con su nombre o el campo se encuentra vacío"
+        );
+        return;
       } else {
         userController.data.nombres = form.nombreUsuarioM.value;
       }
 
-      if (form.cuentaUsuarioM.value.length > 45 || form.cuentaUsuarioM.value.length <=0) {
-        alert("Supero el limite de caracteres con su cuenta o el campo se encuentra vacío");return
+      if (
+        form.cuentaUsuarioM.value.length > 45 ||
+        form.cuentaUsuarioM.value.length <= 0
+      ) {
+        alert(
+          "Supero el limite de caracteres con su cuenta o el campo se encuentra vacío"
+        );
+        return;
       } else {
         userController.data.cuenta = form.cuentaUsuarioM.value;
       }
 
-      if (form.correoUsuarioM.value.length > 255 || form.correoUsuarioM.value.length <=0) {
-        alert("El correo es muy largo o el campo se encuentra vacío");return
+      if (
+        form.correoUsuarioM.value.length > 255 ||
+        form.correoUsuarioM.value.length <= 0
+      ) {
+        alert("El correo es muy largo o el campo se encuentra vacío");
+        return;
       } else {
         userController.data.correo = form.correoUsuarioM.value;
       }
@@ -209,9 +252,9 @@ let userController = {
     }
   },
 
-  list:  () => {
+  list: () => {
     console.log("Listando Usuarios...");
-    
+
     index = 0;
     userService
       .list()
@@ -231,7 +274,6 @@ let userController = {
 
           let txts;
           txts = element.perfil;
-          
 
           // let perfil = perfiles.find(p => p.id === element.perfilId);
           // let txtAux = perfil ? perfil.nombre : "Desconocido";
@@ -251,58 +293,61 @@ let userController = {
       });
   },
 
-
-  dataPass:{
-    id:0,
-    actual:"",
-    nueva:""
-
-  }
-
-  ,
+  dataPass: {
+    id: 0,
+    actual: "",
+    nueva: "",
+  },
 
   changePassword: () => {
     if (confirm("¿Seguro que quieres cambiar la contraseña del Usuario?")) {
+      let form = document.forms["change-password-form"];
 
-      let form=document.forms["change-password-form"];
+      userController.dataPass.id = parseInt(
+        document.getElementById("profile").dataset.id
+      );
 
-      userController.dataPass.id = parseInt(document.getElementById("profile").dataset.id);
-      
-      if(form.claveActual.value.length>6 && form.claveActual.value.length<45){userController.dataPass.actual = form.claveActual.value}
-      else{alert("Su clave actual es demasiado corta o muy largo (7 a 44 caracteres)")
-        return
+      if (
+        form.claveActual.value.length > 6 &&
+        form.claveActual.value.length < 45
+      ) {
+        userController.dataPass.actual = form.claveActual.value;
+      } else {
+        alert(
+          "Su clave actual es demasiado corta o muy largo (7 a 44 caracteres)"
+        );
+        return;
       }
-
 
       if (
         form.claveNueva.value.length > 6 &&
-        form.claveNueva.value.length < 45
-        && form.claveNueva.value==form.claveConfirmacion.value
+        form.claveNueva.value.length < 45 &&
+        form.claveNueva.value == form.claveConfirmacion.value
       ) {
-        userController.dataPass.nueva = form.claveConfirmacion.value
+        userController.dataPass.nueva = form.claveConfirmacion.value;
       } else {
-        alert("Su clave nueva es demasiado corta o muy largo (7 a 44 caracteres) o no coincide con la verificación solicitada" );
-        return
+        alert(
+          "Su clave nueva es demasiado corta o muy largo (7 a 44 caracteres) o no coincide con la verificación solicitada"
+        );
+        return;
       }
 
-        userService
-          .changePassword(userController.dataPass)
-          .then((data) => {
-            if (data.error =="") {
-              alert("Contraseña cambiada con éxito.");
+      userService
+        .changePassword(userController.dataPass)
+        .then((data) => {
+          if (data.error == "") {
+            alert("Contraseña cambiada con éxito.");
           } else {
-              alert(data.error);
+            alert(data.error);
           }
-          })
-          .catch((error) => {
-            // Maneja cualquier error que ocurra durante el cambio de contraseña
-            // console.error("Error al cambiar la contraseña:", error);
-            alert(
-              "Hubo un problema al cambiar la contraseña. Por favor, inténtelo de nuevo más tarde."
-            );
-          });
-      
-
+        })
+        .catch((error) => {
+          // Maneja cualquier error que ocurra durante el cambio de contraseña
+          // console.error("Error al cambiar la contraseña:", error);
+          alert(
+            "Hubo un problema al cambiar la contraseña. Por favor, inténtelo de nuevo más tarde."
+          );
+        });
     }
   },
 
@@ -396,61 +441,276 @@ let userController = {
     let txt = ""; // Asegura la inicialización de txt
 
     userService
-        .loadByPerfil(document.getElementById("filterTipoPerfil").value)
-        .then((data) => {
-            // Verificar si no se encontraron usuarios
-            if (data.result.length === 0) {
-                txt = "<tr><td colspan='15' style='text-align: center;'>No se encontraron Usuarios.</td></tr>";
-                tabla.innerHTML = txt;
-                return;
-            }
+      .loadByPerfil(document.getElementById("filterTipoPerfil").value)
+      .then((data) => {
+        // Verificar si no se encontraron usuarios
+        if (data.result.length === 0) {
+          txt =
+            "<tr><td colspan='15' style='text-align: center;'>No se encontraron Usuarios.</td></tr>";
+          tabla.innerHTML = txt;
+          return;
+        }
 
-            // Si no hay error y se encontraron usuarios
-            if (data.error === "") {
-                console.log("Usuario encontrado:", data);
+        // Si no hay error y se encontraron usuarios
+        if (data.error === "") {
+          console.log("Usuario encontrado:", data);
 
-                data.result.forEach((element) => {
-                    txt += "<tr>";
-                    txt += "<th>" + (++index) + "</th>"; // Incrementa el índice correctamente
-                    txt += "<td>" + element.cuenta + "</td>";
-                    txt += "<td>" + element.nombres + "</td>";
-                    txt += "<td>" + element.apellido + "</td>";
-                    txt += "<td>" + element.correo + "</td>";
+          data.result.forEach((element) => {
+            txt += "<tr>";
+            txt += "<th>" + ++index + "</th>"; // Incrementa el índice correctamente
+            txt += "<td>" + element.cuenta + "</td>";
+            txt += "<td>" + element.nombres + "</td>";
+            txt += "<td>" + element.apellido + "</td>";
+            txt += "<td>" + element.correo + "</td>";
 
-                    let perfil = element.perfil; // Utiliza directamente el perfil
-                    txt += "<td>" + perfil + "</td>";
+            let perfil = element.perfil; // Utiliza directamente el perfil
+            txt += "<td>" + perfil + "</td>";
 
-                    // Botón de edición
-                    txt +=
-                        '<td><a href="http://localhost/SG_CINE_2024/public/usuario/edit/' +
-                        element.id +
-                        '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
-                    txt += "</tr>";
-                });
+            // Botón de edición
+            txt +=
+              '<td><a href="http://localhost/SG_CINE_2024/public/usuario/edit/' +
+              element.id +
+              '" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a></td>';
+            txt += "</tr>";
+          });
 
-                // Actualiza el contenido HTML de la tabla
-                tabla.innerHTML = txt;
-            } else {
-                console.error("Error en la respuesta:", data.error);
-            }
-        })
-        .catch((error) => {
-            console.error("Error al listar Usuarios:", error);
+          // Actualiza el contenido HTML de la tabla
+          tabla.innerHTML = txt;
+        } else {
+          console.error("Error en la respuesta:", data.error);
+        }
+      })
+      .catch((error) => {
+        console.error("Error al listar Usuarios:", error);
+      });
+  },
+
+  loadEntradaPelicula: () => {
+    console.log("Listando entradas por película...");
+  
+    // Obtener el valor de la película desde el input
+    let peliculaId = document.getElementById("filterPelicula").value;
+  
+    // Contenedor donde se mostrarán los resultados
+    let filteredDataContainer = document.getElementById("filteredDataContainer");
+    filteredDataContainer.innerHTML = ""; // Limpiar contenido previo
+  
+    // Llamada al servicio para obtener las entradas filtradas por película
+    userService
+      .loadEntradaPelicula(peliculaId)
+      .then((data) => {
+
+
+        // Comprobar si no hay resultados
+        if (data.result.length === 0) {
+          filteredDataContainer.innerHTML = `
+            <div class="alert alert-warning text-center" role="alert">
+              <div class="d-flex justify-content-center align-items-center">
+                <i class="fas fa-exclamation-circle fa-2x me-3"></i>
+                <h5 class="mb-0">¡Hola! No hemos encontrado compras en tu historial.</h5>
+              </div>
+              <p class="mt-2">Parece que aún no has realizado ninguna compra. Explora nuestra cartelera y disfruta de una buena película.</p>
+              <a href="http://localhost/SG_CINE_2024/public/inicio/index" class="btn btn-success mt-3">Ir a la Cartelera</a>
+            </div>
+          `;
+          return;
+        }
+  
+        // Renderizar las tarjetas de entradas filtradas
+        data.result.forEach((entry) => {
+          filteredDataContainer.innerHTML += `
+            <div class="col-md-6">
+              <div class="card mb-4 shadow-sm border border-dark rounded">
+                <div class="card-body">
+                  <h5 class="card-title mb-3">Nro de Ticket: <strong>${entry.numeroTicket}</strong></h5>
+                  <p class="card-text">
+                    <strong>Función:</strong> ${entry.numeroFuncion}<br>
+                    <strong>Película:</strong> ${entry.nombre_pelicula}<br>
+                    <strong>Precio:</strong> $${entry.precio}<br>
+                    <strong>Hora de Función:</strong> <span class="badge bg-info text-dark">${formatDate(
+                      entry.horarioFuncion
+                    )}</span><br>
+                    <strong>Hora de Venta:</strong> <span class="badge bg-success text-light">${formatDate(
+                      entry.horarioVenta
+                    )}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          `;
         });
-},
+      })
+      .catch((error) => {
+        console.error("Error al cargar las entradas:", error);
+        filteredDataContainer.innerHTML = `
+          <div class="alert alert-danger text-center" role="alert">
+            <i class="fas fa-exclamation-circle fa-2x me-3"></i> Error al cargar el historial de compras. Intenta de nuevo más tarde.
+          </div>
+        `;
+      });
+  },
+
+  loadEntradaNumero: () => {
+    console.log("Listando entradas por película...");
+  
+    // Obtener el valor de la película desde el input
+    let peliculaId = parseInt(document.getElementById("filterNumeroTicket").value);
+  
+    // Contenedor donde se mostrarán los resultados
+    let filteredDataContainer = document.getElementById("filteredDataContainer");
+    filteredDataContainer.innerHTML = ""; // Limpiar contenido previo
+  
+    // Llamada al servicio para obtener las entradas filtradas por película
+    userService
+      .loadEntradaNumero(peliculaId)
+      .then((data) => {
 
 
+        // Comprobar si no hay resultados
+        if (data.result.length === 0) {
+          filteredDataContainer.innerHTML = `
+            <div class="alert alert-warning text-center" role="alert">
+              <div class="d-flex justify-content-center align-items-center">
+                <i class="fas fa-exclamation-circle fa-2x me-3"></i>
+                <h5 class="mb-0">¡Hola! No hemos encontrado compras en tu historial.</h5>
+              </div>
+              <p class="mt-2">Parece que aún no has realizado ninguna compra. Explora nuestra cartelera y disfruta de una buena película.</p>
+              <a href="http://localhost/SG_CINE_2024/public/inicio/index" class="btn btn-success mt-3">Ir a la Cartelera</a>
+            </div>
+          `;
+          return;
+        }
+  
+        // Renderizar las tarjetas de entradas filtradas
+        data.result.forEach((entry) => {
+          filteredDataContainer.innerHTML += `
+            <div class="col-md-6">
+              <div class="card mb-4 shadow-sm border border-dark rounded">
+                <div class="card-body">
+                  <h5 class="card-title mb-3">Nro de Ticket: <strong>${entry.numeroTicket}</strong></h5>
+                  <p class="card-text">
+                    <strong>Función:</strong> ${entry.numeroFuncion}<br>
+                    <strong>Película:</strong> ${entry.nombre_pelicula}<br>
+                    <strong>Precio:</strong> $${entry.precio}<br>
+                    <strong>Hora de Función:</strong> <span class="badge bg-info text-dark">${formatDate(
+                      entry.horarioFuncion
+                    )}</span><br>
+                    <strong>Hora de Venta:</strong> <span class="badge bg-success text-light">${formatDate(
+                      entry.horarioVenta
+                    )}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      })
+      .catch((error) => {
+        console.error("Error al cargar las entradas:", error);
+        filteredDataContainer.innerHTML = `
+          <div class="alert alert-danger text-center" role="alert">
+            <i class="fas fa-exclamation-circle fa-2x me-3"></i> Error al cargar el historial de compras. Intenta de nuevo más tarde.
+          </div>
+        `;
+      });
+  },
 
+  listarTodasEntradas: () => {
+    console.log("Listando entradas por película...");
+  
+    // Obtener el valor de la película desde el input
+    let peliculaId ="";
+  
+    // Contenedor donde se mostrarán los resultados
+    let filteredDataContainer = document.getElementById("filteredDataContainer");
+    filteredDataContainer.innerHTML = ""; // Limpiar contenido previo
+  
+    // Llamada al servicio para obtener las entradas filtradas por película
+    userService
+      .loadEntradaPelicula(peliculaId)
+      .then((data) => {
+
+
+        // Comprobar si no hay resultados
+        if (data.result.length === 0) {
+          filteredDataContainer.innerHTML = `
+            <div class="alert alert-warning text-center" role="alert">
+              <div class="d-flex justify-content-center align-items-center">
+                <i class="fas fa-exclamation-circle fa-2x me-3"></i>
+                <h5 class="mb-0">¡Hola! No hemos encontrado compras en tu historial.</h5>
+              </div>
+              <p class="mt-2">Parece que aún no has realizado ninguna compra. Explora nuestra cartelera y disfruta de una buena película.</p>
+              <a href="http://localhost/SG_CINE_2024/public/cartelera" class="btn btn-success mt-3">Ir a la Cartelera</a>
+            </div>
+          `;
+          return;
+        }
+  
+        // Renderizar las tarjetas de entradas filtradas
+        data.result.forEach((entry) => {
+          filteredDataContainer.innerHTML += `
+            <div class="col-md-6">
+              <div class="card mb-4 shadow-sm border border-dark rounded">
+                <div class="card-body">
+                  <h5 class="card-title mb-3">Nro de Ticket: <strong>${entry.numeroTicket}</strong></h5>
+                  <p class="card-text">
+                    <strong>Función:</strong> ${entry.numeroFuncion}<br>
+                    <strong>Película:</strong> ${entry.nombre_pelicula}<br>
+                    <strong>Precio:</strong> $${entry.precio}<br>
+                    <strong>Hora de Función:</strong> <span class="badge bg-info text-dark">${formatDate(
+                      entry.horarioFuncion
+                    )}</span><br>
+                    <strong>Hora de Venta:</strong> <span class="badge bg-success text-light">${formatDate(
+                      entry.horarioVenta
+                    )}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      })
+      .catch((error) => {
+        console.error("Error al cargar las entradas:", error);
+        filteredDataContainer.innerHTML = `
+          <div class="alert alert-danger text-center" role="alert">
+            <i class="fas fa-exclamation-circle fa-2x me-3"></i> Error al cargar el historial de compras. Intenta de nuevo más tarde.
+          </div>
+        `;
+      });
+  },
+  
+  
+  
 };
+
+const formatDate = (dateString) => {
+  // Divide la fecha y la hora usando el espacio
+  const [datePart, timePart] = dateString.split(" ");
+
+  // Divide la fecha en año, mes y día
+  const [year, month, day] = datePart.split("-");
+
+  // Divide la hora en horas y minutos (después de eliminar los segundos)
+  const [hora, minutos] = timePart.split(":");
+
+  // Retorna el formato deseado
+  return `${day}/${month}/${year} a las ${hora}:${minutos}`;
+};
+
 
 document.addEventListener("DOMContentLoaded", () => {
   let btnUsuarioAlta = document.getElementById("btnAltaUsuario");
   let btnEliminarUsuarios = document.getElementById("btnEliminarUsuarios");
   let btnUsuarioListar = document.getElementById("btnListarUsuario");
   let modificarUsuario = document.getElementById("btnModificarUsuario");
-  let btnBuscarUsuario=document.getElementById("btnBuscarUsuario")
+  let btnBuscarUsuario = document.getElementById("btnBuscarUsuario");
   let imprimirUsuarios = document.getElementById("btnImprimirUsuario");
   let btnChangePassword = document.getElementById("btnChangePassword");
+
+  let btnFilter= document.getElementById("btnFilter");
+  let btnListar= document.getElementById("btnListar");
+
 
   if (btnUsuarioAlta != null) {
     userController.list();
@@ -459,32 +719,38 @@ document.addEventListener("DOMContentLoaded", () => {
       userController.save();
     });
 
-    btnBuscarUsuario.addEventListener("click",function(){
-      if(document.getElementById("filterType").value=="cuenta"){
-
-        userController.loadByNameAccount()
-
-      }else if(document.getElementById("filterType").value=="perfil"){
-
-        userController.loadByPerfil()
-
+    btnBuscarUsuario.addEventListener("click", function () {
+      if (document.getElementById("filterType").value == "cuenta") {
+        userController.loadByNameAccount();
+      } else if (document.getElementById("filterType").value == "perfil") {
+        userController.loadByPerfil();
       }
-    })
+    });
 
-
-    
-
-
-    imprimirUsuarios.onclick=userController.print
+    imprimirUsuarios.onclick = userController.print;
     btnUsuarioListar.onclick = userController.list;
   } else if (modificarUsuario != null) {
     modificarUsuario.onclick = userController.update;
     btnEliminarUsuarios.onclick = userController.delete;
     // btnUsuarioListar.onclick=userController.list;
   } else {
-    if(btnChangePassword!=null){
+    if (btnChangePassword != null) {
+      btnChangePassword.onclick = userController.changePassword;
+    }
 
-      btnChangePassword.onclick=userController.changePassword
+    if(btnFilter!=null){
+
+      btnFilter.addEventListener("click", function () {
+        let filterType = document.getElementById("filterOption").value;
+
+        if (filterType === "numeroTicket") {
+          userController.loadEntradaNumero();
+        } else if (filterType === "pelicula") {
+          userController.loadEntradaPelicula();
+        } 
+      })
+
+      btnListar.onclick=userController.listarTodasEntradas
 
     }
   }

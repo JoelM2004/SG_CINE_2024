@@ -314,7 +314,6 @@ loadByPelicula: (pelicula) => {
   });
 },
 
-
 listEntradas: async () => {
   return fetch("entrada/listEntradas", {
     method: "GET",
