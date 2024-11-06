@@ -35,13 +35,13 @@ function formatDate($dateString)
 
 ?>
 <div class="container mt-5" id="imprimir">
-    <h1 class="text-center mb-4">Generar Reportes de Cine</h1>
+    <h1 class="text-center mb-5" style="font-size: 2.5rem; color: #343a40;">Generar Reportes de Cine</h1>
 
     <!-- Formulario para generación de reportes -->
     <form id="reporteForm">
-        <div class="mb-3">
-            <label for="tipoReporte" class="form-label">Selecciona el tipo de reporte:</label>
-            <select id="tipoReporte" class="form-select" required>
+        <div class="mb-4">
+            <label for="tipoReporte" class="form-label fs-4">Selecciona el tipo de reporte:</label>
+            <select id="tipoReporte" class="form-select form-select-lg" required>
                 <option value="">Selecciona un Reporte</option>
                 <option value="funciones">Reporte de Funciones</option>
                 <option value="peliculas">Reporte de Películas</option>
@@ -51,9 +51,9 @@ function formatDate($dateString)
         </div>
 
         <!-- Sección para Reporte de Funciones -->
-        <div id="funcionSection" class="row g-3" style="display: none;">
+        <div id="funcionSection" class="row g-4" style="display: none;">
             <div class="col-md-6">
-                <label for="funcionInput" class="form-label">Número de Función:</label>
+                <label for="funcionInput" class="form-label fs-5">Número de Función:</label>
                 <select name="funcion" id="funcionInput" class="form-select">
                     <option value="">Selecciona una Función</option>
                     <?php
@@ -66,9 +66,9 @@ function formatDate($dateString)
         </div>
 
         <!-- Sección para Reporte de Películas -->
-        <div id="peliculaSection" class="row g-3" style="display: none;">
+        <div id="peliculaSection" class="row g-4" style="display: none;">
             <div class="col-md-6">
-                <label for="peliculaInput" class="form-label">Película:</label>
+                <label for="peliculaInput" class="form-label fs-5">Película:</label>
                 <select name="pelicula" id="peliculaInput" class="form-select">
                     <option value="">Selecciona una Película</option>
                     <?php
@@ -81,9 +81,9 @@ function formatDate($dateString)
         </div>
 
         <!-- Sección para Reporte de Programaciones -->
-        <div id="programacionSection" class="row g-3" style="display: none;">
+        <div id="programacionSection" class="row g-4" style="display: none;">
             <div class="col-md-6">
-                <label for="programacionInput" class="form-label">Programación:</label>
+                <label for="programacionInput" class="form-label fs-5">Programación:</label>
                 <select name="programacion" id="programacionInput" class="form-select">
                     <option value="">Selecciona una Programación</option>
                     <?php
@@ -96,46 +96,45 @@ function formatDate($dateString)
         </div>
 
         <!-- Sección para Reporte por Usuario -->
-        <div id="usuarioSection" class="row g-3" style="display: none;">
+        <div id="usuarioSection" class="row g-4" style="display: none;">
             <div class="col-md-6">
-                <label for="nombreUsuario" class="form-label">Nombre de Usuario:</label>
-                <input type="text" id="nombreUsuario" class="form-control" placeholder="Ingresa el nombre de usuario">
+                <label for="nombreUsuario" class="form-label fs-5">Nombre de Usuario:</label>
+                <input type="text" id="nombreUsuario" class="form-control form-control-lg" placeholder="Ingresa el nombre de usuario">
             </div>
         </div>
 
         <div class="text-center mt-4">
-            <button type="button" class="btn btn-primary" id="generarReporteBtn">Generar Reporte</button>
-            <!-- Botón para generar PDF -->
-            <button type="button" class="btn btn-secondary" id="generarPDFBtn">Generar PDF</button>
+            <button type="button" class="btn btn-primary btn-lg" id="generarReporteBtn">Generar Reporte</button>
+            <button type="button" class="btn btn-secondary btn-lg" id="generarPDFBtn">Generar PDF</button>
         </div>
     </form>
 
     <!-- Sección de resultados del reporte -->
-    <div id="reporteResultado" class="mt-5 alert alert-info" style="display: none;">
-        <h4 class="alert-heading">Resultado del Reporte</h4>
-        <p id="reporteTexto"></p>
+    <div id="reporteResultado" class="mt-5 alert alert-info shadow-sm" style="display: none;">
+        <h4 class="alert-heading fs-4">Resultado del Reporte</h4>
+        <p id="reporteTexto" class="fs-5"></p>
     </div>
 
     <!-- Sección de métricas y tabla de entradas -->
-    <div id="metricasSection" class="row g-3 mt-5" style="display: none;">
+    <div id="metricasSection" class="row g-4 mt-5" style="display: none;">
         <div class="col-md-6">
-            <label for="entradasVendidas" class="form-label">Cantidad de Entradas Vendidas:</label>
-            <input type="number" id="entradasVendidas" class="form-control" readonly>
+            <label for="entradasVendidas" class="form-label fs-5">Cantidad de Entradas Vendidas:</label>
+            <input type="number" id="entradasVendidas" class="form-control form-control-lg" readonly>
         </div>
         <div class="col-md-6">
-            <label for="totalRecaudado" class="form-label">Total Recaudado:</label>
-            <input type="text" id="totalRecaudado" class="form-control" readonly>
+            <label for="totalRecaudado" class="form-label fs-5">Total Recaudado:</label>
+            <input type="text" id="totalRecaudado" class="form-control form-control-lg" readonly>
         </div>
         <div class="col-md-6">
-            <label for="precioPromedio" class="form-label">Precio Promedio de Entrada:</label>
-            <input type="text" id="precioPromedio" class="form-control" readonly>
+            <label for="precioPromedio" class="form-label fs-5">Precio Promedio de Entrada:</label>
+            <input type="text" id="precioPromedio" class="form-control form-control-lg" readonly>
         </div>
         
         <!-- Tabla de entradas -->
-        <div class="col-md-12 mt-3">
-            <h4>Detalles de Entradas</h4>
-            <table class="table table-striped">
-                <thead>
+        <div class="col-md-12 mt-4">
+            <h4 class="fs-4 mb-3">Detalles de Entradas</h4>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="table-dark">
                     <tr>
                         <th>#</th>
                         <th>Cuenta Usuario</th>
@@ -154,3 +153,4 @@ function formatDate($dateString)
         </div>
     </div>
 </div>
+

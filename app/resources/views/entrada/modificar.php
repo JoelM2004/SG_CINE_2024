@@ -47,65 +47,64 @@ function formatDate($date) {
     }
 }
 ?>
-<div class="container-fluid row">
-    <!-- Tabla de Entradas -->
-    <div class="col-lg-12 p-4">
-        <h4 class="text-secondary">Listado de Entradas</h4>
+<div class="container-fluid my-4">
+    <div class="row g-3">
+        <!-- Tabla de Entradas -->
+        <div class="col-lg-12 p-4 bg-light border rounded shadow-sm">
+            <h4 class="text-center text-primary">Listado de Entradas</h4>
 
-        <table id="tablaEntradas" class="table table-light">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Número de Función</th>
-                    <th scope="col">Fecha y Hora de la Función</th>
-                    <th scope="col">Fecha y Hora de la Venta</th>
-                    <th scope="col">Precio</th>
-                    <th scope="col">Número de Ticket</th>
-                    <th scope="col">Cuenta del Cliente</th>
-                    <th scope="col">Estado</th>
-                </tr>
-            </thead>
-            <tbody id="tbodyEntradas" data-id=<?=$_GET["id"]?> data-funcion=<?=$datoEntrada->getFuncionId()?>>
-                <tr>
-                    <td scope="col">1</td>
-                    <td scope="col"><?= $daoFuncion->load($datoEntrada->getFuncionId())->getNumeroFuncion() ?></td>
-                    <td scope="col"><?= formatDate($datoEntrada->getHoraFuncion()) ?></td>
-                    <td scope="col"><?= formatDate($datoEntrada->getHoraVenta()) ?></td>
-                    <td scope="col"><?= $datoEntrada->getPrecio() ?></td>
-                    <td scope="col"><?= $datoEntrada->getNumeroTicket() ?></td>
-                    <td scope="col"><?= $daoUsuario->load($datoEntrada->getUsuarioId())->getCuenta() ?></td>
-                    <td scope="col">
-                        <?php
-                        if ($datoEntrada->getEstado() == 1) {
-                            echo "<i class='fas fa-circle text-success' title='Activo'></i>";
-                        } else {
-                            echo "<i class='fas fa-circle text-danger' title='Desactivado'></i>";
-                        }
-                        ?>
-                    </td>
+            <table id="tablaEntradas" class="table table-striped table-hover">
+                <thead class="table-primary">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Número de Función</th>
+                        <th scope="col">Fecha y Hora de la Función</th>
+                        <th scope="col">Fecha y Hora de la Venta</th>
+                        <th scope="col">Precio</th>
+                        <th scope="col">Número de Ticket</th>
+                        <th scope="col">Cuenta del Cliente</th>
+                        <th scope="col">Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyEntradas" data-id="<?= $_GET["id"] ?>" data-funcion="<?= $datoEntrada->getFuncionId() ?>">
+                    <tr>
+                        <td scope="col">1</td>
+                        <td scope="col"><?= $daoFuncion->load($datoEntrada->getFuncionId())->getNumeroFuncion() ?></td>
+                        <td scope="col"><?= formatDate($datoEntrada->getHoraFuncion()) ?></td>
+                        <td scope="col"><?= formatDate($datoEntrada->getHoraVenta()) ?></td>
+                        <td scope="col"><?= $datoEntrada->getPrecio() ?></td>
+                        <td scope="col"><?= $datoEntrada->getNumeroTicket() ?></td>
+                        <td scope="col"><?= $daoUsuario->load($datoEntrada->getUsuarioId())->getCuenta() ?></td>
+                        <td scope="col">
+                            <?php
+                            if ($datoEntrada->getEstado() == 1) {
+                                echo "<i class='fas fa-circle text-success' title='Activo'></i>";
+                            } else {
+                                echo "<i class='fas fa-circle text-danger' title='Desactivado'></i>";
+                            }
+                            ?>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="d-flex justify-content-end mt-3">
-            <button type="button" id="btnToggleEntrada" value="<?php
-                        if ($datoEntrada->getEstado() == 0) {
-                            echo 1;
-                        } else {
-                            echo 0;
-                        }
-                        ?>
-                        
-                    </button>" class="btn btn-primary">
-                        
-                        <?php
-                        if ($datoEntrada->getEstado() == 0) {
-                            echo "Activar Entrada";
-                        } else {
-                            echo "Desactivar Entrada";
-                        }
-                        ?></button>
+            <div class="d-flex justify-content-end mt-3">
+                <button type="button" id="btnToggleEntrada" value="<?php
+                            if ($datoEntrada->getEstado() == 0) {
+                                echo 1;
+                            } else {
+                                echo 0;
+                            }
+                            ?>" class="btn btn-primary w-100">
+                    <?php
+                    if ($datoEntrada->getEstado() == 0) {
+                        echo "Activar Entrada";
+                    } else {
+                        echo "Desactivar Entrada";
+                    }
+                    ?>
+                </button>
+            </div>
         </div>
     </div>
 </div>

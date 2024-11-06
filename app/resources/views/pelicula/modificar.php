@@ -233,36 +233,39 @@ $daoImagen = new ImagenDAO($conn);
 </div>
 
 <!-- Sección para Agregar Nueva Imagen -->
-<div class="row mt-4">
+<div class="row mt-5">
+
     <!-- Botón para Agregar Imagen -->
-    <div class="col-md-6 col-lg-3 mb-3">
-        <button type="submit" class="btn btn-secondary w-100" id="btnAgregarImagen">Agregar Imagen</button>
+    <div class="col-md-6 col-lg-3 mb-4">
+        <button type="submit" class="btn btn-primary w-100 shadow-sm" id="btnAgregarImagen">
+            <i class="fas fa-image me-2"></i>Agregar Imagen
+        </button>
     </div>
 
     <!-- Campo para seleccionar una nueva imagen -->
-    <div class="col-md-6 col-lg-3 mb-3">
-        <label for="inputImagen" class="form-label">Seleccionar Imagen</label>
+    <div class="col-md-6 col-lg-3 mb-4">
+        <label for="inputImagen" class="form-label fw-bold">Seleccionar Imagen</label>
         <input type="file" class="form-control" id="inputImagen" accept="image/*">
     </div>
 
     <!-- Previsualización de Imagen -->
-    <div class="col-md-6 col-lg-3 mb-3">
-        <div class="border p-2">
-            <label for="previsualizarImagen" class="form-label">Previsualización de Imagen</label>
-            <img id="previsualizarImagen" src="#" alt="Previsualización" class="img-fluid" style="display: none;">
+    <div class="col-md-6 col-lg-3 mb-4">
+        <div class="border p-3 rounded-3 shadow-sm d-flex justify-content-center align-items-center" style="height: 150px;">
+            <label for="previsualizarImagen" class="form-label text-muted">Previsualización de Imagen</label>
+            <img id="previsualizarImagen" src="#" alt="Previsualización" class="img-fluid" style="display: none; max-height: 100%; max-width: 100%; object-fit: contain;">
         </div>
     </div>
 
     <!-- Selector de Portada -->
-    <div class="col-md-6 col-lg-3 mb-3">
-        <label for="esPortada" class="form-label">Portada</label>
+    <div class="col-md-6 col-lg-3 mb-4">
+        <label for="esPortada" class="form-label fw-bold">Portada</label>
         <select class="form-select" id="esPortada">
-        <option value="0">No</option>    
-        <option value="1">Sí</option>
-            
+            <option value="0">No</option>
+            <option value="1">Sí</option>
         </select>
     </div>
 </div>
+
 
 <!-- Modal para ver la imagen en pantalla completa -->
 <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">

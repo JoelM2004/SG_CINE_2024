@@ -42,7 +42,7 @@ let programacionController = {
       
   
     delete: () => {
-      if (confirm("¿Seguro que lo quieres elimnar?")) {
+      if (confirm("¿Seguro que lo quieres eliminar?")) {
         programacionController.data.id = document.getElementById(
           "filaModificarProgramacion"
         ).dataset.id;

@@ -258,8 +258,8 @@ loadByNumeroSala: () => {
     console.log("Listando salas...");
 
     // Obtener el número de sala del filtro
-    const numeroSala = parseInt(document.getElementById("filterNumeroSala").value);
-    if(numeroSala<=0){
+    const numeroSala = document.getElementById("filterNumeroSala").value;
+    if(numeroSala<=0 || numeroSala==""){
       alert("Inserte un valor mayor a 0")
       return
     }

@@ -237,11 +237,11 @@ final class EntradaDAO extends DAO implements InterfaceDAO
         inner join funciones f on f.id=e.funcionId
         inner join usuarios u on u.id=e.usuarioId
         inner join peliculas p on p.id=f.peliculaId
-        where e.numeroTicket=:id
+        where e.numeroTicket LIKE :id
         ";
         $stmt = $this->conn->prepare($sql);
 
-        $stmt->execute(["id" => $numeroTicket]);
+        $stmt->execute(["id" => $numeroTicket."%"]);
 
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
