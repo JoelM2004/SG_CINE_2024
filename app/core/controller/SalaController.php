@@ -22,9 +22,10 @@ final class SalaController extends Controller implements InterfaceController, In
 
     public function index():void{
 
-        $this->view = "sala/index.php";
+        $this->view = "index.php";
         $breadcrumbActual="Salas";
         $breadcrumbLink=APP_FRONT."inicio/index";
+        $redireccion=APP_FRONT . "sala/create";
         $breadcrumbPasada="Menú Principal";
 
         require_once APP_TEMPLATE."template.php";

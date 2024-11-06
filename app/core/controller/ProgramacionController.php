@@ -20,9 +20,10 @@ final class ProgramacionController extends Controller implements InterfaceContro
 
     public function index():void{
 
-        $this->view = "programacion/index.php";
+        $this->view = "index.php";
         $breadcrumbActual="Programaciones";
         $breadcrumbLink=APP_FRONT."inicio/index";
+        $redireccion=APP_FRONT . "programacion/create";
         $breadcrumbPasada="Menú Principal";
 
         require_once APP_TEMPLATE."template.php";

@@ -28,9 +28,10 @@ final class PeliculaController extends Controller implements InterfaceController
     public function index(): void
     {
 
-        $this->view = "pelicula/index.php";
+        $this->view = "index.php";
         $breadcrumbActual = "Peliculas";
         $breadcrumbLink = APP_FRONT . "inicio/index";
+        $redireccion=APP_FRONT . "pelicula/create";
         $breadcrumbPasada = "Menú Principal";
 
         require_once APP_TEMPLATE . "template.php";

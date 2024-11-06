@@ -26,9 +26,10 @@ final class PerfilController extends Controller implements InterfaceController
     public function index(): void
     { //listo
 
-        $this->view = "perfil/index.php";
+        $this->view = "index.php";
         $breadcrumbActual="Perfiles";
         $breadcrumbLink=APP_FRONT."inicio/index";
+        $redireccion=APP_FRONT . "perfil/create";
         $breadcrumbPasada="Menu Principal";
         
         require_once APP_TEMPLATE . "template.php";

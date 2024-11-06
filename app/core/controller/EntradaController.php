@@ -27,9 +27,10 @@ final class EntradaController extends Controller implements InterfaceController,
 
     public function index():void{
 
-        $this->view = "entrada/index.php";
+        $this->view = "index.php";
         $breadcrumbActual="Entradas";
         $breadcrumbLink=APP_FRONT."inicio/index";
+        $redireccion=APP_FRONT . "entrada/create";
         $breadcrumbPasada="Menú Principal";
 
         require_once APP_TEMPLATE."template.php";

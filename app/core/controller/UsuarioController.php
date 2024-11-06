@@ -24,9 +24,10 @@ final class UsuarioController extends Controller implements InterfaceController,
 
     public function index():void{
 
-        $this->view = "usuario/index.php";
+        $this->view = "index.php";
         $breadcrumbActual="Usuarios";
         $breadcrumbLink=APP_FRONT."inicio/index";
+        $redireccion=APP_FRONT . "usuario/create";
         $breadcrumbPasada="Menú Principal";
 
         require_once APP_TEMPLATE."template.php";

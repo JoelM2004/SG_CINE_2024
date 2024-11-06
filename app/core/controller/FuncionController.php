@@ -25,9 +25,10 @@ final class FuncionController extends Controller implements InterfaceController,
 
     public function index():void{
 
-        $this->view = "funcion/index.php";
+        $this->view = "index.php";
         $breadcrumbActual="Funciones";
         $breadcrumbLink=APP_FRONT."inicio/index";
+        $redireccion=APP_FRONT . "funcion/create";
         $breadcrumbPasada="Menú Principal";
 
         require_once APP_TEMPLATE."template.php";
