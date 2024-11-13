@@ -1,0 +1,26 @@
+.payment-section {
+    border: 1px solid #ddd;
+    padding: 25px; /* Espacio de relleno ajustado */
+    border-radius: 8px;
+    max-width: 450px; /* Aumento ligero del ancho */
+    margin: auto;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+.payment-section h2 {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+.payment-section p {
+    font-size: 15px;
+    color: white;
+    margin-bottom: 20px;
+}
+
+#texto {
+
+    font-size: 15px;
+    color: #8a8686;
+    margin-bottom: 20px;
+
+}

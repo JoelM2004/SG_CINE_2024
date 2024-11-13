@@ -3,7 +3,7 @@
         'name' => 'sg_cine_2024/laboratorio',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '31838c1ef7972a3ede42bd6d4dcce96209e59f33',
+        'reference' => 'aefa933255ae748200afd1afb909b44cd392f764',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -37,6 +37,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'mercadopago/dx-php' => array(
+            'pretty_version' => '3.0.8',
+            'version' => '3.0.8.0',
+            'reference' => 'b03c3c789c7d4fedfcf7d54cf57993e77c95aabb',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../mercadopago/dx-php',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'phpmailer/phpmailer' => array(
             'pretty_version' => 'v6.9.1',
             'version' => '6.9.1.0',
@@ -49,7 +58,7 @@
         'sg_cine_2024/laboratorio' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '31838c1ef7972a3ede42bd6d4dcce96209e59f33',
+            'reference' => 'aefa933255ae748200afd1afb909b44cd392f764',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

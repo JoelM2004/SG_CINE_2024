@@ -34,6 +34,10 @@ class ComposerStaticInitcfb89b696def0423af32663eeb0c162e
         array (
             'PHPMailer\\PHPMailer\\' => 20,
         ),
+        'M' => 
+        array (
+            'MercadoPago\\' => 12,
+        ),
         'E' => 
         array (
             'Egulias\\EmailValidator\\' => 23,
@@ -81,6 +85,10 @@ class ComposerStaticInitcfb89b696def0423af32663eeb0c162e
         'PHPMailer\\PHPMailer\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
+        ),
+        'MercadoPago\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mercadopago/dx-php/src/MercadoPago',
         ),
         'Egulias\\EmailValidator\\' => 
         array (
